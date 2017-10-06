@@ -2,42 +2,52 @@
 
 
 .titulo {
-	background-color: #FFF393;
-	color: #B2095B;
-	text-align: center;
-	margin: auto;
-	padding: 10%;
-	font-size: 30px;
+    background-color: #FFF393;
+    text-shadow: 4px 1px white;
+    color: #B2095B;
+    text-align: center;
+    margin: auto;
+    padding: 10%;
+    font-size: 30px;
 }
 #subtitulo {
-	font-size: 25px;
+    font-size: 32px;
+    text-shadow: 2px 1px white;
 }
 
 blockquote {
-	background-color: #FFF393;
-	padding: 3%;
-	border-radius: 4em;
+    background-color: #FFF393;
+    padding: 3%;
+    border-radius: 4em;
 }
 
 a{
-	color:#B2095B; 
+    color:#B2095B; 
 }
 body{
-	background-color: #FFF9C4;
+    background-color: #FFF9D8;
 }
 
+
+#fechas th{
+    background-color: transparent;
+}
+#fechas{
+    margin-left: 10%;
+}
 h2.titulo {
-	background-color: transparent;
-	text-align: left;
-	margin: auto;
-	margin-top: 20px;
-	padding: 0px;
-	font-size: auto;
+    background-image: none;
+    background-color: transparent;
+    text-align: left;
+    margin: auto;
+    margin-top: 20px;
+    padding: 0px;
+    font-size: auto;
 }
 
 .apartados {
-	margin-left: 24%;
-	margin-right: 24%;
+    margin-left: 24%;
+    margin-right: 24%;
 }
 
 
@@ -49,8 +59,8 @@ h2.titulo {
 
 th,.hora{
     background: #FFCCBC;
-	text-align: center;
-	align-content: center;
+    text-align: center;
+    align-content: center;
     align-items: center;
 
 }
@@ -58,25 +68,25 @@ th,.hora{
 .sesion{
     background: #D8FFD3;
     text-align: center;
-	align-content: center;
+    align-content: center;
     align-items: center
 }
 .cv{
     background: #A3E1D8;
     text-align: center;
-	align-content: center;
+    align-content: center;
     align-items: center
 }
 #as{
     background: #F0D2F0;
     text-align: center;
-	align-content: center;
+    align-content: center;
     align-items: center
 }
 
 th{
-	text-align: center;
-	align-content: center;
+    text-align: center;
+    align-content: center;
     align-items: center
 }
 blockquote{
@@ -100,19 +110,19 @@ th, td {
 }
 
 th,td, .tabla1 {
-	text-align: left;
-	align-content: left;
+    text-align: left;
+    align-content: left;
     align-items: left;
 }
 
 
 #lista1 li {
-	color: #B2095B;
-	font-size: 20px;
+    color: #B2095B;
+    font-size: 20px;
 }
 #lista1 span {
-	color:black;
-	font-size: 14px;
+    color:black;
+    font-size: 14px;
 }
 
 #lista2 {
@@ -133,7 +143,6 @@ th,td, .tabla1 {
     margin: .5em 0 .5em 2.5em;
     color: #444;
     text-decoration: none;
-    transition: all .3s ease-out;   
 }
 
    
