@@ -1,0 +1,193 @@
+      
+	         PROLE 2016 - Call for Papers
+	 XVI Jornadas sobre Programación y Lenguajes
+	Salamanca, del 14 al 16 de septiembre de 2016
+
+        	http://prole2016.webs.upv.es
+
+
+PRESENTACIÓN
+============
+Las Jornadas de PROgramación y LEnguajes (PROLE) constituyen 
+un marco propicio de reunión, debate y divulgación para los 
+grupos españoles que investigan en temas relacionados con la 
+programación y los lenguajes de programación. Con la 
+organización de este evento nacido en 2001, de carácter 
+anual, se pretende fomentar el intercambio de experiencias y 
+resultados, así como la comunicación y cooperación entre 
+dichos grupos. La XVI edición de estas Jornadas (PROLE 2016) 
+se celebrará en el marco del V Congreso Español de 
+informática (CEDI) y tendrá lugar en Salamanca del 14 al 16 
+de septiembre de 2016.
+
+
+TEMAS DE INTERÉS
+================
+
+En el ámbito de PROLE son bienvenidos tanto los trabajos 
+teóricos, como los que desarrollan aspectos prácticos 
+relativos a la especificación, diseño, implementación, 
+análisis y verificación de programas y lenguajes de 
+programación, incluyendo el uso de métodos formales en los 
+procesos de desarrollo del software. Son especialmente 
+relevantes aquellos trabajos relativos al desarrollo de 
+aplicaciones con herramientas y sistemas software existentes, 
+así como demostraciones de herramientas y sistemas en este 
+contexto. Una lista no exhaustiva de los temas abordados en 
+PROLE incluye:
+
+  * Paradigmas de programación. Integración de paradigmas de 
+    programación.
+  * Especificación y lenguajes de especificación. Sistemas 
+    de tipos. Lenguajes y técnicas para nuevos modelos de 
+    programación.
+  * Arquitecturas e interconexión de programas.
+  * Técnicas y herramientas de implementación de lenguajes 
+    de programación. Semántica de lenguajes de programación.
+  * Análisis de programas. Verificación y certificación de 
+    programas. Transformación y optimización de programas. 
+    Depuración y prueba de programas. Terminación de 
+    programas.
+  * Lógicas para el desarrollo de software.
+  * Métodos formales en los procesos de desarrollo de 
+    software.
+  * Aplicación de métodos formales en la industria. Casos de 
+    estudio.
+  * Desarrollo de aplicaciones con lenguajes y herramientas 
+    existentes. Demostraciones de herramientas y sistemas 
+    software.
+
+FECHAS IMPORTANTES 
+==================
+
+Recepción de trabajos:      3 de mayo de 2016
+Notificación de aceptación: 15 de junio de 2016
+Versión definitiva:         4 de julio de 2016
+PROLE 2016:                 14-16 de septiembre de 2016
+
+TIPOS DE CONTRIBUCIONES
+=======================
+
+Se solicitan contribuciones (tanto en castellano como en 
+inglés) en alguna de las siguientes categorías:
+
+  1. Trabajos originales. No publicados ni en proceso de 
+     revisión en revistas, conferencias con actas formales, 
+     etc. (máximo 15 páginas).
+  2. Tutoriales (máximo 18 páginas).
+  3. Demostraciones de herramientas y sistemas software 
+     (máximo 15 páginas). Se deberá aportar URL donde la 
+     herramienta esté disponible.
+  4. Trabajos de alto nivel (revistas, congresos 
+     internacionales de prestigio, etc.) ya publicados en 
+     2015, 2016 o pendientes de publicación (en el formato 
+     y longitud de la publicación). En este caso, en las 
+     actas informales aparecerá el resumen (abstract) del 
+     trabajo.
+  5. Trabajos en progreso (máximo 15 páginas).
+
+ENVÍO DE PUBLICACIONES
+======================
+
+Los trabajos deberán seguir las instrucciones y formatos de 
+EPTCS y su envío se realizará a través de: 
+
+https://easychair.org/conferences/?conf=prole2016
+
+A los trabajos de alto nivel (categoría 4) se les pide el aval 
+de su publicación y, en este caso, en las actas informales 
+aparecerá el resumen (abstract) del trabajo.
+Los trabajos de las categorías 1, 2, 3 y 5 serán revisados por 
+al menos tres revisores y aquéllos que resulten finalmente 
+aceptados aparecerán publicados en las actas informales de las 
+Jornadas. Entre estos trabajos, se otorgará un premio al mejor 
+trabajo, teniendo en cuenta la valoración de los revisores y 
+la presentación realizada en las Jornadas.
+Siguiendo la tradición de ediciones previas, después de las 
+Jornadas se realizará una selección de los mejores trabajos de 
+las categorías 1, 2 y 3 (escritos en inglés) para su publicación 
+posterior en la revista Electronic Proceedings in Theoretical 
+Computer Science.
+De forma excepcional, el comité de programa considerará la 
+posibilidad de cambiar la categoría de los trabajos sometidos a 
+las categorías 1 y 5, según el proceso de revisión previo y/o 
+las presentaciones durante las jornadas, aspecto que será 
+comunicado a los autores con la suficiente antelación para su 
+conocimiento y posible reconsideración de su propuesta.
+
+PONENTE INVITADO
+================
+
+Arnaud Gotlieb, Simula Research Laboratory, Norway 
+(https://www.simula.no/people/arnaud)
+
+Arnaud Gotlieb is a French research scientist, currently 
+leader of the Certus Centre, Simula's Centre for Research-based 
+Innovation (SFI) on Software Verification & Validation. His 
+expertise lies in the domain of software testing and the 
+application of constraint programming to software validation 
+and verification.
+
+COMITÉ DE PROGRAMA
+==================
+
+Jesús Almendros         Universidad de Almería
+María Alpuente          Universitat Politècnica de València
+Manuel Carro            Universidad Politécnica de Madrid
+Laura Castro            Universidad da Coruña
+Francisco Durán         Universidad de Málaga
+Lars-Ake Fredlund       Universidad Politécnica de Madrid
+Maria del Mar Gallardo  Universidad de Málaga
+Miguel Gómez-Zamalloa   Universidad Complutense de Madrid
+Pascual Julián-Iranzo   Universidad de Castilla la Mancha
+Francisco López Fraguas Universidad Complutense de Madrid
+Salvador Lucas          Universitat Politècnica de València
+Paqui Lucio             Euskal Herriko Unibertsitatea
+Marisa Navarro          Euskal Herriko Unibertsitatea
+Fernando Orejas         Universitat Politècnica de Catalunya
+Narciso Martí-Oliet     Universidad Complutense de Madrid
+Fernando Sáenz-Pérez    Universidad Complutense de Madrid
+César Sánchez           IMDEA Software
+Clara Segura            Universidad Complutense de Madrid
+Josep Silva             Universitat Politècnica de València
+Alicia Villanueva       Universitat Politècnica de València
+Mateu Villaret          Universitat de Girona
+
+PROGRAMA
+========
+
++---------------+--------------------+-------------------+------------------+
+|               | Miércoles 14 Sept. |  Jueves 15 Sept.  | Viernes 16 Sept. |
++---------------+--------------------+-------------------+------------------+
+| 9:00 - 10:00  |                    |                   |                  |
++---------------+      Sesión 1      |     Sesión 5      |     Sesión 7     |
+| 10:00 - 11:00 |                    |                   |                  | 
++---------------+--------------------+-------------------+------------------+
+| 11:00 - 11:30 |                        Coffee Break                       |
++---------------+--------------------+-------------------+------------------+
+| 11:30 - 12:30 |                    |  Charla Invitada  |                  |
++---------------+      Sesión 2      +-------------------+     Clausura     +
+| 12:30 - 13:30 |                    | Asamblea SISTEDES |                  |
++---------------+--------------------+-------------------+------------------+
+| 13:30 - 15:00 |                            Comida                         |
++---------------+--------------------+-------------------+------------------+
+| 15:30 - 16:30 |      Sesión 3      |     Sesión 6      | 
++---------------+--------------------+-------------------+
+| 16:30 - 17:00 |              Coffee Break              |
++---------------+--------------------+-------------------+
+| 17:00 - 18:00 |                    |                   |
++---------------+      Sesión 4      |   Visita centro   |
+| 18:00 - 19:00 |                    |                   |
++---------------+--------------------+-------------------+
+
+
+
+PREMIO A LA MEJOR TESIS DOCTORAL SISTEDES
+=========================================
+
+Se ha convocado la segunda edición del premio a la mejor
+tesis doctoral en el ámbito de SISTEDES. Son candidatas las
+tesis leídas durante el año 2014. Para ello, el autor debe
+seguir las indicaciones de la convocatoria:
+
+http://www.sistedes.es/convocatoria-premio-mejor-tesis-2016
