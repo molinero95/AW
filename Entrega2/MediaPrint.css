@@ -1,0 +1,28 @@
+input{
+	display: none;
+}
+
+.fin{
+	display: none;
+}
+
+#user {
+	display: none;
+}
+
+#imgPerf{
+	display: none;
+}
+
+.etiquetas{
+	font-size: 10px;
+	color:grey;
+}
+
+#añade {
+	display: none;
+}
+
+#final {
+	display: none;
+}

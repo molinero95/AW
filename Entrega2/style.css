@@ -1,0 +1,178 @@
+
+body{
+	margin: 0px;
+	font-size: 18px;
+}
+
+#barra {
+	background: linear-gradient(to bottom, green, #1f3b08);
+	margin-bottom: 10px;
+	display: flex;
+	justify-content: space-between;
+	color: white;
+}
+
+
+#imgPerf{
+	width: 60px;
+	height: 60px;
+	margin-top: 15px;
+	margin-right: 10px;
+}
+
+
+#desconectar{
+	background-color: #C78800;
+	text-align: center;
+	padding-left: 15px;
+	padding-right: 15px;
+	border: 0px;
+	border-radius: 5px;
+	font-size: 20px;
+}
+
+#desconectar:hover{
+	background-color: #493304;
+	color:white;
+
+}
+
+#barraDer {
+	float: right;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	text-align: center;
+}
+
+#derecha {
+	float: right;
+	margin-right: 10px;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
+
+}
+ 
+ul {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
+}
+.entrada{
+	margin-top: 5px;
+	font-size: 25px;
+	padding-right: 5px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #FFE7B3;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-right: 11%;
+	margin-left: 7%;
+	border: 2px;
+	border-color: #C78800;
+	border-style: solid;
+}
+
+.entrada strong{
+	margin-left: 10px;
+
+}
+
+.etiquetas{
+	background-color: #C78800;
+	color: white;
+	font-size: 20px;
+	border-radius: 10px;
+	padding: 4px;
+	padding-top: 2px;
+}
+
+.fin{
+	background-color: #493304;
+	color: white;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-bottom: 3px;
+	padding-top: 3px;
+	border-radius: 10px;
+	display: flex;
+	justify-content: space-between;
+
+}
+.fin::before {
+	content: url("tick.gif");
+	margin-top: 4px;
+}
+
+.marcar {
+	background-color: transparent;
+	border: 0;
+	font: bold;
+	color: white;
+	font-size:20px;
+}
+
+#tachado {
+	color: #E1CA98;
+}
+
+strike {
+	color:#E1CA98;
+}
+
+#añade {
+	background-color: #9EDAB7;
+	border-color: #00441C;
+}
+
+#añadir {
+	background-color: #00441C;
+	border: 1px;
+	color:white;
+	width:8%;
+	margin-right:3px; 
+	border-radius: 10px;
+	padding: 5px;
+	font-size: 17px;
+
+}
+
+#añadir:hover {
+	background-color: black;
+}
+
+#text{
+	width: 90%;
+	margin-left: 10px;
+	font-size: 18px;
+}
+
+#eliminar {
+	margin-top: 10px;
+	height: 30px;
+	border-radius: 10px;
+	color:black;
+	background-color: #C78800;
+	border: white;
+	padding-right: 20px;
+	padding-left: 20px;
+	height: 40px;
+	font:bold;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 20px;
+}
+
+#eliminar:hover {
+	background-color: #493304;
+	color:white;
+}
+
+#final {
+	display: flex;
+	justify-content: center;
+}

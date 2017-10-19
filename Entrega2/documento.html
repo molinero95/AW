@@ -1,0 +1,69 @@
+<!DOCTYPE <html>
+	<head>
+		<meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+        <link rel="stylesheet" type="text/css" media="print" href="MediaPrint.css">
+        <title>Gestor de tareas</title>
+	</head>
+	<body>
+		<div id="barra">
+			<img src="Logo.png" alt="tareas">
+			<span id="derecha">
+				<img src="NoPerfil.png" alt="foto de perfil" id="imgPerf">
+				<span id="barraDer">
+					<p id="user">user@mail.com</p>
+					<input type="submit" name="desconectar" value="Desconectar" id="desconectar">
+				</span>
+			</span>
+
+		</div>
+		<ul>
+			<li class="entrada">
+				<span>
+					<strong>Preparar práctica PDA0</strong>
+					<span class="etiquetas">pdap</span> 
+					<span class="etiquetas">practica</span> 
+				</span>
+				<span class="fin">
+					<input type="submit" name="marcar" class="marcar" value="Marcar finalizada">
+					</input>	
+				</span>
+			</li>
+			<li class="entrada">
+					<strike>
+						<strong id="tachado">Mirar fechas congreso</strong> 
+					</strike>
+			</li>
+			<li class="entrada">
+				<span>
+					<strong>Ir al supermercado</strong> 
+					<span class="etiquetas">personal</span> 
+				</span>
+				<span class="fin">
+					<input type="submit" name="marcar" class="marcar" value="Marcar finalizada">
+					</input>	
+				</span>
+
+			</li>
+			<li class="entrada">
+				<span>
+					<strong>Mudanza</strong> 
+					<span class="etiquetas">personal</span>
+				</span>
+				<span class="fin">
+					<input type="submit" name="marcar" class="marcar" value="Marcar finalizada">
+					</input>	
+				</span>
+			</li>
+			<li id="añade" class="entrada">
+				<input type="text" name="texto" id="text">
+				<input type="submit" name="añadir" id="añadir" value="Añadir"></input>
+			</li>
+			<li id="final">
+				<a id = "eliminar" >Eliminar tareas completadas</a>
+			</li>
+		</ul>
+		
+	</body>
+
+</html>
