@@ -11,8 +11,7 @@ let tareas = [
 //primero filtramos por done === false o undefined.
 //segundo mapeo para obtener solo el campo text en un vector.
 function getToDoTask(tasks) {
-	let tareas = tasks.filter(n=>n.done === false || n.done === undefined);
-	return tareas.map(n=>n.text);	//con la funcion map obtenemos el vector de text
+	return tasks.filter(n=>n.done === false || n.done === undefined).map(n=>n.text);
 }
 
 //console.log(getToDoTask(tareas));
@@ -24,4 +23,12 @@ function findByTag(tasks, tag) {
 	return tasks.filter(n=>n.tags.indexOf(tag) !== -1)
 }
 
-console.log(findByTag(tareas, "personal"));
+//console.log(findByTag(tareas, "personal"));
+
+//ejercicio 3
+
+function findByTags(tasks, tags) {
+	return tasks.filter(n=>n.tags.some(n=>tags.indexOf(n) !== -1));
+}
+
+//console.log(findByTags(tareas, ["personal","pdap"]));
