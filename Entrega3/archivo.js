@@ -32,3 +32,34 @@ function findByTags(tasks, tags) {
 }
 
 //console.log(findByTags(tareas, ["personal","pdap"]));
+
+
+//ejercicio 4
+
+function countDone(tasks) {
+	return tasks.filter(n=>n.done === true).reduce((ac, n) => ac + 1, 0);
+}
+
+//console.log(countDone(tareas));
+
+//ejercicio 5
+
+function createTask(texto) {
+	//let exp = /(\@[A-z]{0,}\s)/;
+	let exp = /\@[A-z]{0,}/g;
+	let nuevaCadena = texto;
+	let tarea, etiq, simple;
+	tarea = {text:"", tags: []}
+	while(etiq = exp.exec(texto)){
+		nuevaCadena = nuevaCadena.replace(etiq[0], "");
+		simple = etiq[0].replace("@","");
+		tarea.tags.push(simple);
+	}
+	nuevaCadena = nuevaCadena.trim();
+	tarea["text"] = nuevaCadena;
+	return tarea;
+	
+}
+
+console.log(createTask("Esto es una cadena @de @texto"));
+console.log(createTask("Y por aquí va otra @personal"));
