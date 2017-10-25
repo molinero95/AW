@@ -1,5 +1,6 @@
 body {
 	margin: 0;
+	background-image: url(fondo.jpg);
 }
 
 .menu {
@@ -15,7 +16,9 @@ a {
 
 
 #menuLogin{
-	background-color: black;
+	margin-right: 10%;
+	margin-left: 10%;
+	background-color: #98D18C;
 
 }
 
@@ -25,12 +28,17 @@ nav > ul > li{
 }
 
 nav > ul > li:hover {
-	background: grey;
+	background: #B9E09D;
 }
 
 .elemMenu > a {
-	color: white;
+	color: black;
 	font-size: 30px;
+
+}
+
+.elemMenu {
+	border-style: solid;
 
 }
 
@@ -40,7 +48,9 @@ nav > ul > li:hover {
 }
 
 #centradoLogReg{
-	background-color: grey;
+	background-color: #B9E09D;
+	border-style: solid;
+	border-color: black;
 	padding: 20px;
 	margin-right: 25%;
 	margin-left: 25%;
@@ -93,12 +103,14 @@ nav > ul > li:hover {
 	height: 40px;
 	width: 120px;
 	border-radius: 10px;
-	border-style: none;
+	border-style: solid;
+	border-color: black;
+	background-color: #98D18C;
 }
 
 #btLogin:hover {
 	color: white;
-	background-color: black;
+	background-color: #B9E09D;
 }
 
 ul {
@@ -106,3 +118,44 @@ ul {
 	list-style: none;
 }
 
+#perfilCompleto {
+	margin-right: 25%;
+	margin-left: 25%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+
+#perfil {
+	display: flex;
+	justify-content: flex-start;
+}
+
+#datosPerfil {
+	margin-left: 5%;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
+}
+
+#fotoPerfil {
+	margin-left: 25%;
+	height: 90;
+	width: 90px;
+}
+
+#modificaPerfil {
+	margin-left: 20%;
+	margin-right: 20%;
+	background-color: #98D18C;
+	border-radius: 10px;
+	height: 30px;
+	border-color: black;
+	border-style: solid;
+}
+
+#modificaPerfil:hover {
+	background-color: #B9E09D;
+	color: white;
+}
