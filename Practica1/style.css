@@ -1,0 +1,89 @@
+body {
+	margin: 0;
+}
+
+.menu {
+	list-style: none;
+	display: flex;
+	justify-content: space-around;
+	flex-direction: row;
+}
+a {
+	text-decoration: none;
+}
+
+
+
+#menuLogin{
+	background-color: black;
+
+}
+
+nav > ul > li{
+	width: 50%;
+	text-align: center;
+}
+
+nav > ul > li:hover {
+	background: grey;
+}
+
+.elemMenu > a {
+	color: white;
+	font-size: 30px;
+
+}
+
+
+.titulo {
+	text-align: center;
+}
+
+#login{
+	background-color: grey;
+	padding: 20px;
+	margin-right: 25%;
+	margin-left: 25%;
+}
+
+.emailPass {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	align-items: center;
+}
+
+.textLogin{
+	width: 60%;
+	height: 22px;
+	margin-right: 50px;
+}
+
+#div {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+#conectar {
+	display: flex;
+	justify-content: center;
+}
+
+#btLogin {
+	height: 40px;
+	width: 120px;
+	border-radius: 10px;
+	border-style: none;
+}
+
+#btLogin:hover {
+	color: white;
+	background-color: black;
+}
+
+ul {
+	padding: 0;
+	list-style: none;
+}
+
