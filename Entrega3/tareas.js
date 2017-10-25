@@ -41,7 +41,7 @@ function findByTags(tasks, tags) {
  * Devuelve el número de tareas finalizadas
  */
 function countDone(tasks) {
-	return tasks.filter(n=>n.done === true).reduce((ac, n) => ac + 1, 0);
+	return tasks.filter(n=>n.done === true).reduce(ac => ac + 1, 0);
 }
 
 /**

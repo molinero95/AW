@@ -39,24 +39,43 @@ nav > ul > li:hover {
 	text-align: center;
 }
 
-#login{
+#centradoLogReg{
 	background-color: grey;
 	padding: 20px;
 	margin-right: 25%;
 	margin-left: 25%;
 }
 
-.emailPass {
+.lblcampo {
 	display: flex;
 	justify-content: space-between;
 	flex-direction: row;
 	align-items: center;
 }
 
-.textLogin{
+
+.entrada{
 	width: 60%;
 	height: 22px;
 	margin-right: 50px;
+}
+
+#nacimiento{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+}
+
+#nacimiento > input{
+	margin-right: 17%;
+}
+
+#radiosReg {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
 }
 
 #div {

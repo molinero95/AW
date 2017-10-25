@@ -9,25 +9,25 @@
     <body>
     	<nav id="menuLogin">
     		<ul class="menu">
-    			<li class="elemMenu"><a href="">Entrar</a></li>
-    			<li class="elemMenu"><a href="">Nuevo Usuario</a></li>
+    			<li class="elemMenu"><a href="login.html">Entrar</a></li>
+    			<li class="elemMenu"><a href="register.html">Nuevo Usuario</a></li>
     		</ul>
     	</nav>
     	<h1 class="titulo">ENTRAR</h1>
-    	<div id="login">
+    	<form id="centradoLogReg" method="post" action="login_submit">
     		<ul>
-	    		<li class="emailPass">
+	    		<li class="lblcampo">
 	    			<p>Email: </p>
-	    			<input type="text" name="texto" value="" class="textLogin">
+	    			<input type="text" name="email" value="" class="entrada">
 	    		</li>
-	    		<li class="emailPass">
+	    		<li class="lblcampo">
 	    			<p>Contraseña: </p>
-	    			<input type="text" name="texto" value="" class="textLogin">
+	    			<input type="password" name="pass" value="" class="entrada">
 	    		</li>
 	    		<li id=conectar>
 	    			<input type="submit" name="conectar" id="btLogin" value="Conectar">
 				</li>
     		</ul>
-    	</div>
+    	</form>
     </body>
 </html>
