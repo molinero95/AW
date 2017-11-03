@@ -1,6 +1,21 @@
+
+
+@font-face{
+	font-family: GloriaHallelujah;
+	src: url(./fonts/GloriaHallelujah.ttf);
+}
+
 body {
 	margin: 0;
-	background-image: url(fondo.jpg);
+	background-image: url(./img/Fondo.jpg);
+	font-family: GloriaHallelujah;
+}
+
+body:before {
+	display: flex;
+	justify-content: space-around;
+	content: url(./img/Logo.png);
+
 }
 
 .menu {
@@ -16,9 +31,10 @@ a {
 
 
 #menuLogin{
+	margin-top: 1.5%;
 	margin-right: 10%;
 	margin-left: 10%;
-	background-color: #98D18C;
+	background-color: #970EB4;
 
 }
 
@@ -28,11 +44,11 @@ nav > ul > li{
 }
 
 nav > ul > li:hover {
-	background: #B9E09D;
+	background: #503554;
 }
 
 .elemMenu > a {
-	color: black;
+	color: white;
 	font-size: 30px;
 
 }
@@ -48,12 +64,13 @@ nav > ul > li:hover {
 }
 
 #centradoLogReg{
-	background-color: #B9E09D;
+	background-color: #970EB4;
 	border-style: solid;
 	border-color: black;
 	padding: 20px;
 	margin-right: 25%;
 	margin-left: 25%;
+	color:white;
 }
 
 .lblcampo {
@@ -99,18 +116,19 @@ nav > ul > li:hover {
 	justify-content: center;
 }
 
-#btLogin {
+.boton {
 	height: 40px;
 	width: 120px;
 	border-radius: 10px;
 	border-style: solid;
 	border-color: black;
-	background-color: #98D18C;
+	background-color: #DA90E5;
 }
 
-#btLogin:hover {
+
+#boton:hover {
 	color: white;
-	background-color: #B9E09D;
+	background-color: #503554;
 }
 
 ul {
@@ -119,36 +137,38 @@ ul {
 }
 
 #perfilCompleto {
+	color:white;
 	margin-right: 25%;
 	margin-left: 25%;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	background-color: #970EB4;
+	border-style: solid;
+	border-color: black;	
+	padding: 20px;
+	margin-bottom: 5%;
 }
 
 
 #perfil {
 	display: flex;
-	justify-content: flex-start;
+	justify-content: center;
 }
 
 #datosPerfil {
 	margin-left: 5%;
-	display: flex;
-	justify-content: space-between;
-	flex-direction: column;
 }
 
 #fotoPerfil {
-	margin-left: 25%;
-	height: 90;
-	width: 90px;
+	height: 180px;
+	width: 180px;
 }
 
 #modificaPerfil {
 	margin-left: 20%;
 	margin-right: 20%;
-	background-color: #98D18C;
+	background-color: #DA90E5;
 	border-radius: 10px;
 	height: 30px;
 	border-color: black;
@@ -156,6 +176,6 @@ ul {
 }
 
 #modificaPerfil:hover {
-	background-color: #B9E09D;
+	background-color: #503554;
 	color: white;
 }
