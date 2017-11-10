@@ -97,6 +97,11 @@ FIN MENUS
     margin-right: 20%;
     color: mediumorchid;
 }
+
+.preguntas:hover{
+	color: #503554;	
+}
+
 .preguntas > li{
     background: #FFFED0;
     padding-left: 10px;
@@ -128,13 +133,9 @@ FIN MENUS
 	flex-direction: row;
 }
 
-#div {
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-}
 
-#conectar {
+/*Botones*/
+.botonCentro {
 	display: flex;
 	justify-content: center;
 }
@@ -150,6 +151,20 @@ FIN MENUS
     font-family: GloriaHallelujah;
 }
 
+
+#botonesAmigos{
+    display: flex;
+    float:right;
+    justify-content: space-around;
+}
+
+.boton:hover {
+	color: white;
+	background-color: #503554;
+}
+
+/*Botones FIN*/
+
 #preg{
     width: auto;   
 }
@@ -158,17 +173,8 @@ FIN MENUS
     width:auto;
 }
 
-.crearP{
-    margin-left: 20%;
-    margin-right: 30%;
-    text-align: center;
-}
 
 
-#boton:hover {
-	color: white;
-	background-color: #503554;
-}
 
 ul {
 	padding: 0;
@@ -232,11 +238,7 @@ nav{
     margin-right: 20%;
 }
 
-#botonesAmigos{
-    display: flex;
-    float:right;
-    justify-content: space-around;
-}
+
 
 #modificaPerfil {
 	margin-left: 20%;
