@@ -1,0 +1,23 @@
+{
+  "name": "facebluff",
+  "version": "1.0.0",
+  "description": "Red social practica AW con HTML, CSS y JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "molinero95/AW/Practica1"
+  },
+  "keywords": [
+    "javascript",
+    "red",
+    "social",
+    "facebluf",
+    "html",
+    "css"
+  ],
+  "author": "Marta Huertas Smolis y Jaime Molinero Lacave",
+  "license": "ISC"
+}
