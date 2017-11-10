@@ -23,6 +23,7 @@ body:before {
 a {
 	text-decoration: none;
 }
+
 /*FIN GENERAL*/
 
 
@@ -56,9 +57,28 @@ nav > ul {
 	font-size: 30px;
 
 }
+
+#puntos {
+	font-size:25px;
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	margin-top:5px;
+}
+
+#iconoPuntos {
+	margin-right: 15px;
+	width:50px;
+	height: 50px;
+}
+
 /*
 FIN MENUS
 */
+
+.info {
+	margin-left: 20%;
+}
 
 .titulo {
 	text-align: center;
@@ -152,15 +172,18 @@ FIN MENUS
 }
 
 
-#botonesAmigos{
-    display: flex;
-    float:right;
-    justify-content: space-around;
-}
+
 
 .boton:hover {
 	color: white;
 	background-color: #503554;
+}
+
+
+#botonesAmigos{
+    display: flex;
+    float:right;
+    justify-content: space-around;
 }
 
 /*Botones FIN*/
@@ -187,16 +210,14 @@ nav{
 
 #fallado{
     display: flex;
-    float:right;
     color:red;
     font-family: GloriaHallelujah;
-     
+    justify-content: flex-end;
 }
 #acertado{
     color: green;
     font-family: GloriaHallelujah;
-     display: flex;
-    float:right;
+    display: flex;
 }
 #perfilCompleto {
 	color:white;
@@ -254,3 +275,30 @@ nav{
 	background-color: #503554;
 	color: white;
 }
+/*contestaPregunta*/
+.eleccion {
+	background: #FFDC8F;
+	padding-left: 20px; 
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-left: 20%;
+	margin-right: 20%;
+	display: flex;
+	justify-content: flex-start;
+	margin-bottom: 10px;
+}
+
+#otra {
+	background: #D6FFD6;
+}
+
+
+#otraText {
+	margin-left:5px;
+	width:50%;
+}
+
+.eleccion > span > input{
+	margin-right: 10px;
+}
+/*Fin contestaPregunta*/
