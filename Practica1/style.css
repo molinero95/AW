@@ -1,4 +1,4 @@
-
+/*GENERAL*/
 
 @font-face{
 	font-family: GloriaHallelujah;
@@ -19,33 +19,36 @@ body:before {
 
 }
 
-.menu {
+
+a {
+	text-decoration: none;
+}
+/*FIN GENERAL*/
+
+
+/*MENUS*/
+nav{
+	margin-top: 1.5%;
+	margin-right: 10%;
+	margin-left: 10%;
+	background-color: #970EB4;
+}
+
+nav > ul {
 	list-style: none;
 	display: flex;
 	justify-content: space-around;
 	flex-direction: row;
 }
-a {
-	text-decoration: none;
-}
 
-
-
-#menuLogin{
-	margin-top: 1.5%;
-	margin-right: 10%;
-	margin-left: 10%;
-	background-color: #970EB4;
-
-}
-
-nav > ul > li{
+.elemMenu {
+	border-style: solid;
 	width: 50%;
 	text-align: center;
 }
 
-nav > ul > li:hover {
-	background: #503554;
+.elemMenu:hover {
+	background: #503554;	
 }
 
 .elemMenu > a {
@@ -53,12 +56,9 @@ nav > ul > li:hover {
 	font-size: 30px;
 
 }
-
-.elemMenu {
-	border-style: solid;
-
-}
-
+/*
+FIN MENUS
+*/
 
 .titulo {
 	text-align: center;
