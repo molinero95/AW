@@ -19,5 +19,8 @@
     "css"
   ],
   "author": "Marta Huertas Smolis y Jaime Molinero Lacave",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
 }
