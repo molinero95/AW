@@ -17,6 +17,6 @@ module.exports = {
   password: "",
   
   // Nombre de la base de datos
-  database: "tareas"
+  database: "javascriptdb"
 
 }
