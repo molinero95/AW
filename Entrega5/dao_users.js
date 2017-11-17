@@ -31,21 +31,21 @@ class DAOUsers {
      * @param {function} callback Función que recibirá el objeto error y el resultado
      */
     isUserCorrect(email, password, callback) {
-        pool.getConnection((err,con)=>{
+        this.pool.getConnection((err,con)=>{
             if(err){
-                callback(err);
+                callback(err, null);
             }
             else{
                 con.query("select count(email) as numero from user where email = ? and password = ?", [email,password], (err,fila)=> {
                     if(err){
-                        callback(err);
+                        callback(err, null);
                     }
                     else{
-                        if(fila.numero===1){
-                            callback(true);
+                        if(fila[0].numero === 1){
+                            callback(null,true);
                         }
                         else{
-                            callback(false);
+                            callback(null,false);
                         }
                     }
                 });

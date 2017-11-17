@@ -33,9 +33,54 @@ class DAOTasks {
      * @param {function} callback Función callback.
      */
     getAllTasks(email, callback) {
+        this.pool.getConnection((err,con) => {
+            if(err){
+                callback(err,null);
+            }
+            else{
+                con.query("select *  from task as t left join tag as g on t.id = g.taskId where t.user = ?  order by t.id",[email],(err,filas) => {
+                    if(err){
+                        callback(err,null);
+                    }
+                    else{
+                        let miObjeto = {
+                            id: null,
+                            text:null,
+                            done:null,
+                            tag:[]
+                        };
+                        let resultado = [];
+                        let anterior = -1;
+                        for(let i of filas){
+                            if(anterior === i.id){
+                                miObjeto.tag.push(i.tag);
 
-        /* Implementar */
+                                
+                            }
+                           else{ // anterior != id
+                                if(anterior !== -1){
+                                    resultado.push(miObjeto);
+                                    miObjeto.tag = [];
+                                    
+                                }
+                                
+                                miObjeto.id = i.id;
+                                miObjeto.text = i.text;
+                                miObjeto.done = i.done;
+                                miObjeto.tag.push(i.tag);             
+                                anterior = i.id;                               
 
+                            }
+                            //console.log(miObjeto);
+                            
+                        }
+                        console.log(filas);
+                        console.log("---");
+                        callback(null,resultado);
+                    }
+                })
+            }
+        })
     }
 
     /**
