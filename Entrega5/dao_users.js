@@ -49,6 +49,7 @@ class DAOUsers {
                         }
                     }
                 });
+                con.release();
             }
         })
        

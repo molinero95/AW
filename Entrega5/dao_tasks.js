@@ -38,48 +38,45 @@ class DAOTasks {
                 callback(err,null);
             }
             else{
-                con.query("select *  from task as t left join tag as g on t.id = g.taskId where t.user = ?  order by t.id",[email],(err,filas) => {
-                    if(err){
+                con.query("select t.id, t.text, t.done, g.tag  from task as t left join tag as g on t.id = g.taskId where t.user = ?  order by t.id",[email],(err,filas) => {
+                    if(err)
                         callback(err,null);
-                    }
                     else{
-                        let miObjeto = {
-                            id: null,
-                            text:null,
-                            done:null,
-                            tag:[]
-                        };
                         let resultado = [];
-                        let anterior = -1;
-                        for(let i of filas){
-                            if(anterior === i.id){
-                                miObjeto.tag.push(i.tag);
-
-                                
+                        let anterior;
+                        for(let fila of filas) {
+                            let dato = {
+                                id: fila.id,
+                                text: fila.text,
+                                done: fila.done,
+                                tags: []
                             }
-                           else{ // anterior != id
-                                if(anterior !== -1){
-                                    resultado.push(miObjeto);
-                                    miObjeto.tag = [];
-                                    
+                            dato.tags.push(fila.tag);
+                            if(anterior && anterior.id === dato.id){    //ac = ant
+                                anterior.tags.push(fila.tag);
+                                if(fila === filas[filas.length - 1])//ultimo caso
+                                    resultado.push(anterior);
+                            }
+                            else if(anterior && anterior.id !== dato.id){   //ac != ant
+                                resultado.push(anterior);
+                                if(fila === filas[filas.length - 1]){//ultimo caso
+                                    resultado.push(dato);
                                 }
-                                
-                                miObjeto.id = i.id;
-                                miObjeto.text = i.text;
-                                miObjeto.done = i.done;
-                                miObjeto.tag.push(i.tag);             
-                                anterior = i.id;                               
-
+                                anterior = new Object();
+                                anterior = dato;
                             }
-                            //console.log(miObjeto);
-                            
+                            else{//primer caso
+                                anterior = dato;
+                                if(fila === filas[filas.length - 1]){//ultimo caso
+                                    resultado.push(anterior);
+                                }
+                            }
                         }
-                        console.log(filas);
-                        console.log("---");
                         callback(null,resultado);
                     }
                 })
             }
+            con.release();
         })
     }
 
