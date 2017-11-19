@@ -21,6 +21,9 @@
   "author": "Marta Huertas Smolis y Jaime Molinero Lacave",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.2"
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "mysql": "^2.15.0",
+    "path": "^0.12.7"
   }
 }
