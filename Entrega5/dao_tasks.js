@@ -32,51 +32,43 @@ class DAOTasks {
      * @param {string} email Identificador del usuario.
      * @param {function} callback Función callback.
      */
-    getAllTasks(email, callback) {
+    getAllTasks(email, callback) {//Intentar poner mas claro
         this.pool.getConnection((err,con) => {
-            if(err){
-                callback(err,null);
-            }
-            else{
-                con.query("select t.id, t.text, t.done, g.tag  from task as t left join tag as g on t.id = g.taskId where t.user = ?  order by t.id",[email],(err,filas) => {
-                    if(err)
-                        callback(err,null);
-                    else{
-                        let resultado = [];
-                        let anterior;
-                        for(let fila of filas) {
-                            let dato = {
-                                id: fila.id,
-                                text: fila.text,
-                                done: fila.done,
-                                tags: []
-                            }
-                            dato.tags.push(fila.tag);
-                            if(anterior && anterior.id === dato.id){    //ac = ant
-                                anterior.tags.push(fila.tag);
-                                if(fila === filas[filas.length - 1])//ultimo caso
-                                    resultado.push(anterior);
-                            }
-                            else if(anterior && anterior.id !== dato.id){   //ac != ant
-                                resultado.push(anterior);
-                                if(fila === filas[filas.length - 1]){//ultimo caso
-                                    resultado.push(dato);
-                                }
-                                anterior = new Object();
-                                anterior = dato;
-                            }
-                            else{//primer caso
-                                anterior = dato;
-                                if(fila === filas[filas.length - 1]){//ultimo caso
-                                    resultado.push(anterior);
-                                }
-                            }
+            if(err){ callback(err,null); return;}
+            con.query("select t.id, t.text, t.done, g.tag  from task as t left join tag as g on t.id = g.taskId where t.user = ?  order by t.id",[email],(err,filas) => {
+                if(err){callback(err,null); return;}
+                let resultado = [];
+                    let anterior;
+                    for(let fila of filas) {
+                        let dato = {
+                            id: fila.id,
+                            text: fila.text,
+                            done: fila.done,
+                            tags: []
                         }
-                        callback(null,resultado);
+                        dato.tags.push(fila.tag);
+                        if(anterior && anterior.id === dato.id){    //ac = ant
+                            anterior.tags.push(fila.tag);
+                            if(fila === filas[filas.length - 1])//ultimo caso
+                               resultado.push(anterior);
+                        }
+                        else if(anterior && anterior.id !== dato.id){   //ac != ant
+                            resultado.push(anterior);
+                            if(fila === filas[filas.length - 1])//ultimo caso
+                                resultado.push(dato);
+                            anterior = new Object();
+                            anterior = dato;
+                        }
+                        else{//primer caso
+                            anterior = dato;
+                            if(fila === filas[filas.length - 1])//ultimo caso
+                                resultado.push(anterior);
+                        }
                     }
-                })
-            }
-            con.release();
+                    con.release();                        
+                    callback(null,resultado);
+            
+            });
         })
     }
 
@@ -95,8 +87,31 @@ class DAOTasks {
      * @param {function} callback Función callback que será llamada tras la inserción
      */
     insertTask(email, task, callback) {
-
-        /* Implementar */
+        this.pool.getConnection((err, conn) => {
+            if(err) {callback(err); return;}
+            conn.query("INSERT INTO task(user, text, done) VALUES (?,?,?)",[email, task.text, task.done], (err, filas) =>{
+                if(err) {callback(err); return;}
+                //console.log(filas.insertId);
+                if(task.tags.length != 0){
+                    let sentence = "INSERT INTO tag(taskId, tag) VALUES "
+                    let arrayDatos = [];
+                    for(let tag of task.tags){//añadimos a la consulta el numero de tags a insertar
+                        if(tag == task.tags[task.tags.length - 1])
+                            sentence = sentence + "(?,?);";
+                        else
+                            sentence = sentence + "(?,?), ";
+                        arrayDatos.push(filas.insertId);
+                        arrayDatos.push(tag);
+                    }                    
+                    conn.query(sentence, arrayDatos, (err,filas) => {
+                        if(err){callback(err); return;}
+                        callback(null);
+                    })
+                }
+                callback(null);
+                conn.release();                
+            });
+        });
         
     }
 

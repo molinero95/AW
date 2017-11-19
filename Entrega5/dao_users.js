@@ -37,19 +37,15 @@ class DAOUsers {
             }
             else{
                 con.query("select count(email) as numero from user where email = ? and password = ?", [email,password], (err,fila)=> {
-                    if(err){
-                        callback(err, null);
+                    if(err){ callback(err, null); return;}
+                    con.release();                    
+                    if(fila[0].numero === 1){
+                        callback(null,true);
                     }
                     else{
-                        if(fila[0].numero === 1){
-                            callback(null,true);
-                        }
-                        else{
-                            callback(null,false);
-                        }
+                        callback(null,false);
                     }
                 });
-                con.release();
             }
         })
        
