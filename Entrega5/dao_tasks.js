@@ -32,47 +32,37 @@ class DAOTasks {
      * @param {string} email Identificador del usuario.
      * @param {function} callback Función callback.
      */
-    getAllTasks(email, callback) {//Intentar poner mas claro
-        this.pool.getConnection((err,con) => {
-            if(err){ callback(err,null); return;}
-            con.query("select t.id, t.text, t.done, g.tag  from task as t left join tag as g on t.id = g.taskId where t.user = ?  order by t.id",[email],(err,filas) => {
+    getAllTasks(email, callback) {
+        this.pool.getConnection((err, con) => {
+            if(err) {callback(err, null); return;}
+            con.query("SELECT t.id, t.text, t.done, g.tag FROM task as t left join tag as g on t.id = g.taskId where t.user = ? order by t.id", [email], (err, filas)=>{
                 if(err){callback(err,null); return;}
-                let resultado = [];
-                    let anterior;
-                    for(let fila of filas) {
-                        let dato = {
-                            id: fila.id,
-                            text: fila.text,
-                            done: fila.done,
-                            tags: []
-                        }
-                        dato.tags.push(fila.tag);
-                        if(anterior && anterior.id === dato.id){    //ac = ant
-                            anterior.tags.push(fila.tag);
-                            if(fila === filas[filas.length - 1])//ultimo caso
-                               resultado.push(anterior);
-                        }
-                        else if(anterior && anterior.id !== dato.id){   //ac != ant
-                            resultado.push(anterior);
-                            if(fila === filas[filas.length - 1])//ultimo caso
-                                resultado.push(dato);
-                            anterior = new Object();
-                            anterior = dato;
-                        }
-                        else{//primer caso
-                            anterior = dato;
-                            if(fila === filas[filas.length - 1])//ultimo caso
-                                resultado.push(anterior);
-                        }
+                let anterior;
+                let res = [];
+                let tags = [];
+                filas.forEach(element => {
+                    if(anterior && anterior.id !== element.id){//no coinciden
+                        res.push(anterior);//guardamos el dato anterior
+                        if(element === filas[filas.length - 1])//si es el ultimo, guardamos tambien el actual
+                            res.push([element.id, element.text, element.done, element.tag]);
+                        tags = [];
+                        anterior = new Object();
                     }
-                    con.release();                        
-                    callback(null,resultado);
-            
+                    tags.push(element.tag);//metemos el elemento   
+                    anterior = {
+                        id: element.id,
+                        text: element.text,
+                        done: element.done,
+                        tags: tags
+                    } 
+                    if(element === filas[filas.length - 1] && anterior.id === element.id)
+                        res.push(anterior);
+                });
+                callback(null, res);
             });
         })
     }
-
-    /**
+     /**
      * Inserta una tarea asociada a un usuario.
      * 
      * Se supone que la tarea a insertar es un objeto con, al menos,

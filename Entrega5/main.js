@@ -48,6 +48,7 @@ daoUser.isUserCorrect("usuario@ucm.es", "mipass", (err, result) => {
             }
             pool.end();
         });
+        
     });
 });
 
