@@ -91,24 +91,18 @@ class DAOTasks {
             if(err) {callback(err); return;}
             conn.query("INSERT INTO task(user, text, done) VALUES (?,?,?)",[email, task.text, task.done], (err, filas) =>{
                 if(err) {callback(err); return;}
-                //console.log(filas.insertId);
                 if(task.tags.length != 0){
-                    let sentence = "INSERT INTO tag(taskId, tag) VALUES "
-                    let arrayDatos = [];
+                    let valores = [];
                     for(let tag of task.tags){//añadimos a la consulta el numero de tags a insertar
-                        if(tag == task.tags[task.tags.length - 1])
-                            sentence = sentence + "(?,?);";
-                        else
-                            sentence = sentence + "(?,?), ";
-                        arrayDatos.push(filas.insertId);
-                        arrayDatos.push(tag);
-                    }                    
-                    conn.query(sentence, arrayDatos, (err,filas) => {
+                        valores.push([filas.insertId, tag]);
+                    }
+                    conn.query("INSERT INTO tag (taskId, tag) VALUES ?", [valores], (err, fila) => {
                         if(err){callback(err); return;}
                         callback(null);
-                    })
+                    });                
                 }
-                callback(null);
+                else
+                    callback(null);
                 conn.release();                
             });
         });
