@@ -1,0 +1,304 @@
+/*GENERAL*/
+
+@font-face{
+	font-family: GloriaHallelujah;
+	src: url(../fonts/GloriaHallelujah.ttf);
+}
+
+body {
+	margin: 0;
+	background-image: url(../img/Fondo.jpg);
+	font-family: cursive;
+}
+
+
+body:before {
+	display: flex;
+	justify-content: space-around;
+	content: url(../img/Logo.png);
+
+}
+
+
+a {
+	text-decoration: none;
+}
+
+/*FIN GENERAL*/
+
+
+/*MENUS*/
+nav{
+	margin-top: 1.5%;
+	margin-right: 10%;
+	margin-left: 10%;
+	background-color: #970EB4;
+}
+
+nav > ul {
+	list-style: none;
+	display: flex;
+	justify-content: space-around;
+	flex-direction: row;
+}
+
+.elemMenu {
+	border-style: solid;
+	width: 50%;
+	text-align: center;
+}
+
+.elemMenu:hover {
+	background: #503554;	
+}
+
+.elemMenu > a {
+	color: white;
+	font-size: 30px;
+
+}
+
+#puntos {
+	font-size:25px;
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	margin-top:5px;
+}
+
+#iconoPuntos {
+	margin-right: 15px;
+	width:50px;
+	height: 50px;
+}
+
+/*
+FIN MENUS
+*/
+
+.info {
+	margin-left: 20%;
+}
+
+.titulo {
+	text-align: center;
+    font-family: GloriaHallelujah;
+}
+
+#centradoLogReg{
+	background-color: #970EB4;
+	border-style: solid;
+	border-color: black;
+	padding: 20px;
+	margin-right: 25%;
+	margin-left: 25%;
+	color:white;
+}
+
+.lblcampo {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	align-items: center;
+}
+
+.busqueda {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+	align-items: center;
+    margin-left: 20%;
+    margin-right: 20%;
+    
+}
+
+.preguntas{
+    margin-left: 20%;
+    margin-right: 20%;
+    color: mediumorchid;
+}
+
+.preguntas:hover{
+	color: #503554;	
+}
+
+.preguntas > li{
+    background: #FFFED0;
+    padding-left: 10px;
+    margin-bottom: 5px;
+}
+
+
+.entrada{
+	width: 60%;
+	height: 22px;
+	margin-right: 50px;
+}
+
+#nacimiento{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+}
+
+#nacimiento > input{
+	margin-right: 17%;
+}
+
+#radiosReg {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+}
+
+
+/*Botones*/
+.botonCentro {
+	display: flex;
+	justify-content: center;
+}
+
+.boton {
+	height: 40px;
+	width: 120px;
+	border-radius: 10px;
+	border-style: solid;
+	border-color: black;
+	background-color: #DA90E5;
+    margin-left: 3px;
+    font-family: GloriaHallelujah;
+}
+
+
+
+
+.boton:hover {
+	color: white;
+	background-color: #503554;
+}
+
+
+#botonesAmigos{
+    display: flex;
+    float:right;
+    justify-content: space-around;
+}
+
+/*Botones FIN*/
+
+#preg{
+    width: auto;   
+}
+
+#contestar{
+    width:auto;
+}
+
+
+
+
+ul {
+	padding: 0;
+	list-style: none;
+}
+
+nav{
+    font-family: GloriaHallelujah;
+}
+
+#fallado{
+    display: flex;
+    color:red;
+    font-family: GloriaHallelujah;
+    justify-content: flex-end;
+}
+#acertado{
+    color: green;
+    font-family: GloriaHallelujah;
+    display: flex;
+}
+#perfilCompleto {
+	color:white;
+	margin-right: 25%;
+	margin-left: 25%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	background-color: #970EB4;
+	border-style: solid;
+	border-color: black;	
+	padding: 20px;
+	margin-bottom: 5%;
+}
+
+
+#perfil {
+	display: flex;
+	justify-content: center;
+}
+
+#datosPerfil {
+	margin-left: 5%;
+}
+
+#fotoPerfil {
+	height: 180px;
+	width: 180px;
+}
+
+#fotoAmigo{
+    height: 50px;
+	width: 50px;
+    border: black 1px solid;
+}
+
+.listaAmigos{
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+
+
+#modificaPerfil {
+	margin-left: 20%;
+	margin-right: 20%;
+	background-color: #DA90E5;
+	border-radius: 10px;
+	height: 30px;
+	border-color: black;
+	border-style: solid;
+}
+
+#modificaPerfil:hover {
+	background-color: #503554;
+	color: white;
+}
+/*contestaPregunta*/
+.eleccion {
+	background: #FFDC8F;
+	padding-left: 20px; 
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-left: 20%;
+	margin-right: 20%;
+	display: flex;
+	justify-content: flex-start;
+	margin-bottom: 10px;
+}
+
+#otra {
+	background: #D6FFD6;
+}
+
+
+#otraText {
+	margin-left:5px;
+	width:50%;
+}
+
+.eleccion > span > input{
+	margin-right: 10px;
+}
+/*Fin contestaPregunta*/

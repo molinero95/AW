@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="style.css">
-        <title>Casper María Rodríguez</title>
+        <title><%= user %></title>
     </head>
     <body>
     	<nav>
@@ -13,19 +13,19 @@
     			<li class="elemMenu"><a href="misamigos.html">Amigos</a></li>
     			<li class="elemMenu"><a href="preguntas.html">Preguntas</a></li>
     			<li class="elemMenu"><a href="">Desconectar</a></li>
-                <li class="elemMenu"><span id="puntos"><img src="icons/Fatso-01.png" id="iconoPuntos"> 50 pts</span></li>
+                <li class="elemMenu"><span id="puntos"><img src="<%= user.foto %>" id="iconoPuntos"> <%= user.puntos %> pts</span></li>
     		</ul>
     	</nav>
     	<h1 class="titulo">Perfil</h1>
     	<div id="perfilCompleto">
 	    	<div id="perfil">
                 <!--CUIDADO posible CSS-->
-	    		<img id="fotoPerfil" src="icons/Fatso-01.png" alt="foto de perfil">
+	    		<img id="fotoPerfil" src="<%= user.foto %>" alt="foto de perfil">
 	    		<div id="datosPerfil">
-	    			<p>Casper María Rodríguez</p>
-	    			<p>33 Años</p>
-	    			<p>Hombre</p>
-	    			<p>50 Puntos</p>
+	    			<p><%= user.nombre %></p>
+	    			<p><%= user.edad %> años</p>
+	    			<p><%= user.sexo %></p>
+	    			<p><%= user.puntos %> puntos</p>
 	    		</div>
 	    	</div>
 	    	<input type="submit" id="modificaPerfil" name="modificaPerf" value="Modificar Perfil">

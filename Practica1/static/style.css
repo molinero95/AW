@@ -2,12 +2,12 @@
 
 @font-face{
 	font-family: GloriaHallelujah;
-	src: url(./fonts/GloriaHallelujah.ttf);
+	src: url(../fonts/GloriaHallelujah.ttf);
 }
 
 body {
 	margin: 0;
-	background-image: url(./img/Fondo.jpg);
+	background-image: url(../img/Fondo.jpg);
 	font-family: cursive;
 }
 
@@ -15,7 +15,7 @@ body {
 body:before {
 	display: flex;
 	justify-content: space-around;
-	content: url(./img/Logo.png);
+	content: url(../img/Logo.png);
 
 }
 
