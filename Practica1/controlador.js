@@ -7,9 +7,18 @@ app.set("views", path.join(__dirname, "views"));
 const estaticos = path.join(__dirname, "static");
 app.use(express.static(estaticos));
 
+function logger (req, res, next) {
+    console.log(`Recibida peticion: ${req.url}`);
+    next();
+}
+app.use(logger);
+
 app.get('/', (req, res) => {
     res.status(200);
+    //if(sesion)
     res.redirect('/profile.html');
+    //else
+    //res.redirect('/login.html');
 })
 
 app.get('/profile.html', (req, res) => {
