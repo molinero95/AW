@@ -13,6 +13,7 @@ app.use(function logger (req, res, next) {
     next();
 });
 
+
 app.get('/', (req, res) => {
     res.status(200);
     //if(sesion)
@@ -21,7 +22,8 @@ app.get('/', (req, res) => {
     //res.redirect('/login.html');
 })
 
-app.get('/profile.html', (req, res) => {
+
+app.get('/profile', (req, res) => {
     let usuario = new Object();
     usuario.nombre = "Pepito Pérez Rodriguez";
     usuario.edad = 33;
@@ -29,10 +31,39 @@ app.get('/profile.html', (req, res) => {
     usuario.puntos = 100;
     usuario.foto = "icons/Fatso-01.png";
     //el render se encarga de llamar al .ejs
+    res.status(200);    
     res.render("profile", {user: usuario})
-    res.status(200);
 });
 
+
+
+/*
+Este middleware sera el encargado de comprobar si el usuario esta iniciado al 
+acceder al login/register.
+Si no hay usuario iniciado, redirige a login.
+Si el usuario está iniciado, redirige a profile.
+*/
+app.use(function chekLogged (req, res, next){
+    let sesion; //quitar, ya veremos sesiones
+    if(!sesion) //Cuidado, si usuario no iniciado y queremos pagina rara redirige a login
+        next();
+    else
+        res.redirect('/profile');
+});
+
+app.get('/login', (req, res) => {
+    res.status(200);
+    res.render("login");
+})
+
+app.get('/register', (req, res) => {
+    res.status(200);
+    res.render("register");
+})
+
+
+
+
 app.listen(3000, () => {
-    console.log(`Server started on port`);
+    console.log(`Server started on port 3000`);
 });
