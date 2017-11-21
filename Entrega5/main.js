@@ -38,7 +38,7 @@ daoUser.isUserCorrect("usuario@ucm.es", "mipass", (err, result) => {
         let newTask = {
             text: "Terminar ejercicio entregable 5",
             done: true,
-            tags: ["aw", "ejercicio"]
+            tags: ["aw", "ejercicio", "tds", "pts"]
         }
         daoTask.insertTask("usuario@ucm.es", newTask, (err) => {
             if (err) {
