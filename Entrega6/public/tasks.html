@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Gestor de tareas</title>
+    <meta charset="utf8">
+    <link rel="stylesheet" href="css/index.css" media="screen">
+    <link rel="stylesheet" href="css/index_print.css" media="print">
+</head>
+
+<body>
+    <div class="cabecera">
+        <img src="img/Logo.png" alt="Tareas" id="logo">
+        <div class="user">
+            <div class="userimg">
+                <img src="img/img2315.png" class="avatar">
+            </div>
+            <div>
+                <div class="username">usuario@ucm.es</div>
+                <div class="connect_container">
+                    <a class="action_button" href="">Desconectar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tareas">
+        <ul>
+            <li>
+                <span>
+                    <span class="enunciado">Preparar práctica PDAP</span>
+                    <span class="tag">pdap</span>
+                    <span class="tag">practica</span>
+                </span>
+                <input class="finalizada" value="Marcar finalizada" type="submit">
+            </li>
+
+            <li>
+                <span>
+                    <span class="finalizada">Mirar fechas congreso</span>
+                </span>
+
+            </li>
+
+            <li>
+                <span>
+                    <span class="enunciado">Ir al supermercado</span>
+                    <span class="tag">personal</span>
+                </span>
+                <input class="finalizada" value="Marcar finalizada" type="submit">
+            </li>
+
+            <li>
+                <span>
+                    <span class="enunciado">Mudanza</span>
+                    <span class="tag">personal</span>
+                </span>
+                <input class="finalizada" value="Marcar finalizada" type="submit">
+            </li>
+
+            <li class="nueva">
+                <form method="POST" id="formNueva" action="/addTask">
+                    <input name="taskText" type="text">
+                    <input value="Añadir" type="submit">
+                </form>
+            </li>
+        </ul>
+    </div>
+
+    <div class="barra_botones">
+        <a href="/deleteCompleted" class="action_button">Eliminar tareas completadas</a>
+    </div>
+</body>
+
+</html>
