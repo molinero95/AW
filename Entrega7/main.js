@@ -39,14 +39,21 @@ let pool = mysql.createPool({
 
 let daoT = new daoTasks.DAOTasks(pool);
 let daoU = new daoUsers.DAOUsers(pool);
+//Es un middleware para evitar que un usuario logeado pueda ir a loggin
+function prohibeLogin(req, res, next) {
+    if(req.session.currentUser)
+        res.redirect("/tasks");
+    else
+        next();
+}
 
-app.get("/login.html", (req, res) =>{
+app.get("/login.html", prohibeLogin,(req, res) =>{
     res.status(200);
     let error = null;
     res.render("login", {errorMsg: error});
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', prohibeLogin,(req, res) => {
     res.status(200);
     let mail = req.body.mail;
     daoU.isUserCorrect(mail, req.body.pass, (err, existe) =>{
@@ -82,8 +89,10 @@ app.use(function compruebaSession(req, res, next){
         next();
     }
     else
-         res.redirect('login.html');
+        res.redirect('login.html');
 });
+
+
 
 
 app.get('/logout', (req, res) => {
@@ -94,19 +103,33 @@ app.get('/logout', (req, res) => {
 });
 
 
+
 app.get("/tasks",(req, res) => {
     res.status(200);
-    daoT.getAllTasks("usuario@ucm.es", (err, tasks) => {
+    daoT.getAllTasks(res.locals.userEmail, (err, tasks) => {
         if(err){console.log(err); return;}
-        res.render("tasks", {taskList : tasks});
+        res.render("tasks", {taskList : tasks, user: res.locals.userEmail});
     })
-})
+});
+
+app.get("/imagenUsuario", (req, res) => {
+    console.log("aqui estoy");
+    daoU.getUserImageName(res.locals.userEmail, (err, dato) => {
+        if(err){console.error(err);return;}
+        if(dato){
+            res.sendFile(path.join(__dirname,"profile_imgs",dato));
+        }
+        else
+            res.sendFile(path.join(ficherosEstaticos,"img","NoPerfil.png"));
+    });
+});
+
 
 app.post('/addTask', (req, res) => {
     res.status(200);
     let task = taskUtils.createTask(req.body.taskText);
     task.done = false;
-    daoT.insertTask("usuario@ucm.es", task, (err) =>{
+    daoT.insertTask(res.locals.userEmail, task, (err) =>{
         if(err){console.log(err); return;}
         res.redirect("/tasks");         
     });
@@ -122,7 +145,7 @@ app.post('/finish', (req, res) => {
 
 app.get("/deleteCompleted", (req, res) => {
     res.status(200);
-    daoT.deleteCompleted("usuario@ucm.es", (err) =>{
+    daoT.deleteCompleted(res.locals.userEmail, (err) =>{
         if(err){console.error(err); return;}
          res.redirect('/tasks');
     })
