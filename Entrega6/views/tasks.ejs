@@ -43,7 +43,10 @@
                 <% } %>                  
                 </span>
                 <% if (!task.done) { %>
-                <input class="finalizada" value="Marcar finalizada" type="submit">
+                <form method="POST" action="/finish">
+                    <input type="hidden" name="idTarea" value="<%= task.id %>">
+                    <input class="finalizada" value="Marcar finalizada" type="submit">
+                </form>
                 <% } %>
             </li>
             <% }); %>

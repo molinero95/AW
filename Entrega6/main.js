@@ -30,16 +30,37 @@ let daoT = new daoTasks.DAOTasks(pool);
 app.get("/tasks",(req, res) => {
     res.status(200);
     daoT.getAllTasks("usuario@ucm.es", (err, tasks) => {
-        console.log(tasks);
-        if(err){console.log(err); return}
+        if(err){console.log(err); return;}
         res.render("tasks", {taskList : tasks});
     })
 })
 
+
 app.post('/addTask', (req, res) => {
     res.status(200);
-    console.log(req.body);
+    let task = taskUtils.createTask(req.body.taskText);
+    task.done = false;
+    daoT.insertTask("usuario@ucm.es", task, (err) =>{
+        if(err){console.log(err); return;}
+        res.redirect("/tasks");         
+    });
 });
+
+app.post('/finish', (req, res) => {
+    res.status(200);
+    daoT.markTaskDone(req.body.idTarea, (err)=>{
+        if(err){console.error(err); return;}
+         res.redirect('/tasks');
+    });
+})
+
+app.get("/deleteCompleted", (req, res) => {
+    res.status(200);
+    daoT.deleteCompleted("usuario@ucm.es", (err) =>{
+        if(err){console.error(err); return;}
+         res.redirect('/tasks');
+    })
+})
 
 
 app.listen(config.port, function (err) {
