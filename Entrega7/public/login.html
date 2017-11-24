@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gestor de tareas</title>
+    <meta charset="utf8">
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+
+<body>
+    <div class="cabecera">
+        <img src="/img/Logo.png" alt="Tareas" id="logo">
+    </div>
+
+    <form action="/login" method="POST">
+        <div class="formulario">
+            <div class="enunciado_correo celda">
+                Dir. de correo:
+            </div>
+            <div class="cuadro_correo celda">
+                <input type="text" name="mail">
+            </div>
+            <div class="enunciado_pass celda">
+                Contraseña:
+            </div>
+            <div class="cuadro_pass celda">
+                <input type="password" name="pass">
+            </div>
+            <div class="celda_enviar celda">
+                <input type="submit" value="Aceptar">
+            </div>
+        </div>
+    </form>
+
+    <div class="error">
+        Mensaje de error
+    </div>
+
+
+</body>
+
+</html>
