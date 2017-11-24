@@ -13,6 +13,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.use(express.static(ficherosEstaticos));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 
 let pool = mysql.createPool({
@@ -25,13 +26,20 @@ let pool = mysql.createPool({
 
 let daoT = new daoTasks.DAOTasks(pool);
 
+
 app.get("/tasks",(req, res) => {
     res.status(200);
     daoT.getAllTasks("usuario@ucm.es", (err, tasks) => {
+        console.log(tasks);
         if(err){console.log(err); return}
         res.render("tasks", {taskList : tasks});
     })
 })
+
+app.post('/addTask', (req, res) => {
+    res.status(200);
+    console.log(req.body);
+});
 
 
 app.listen(config.port, function (err) {

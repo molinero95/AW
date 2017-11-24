@@ -30,7 +30,12 @@
             <% taskList.forEach(task => { %>
             <li>
                 <span>
+                    <% if(!task.done) { %>
                     <span class="enunciado"><%= task.text %></span>
+                    <% }else { %>
+                    <span class="finalizada"><%= task.text %></span>
+                    <% } %>
+
                 <% if(task.tags) { %>
                     <% task.tags.forEach(tag => { %>
                     <span class="tag"><%= tag %></span>
