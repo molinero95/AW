@@ -27,38 +27,21 @@
 
     <div class="tareas">
         <ul>
+            <% taskList.forEach(task => { %>
             <li>
                 <span>
-                    <span class="enunciado">Preparar práctica PDAP</span>
-                    <span class="tag">pdap</span>
-                    <span class="tag">practica</span>
+                    <span class="enunciado"><%= task.text %></span>
+                <% if(task.tags) { %>
+                    <% task.tags.forEach(tag => { %>
+                    <span class="tag"><%= tag %></span>
+                    <% }); %>  
+                <% } %>                  
                 </span>
+                <% if (!task.done) { %>
                 <input class="finalizada" value="Marcar finalizada" type="submit">
+                <% } %>
             </li>
-
-            <li>
-                <span>
-                    <span class="finalizada">Mirar fechas congreso</span>
-                </span>
-
-            </li>
-
-            <li>
-                <span>
-                    <span class="enunciado">Ir al supermercado</span>
-                    <span class="tag">personal</span>
-                </span>
-                <input class="finalizada" value="Marcar finalizada" type="submit">
-            </li>
-
-            <li>
-                <span>
-                    <span class="enunciado">Mudanza</span>
-                    <span class="tag">personal</span>
-                </span>
-                <input class="finalizada" value="Marcar finalizada" type="submit">
-            </li>
-
+            <% }); %>
             <li class="nueva">
                 <form method="POST" id="formNueva" action="/addTask">
                     <input name="taskText" type="text">
