@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");//procesamiento post
 const config = require("./config");//modulo config.js
 const daoTasks = require("./dao_tasks");//modulo dao_task.js
 const taskUtils = require("./task_utils");//modulo task_utils.
+const daoUsers = require("./dao_users");
 const session = require("express-session");//sesiones
 const mysqlSession = require("express-mysql-session");//guardar session para mysql
 const mysqlStore = mysqlSession(session);
@@ -37,8 +38,60 @@ let pool = mysql.createPool({
 
 
 let daoT = new daoTasks.DAOTasks(pool);
+let daoU = new daoUsers.DAOUsers(pool);
+
+app.get("/login.html", (req, res) =>{
+    res.status(200);
+    let error = null;
+    res.render("login", {errorMsg: error});
+});
+
+app.post('/login', (req, res) => {
+    res.status(200);
+    let mail = req.body.mail;
+    daoU.isUserCorrect(mail, req.body.pass, (err, existe) =>{
+        if(err){console.error(err); return;}
+        if(existe){
+            req.session.currentUser = mail;
+            res.redirect('/tasks');
+        }
+        else
+            res.render("login", {errorMsg: "Dirección de correo y/o contraseña no validos."});
+    });
+});
+
+//A partir de aqui solo AUTENTICACIÓN REQ.
+/*Si quieremos que no afecte a todo:
+function compruebaSession(req, res, next){
+    if(req.session.currentUser){
+        res.locals.userEmail = req.session.currentUser;
+        next();
+    }
+    else
+         res.redirect('login.html');
+}
+app.get("/task", compruebaSession, (req, res) =>{
+
+});
+app.get...
+*/
+//este afecta a todo lo de abajo, aplicacion dividida en 2
+app.use(function compruebaSession(req, res, next){
+    if(req.session.currentUser){
+        res.locals.userEmail = req.session.currentUser;
+        next();
+    }
+    else
+         res.redirect('login.html');
+});
 
 
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if(err){console.error(err); return;}
+        res.redirect("login.html");
+    });
+});
 
 
 app.get("/tasks",(req, res) => {
@@ -48,7 +101,6 @@ app.get("/tasks",(req, res) => {
         res.render("tasks", {taskList : tasks});
     })
 })
-
 
 app.post('/addTask', (req, res) => {
     res.status(200);

@@ -32,9 +32,11 @@
         </div>
     </form>
 
+    <% if(errorMsg) { %>
     <div class="error">
-        Mensaje de error
+        <%= errorMsg %>
     </div>
+    <% } %>
 
 
 </body>
