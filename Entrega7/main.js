@@ -1,13 +1,25 @@
-const express = require("express");
-const mysql = require("mysql");
-const path = require("path");
-const bodyParser = require("body-parser");
-const config = require("./config");
-const daoTasks = require("./dao_tasks");
-const taskUtils = require("./task_utils");
-
+const express = require("express");//express
+const mysql = require("mysql");//mysql
+const path = require("path");//path
+const bodyParser = require("body-parser");//procesamiento post
+const config = require("./config");//modulo config.js
+const daoTasks = require("./dao_tasks");//modulo dao_task.js
+const taskUtils = require("./task_utils");//modulo task_utils.
+const session = require("express-session");//sesiones
+const mysqlSession = require("express-mysql-session");//guardar session para mysql
+const mysqlStore = mysqlSession(session);
+const sessionStore = new mysqlStore(config.mysqlConfig);
 const app = express();
 const ficherosEstaticos = path.join(__dirname, "public");
+
+
+const middlewareSession = session({//datos de la sesion
+    saveUninitialized:false,
+    secret: "foobar34",
+    resave: false,
+    store: sessionStore
+});
+app.use(middlewareSession);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -25,6 +37,8 @@ let pool = mysql.createPool({
 
 
 let daoT = new daoTasks.DAOTasks(pool);
+
+
 
 
 app.get("/tasks",(req, res) => {
