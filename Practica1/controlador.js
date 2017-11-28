@@ -6,6 +6,7 @@ const path = require("path");//path
 const bodyParser = require("body-parser");//procesamiento post
 const config = require("./config");//modulo config.js
 const daoApp = require("./dao");//modulo dao_task.js
+const utilidades = require("./utilidades");
 const session = require("express-session");//sesiones
 const mysqlSession = require("express-mysql-session");//guardar session para mysql
 const mysqlStore = mysqlSession(session);
@@ -52,11 +53,6 @@ app.get('/login', (req, res) => {
     res.render("login", {errorMsg:null});
 });
 
-app.get('/login.html', (req, res) =>{
-    res.status(200);
-    res.redirect("/login");
-})
-
 app.post('/login', (req, res) => {
     res.status(200);
     let user = req.body.user;
@@ -64,7 +60,7 @@ app.post('/login', (req, res) => {
         if(err){console.error(err); return;}        
         if(exists){
             req.session.user = user;
-             res.redirect('login');//esto redirigira a perfil o a home no se
+            res.redirect('login');//esto redirigira a perfil o a home no se
             console.log("usuario existe");//continuar
         }
         else{
@@ -73,19 +69,56 @@ app.post('/login', (req, res) => {
         }
         
     });
-    //res.redirect('/login');
-})
-
-app.get('/register.html', (req, res) => {
-    res.status(200);
-    res.render("register");
 });
+
+app.get('/register', (req, res) => {
+    res.status(200);
+    res.render("register", {errorMsg:null});
+});
+
+
+//podria poner un mensaje de error por si acaso
+app.post('/register', (req, res) => {
+    res.status(200);
+    let user = {
+        user: req.body.user,
+        password: req.body.password,
+        name: req.body.name,
+        gender: req.body.gender,
+        date: req.body.date,
+        img: req.body.img
+    };
+    let errores = utilidades.checkRegister(user);
+    if(errores.length == 0){
+        console.log(user);
+        dao.userExists(user.user,(err, exists) =>{
+            if(err){console.error(err); return;}        
+            if(exists){//mostrar error aqui
+                let error = "Usuario no valido.";
+                res.render("register", {errorMsg:error});
+            }
+            else{
+                dao.insertUser(user, (err, insert) =>{
+                    if(err){res.render("register", {errorMsg:"Error insertando el nuevo usuario."})}
+                    else{
+                        console.log("usuario insertado");
+                        //sesion aqui y a perfil
+                    }
+                });
+            }
+            
+        });
+    }
+    else
+        res.render("register", {errorMsg: errores});    
+});
+
 
 function isLogged(req, res, next) {
     if(req.session.user)
         next();
     else
-         res.redirect('/login');
+        res.redirect('/login');
     
 }
 

@@ -14,24 +14,34 @@ class DAO {
             filas[0].resultado == 1 ? callback(null, true):callback(null, false);
           });
       });
-  }
-//No probadas a partir de aqui
-    insertarUsuario(usuario, callback) {
+    }
+
+    userExists(name, callback) {
+      this.pool.getConnection((err, connect) => {
+        if(err){console.log(err); return;}
+        connect.query("SELECT COUNT (users.id) as resultado FROM users AS users where email = ? ",[name],(err, filas) =>{
+          connect.release();            
+          if(err){callback(err); return;}
+          filas[0].resultado == 1 ? callback(null, true):callback(null, false);
+        });
+      });
+    }
+
+    insertUser(user, callback) {
       this.pool.getConnection((err, con) =>{
         if(err)
           callback(err);
         else{
-          con.query("INSERT INTO usuarios(nombre, correo, telefono) VALUES(?,?,?)", [usuario.nombre, usuario.correo, usuario.telefono], (err, fila)=>{
-            if(err)
-              callback(err);
+          con.query("INSERT INTO users (email, password, nombreCompleto, sexo, nacimiento, imagen) VALUES(?,?,?,?,?,?)", [user.user, user.password, user.name, user.gender, user.date, user.img], (err, fila)=>{
+            if(err){callback(err); return;}
             else
-              callback(fila);
+              callback(null,true);
           });
         }
         con.release();
       });
     }
-
+//No probadas a partir de aqui
     enviarMensaje(usuarioOrigen, usuarioDestino, mensaje, callback) {
       this.pool.getConnection((err, con) => {
         if(err)
