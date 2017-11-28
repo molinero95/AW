@@ -1,5 +1,11 @@
 /*GENERAL*/
 
+.errorMsg {
+	color: red;
+	margin-left: 40%;
+	margin-right: 40%;
+}
+
 @font-face{
 	font-family: GloriaHallelujah;
 	src: url(../fonts/GloriaHallelujah.ttf);

@@ -1,28 +1,21 @@
-"use strict";
 const mysql = require("mysql");
 //Clase reutilizada del ejercicio 2
 class DAO {
-    constructor(host, user, password, database) {
-      this.pool = mysql.createPool({
-        host: host,
-        user: user,
-        password: password,
-        database: database,
-      });
+    constructor(pool) {
+      this.pool = pool;
     }
 
-    existeUsuario(nombreUsr, callback){
-      pool.getConnection((err, connect) => {
+    userCorrect(name, password,callback){
+      this.pool.getConnection((err, connect) => {
           if(err) {console.log(err); return;}
-          connect.query("SELECT COUNT (users.id) as resultado FROM usuarios AS users where nombre= ? ",[nombreUsr],(err, filas) =>{
-              if(err){callback(err); return;}
-              connect.release();
-              //console.log(filas.resultado);
-              filas.resultado == 1 ? callback(null, true):callback(null, false);
+          connect.query("SELECT COUNT (users.id) as resultado FROM users AS users where email = ? and password = ? ",[name, password],(err, filas) =>{
+            connect.release();            
+            if(err){callback(err); return;}
+            filas[0].resultado == 1 ? callback(null, true):callback(null, false);
           });
       });
   }
-
+//No probadas a partir de aqui
     insertarUsuario(usuario, callback) {
       this.pool.getConnection((err, con) =>{
         if(err)

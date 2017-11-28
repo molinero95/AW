@@ -1,11 +1,44 @@
-const express = require('express');
-const path = require('path');
+"use strict";
 
+const express = require("express");//express
+const mysql = require("mysql");//mysql
+const path = require("path");//path
+const bodyParser = require("body-parser");//procesamiento post
+const config = require("./config");//modulo config.js
+const daoApp = require("./dao");//modulo dao_task.js
+const session = require("express-session");//sesiones
+const mysqlSession = require("express-mysql-session");//guardar session para mysql
+const mysqlStore = mysqlSession(session);
+const sessionStore = new mysqlStore(config.mysqlConfig);
 const app = express();
-app.set('view engine', 'ejs');
+const ficherosEstaticos = path.join(__dirname, "public");
+
+
+
+const middlewareSession = session({//datos de la sesion
+    saveUninitialized:false,
+    secret: "foobar34",
+    resave: false,
+    store: sessionStore
+});
+app.use(middlewareSession);
+
+app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-const estaticos = path.join(__dirname, "static");
-app.use(express.static(estaticos));
+
+app.use(express.static(ficherosEstaticos));
+app.use(bodyParser.urlencoded({ extended: false }));
+
+
+let pool = mysql.createPool({
+    database: config.mysqlConfig.database,
+    host: config.mysqlConfig.host,
+    user: config.mysqlConfig.user,
+    password: config.mysqlConfig.password
+});
+
+
+let dao = new daoApp(pool);
 
 
 app.use(function logger (req, res, next) {
@@ -14,56 +47,73 @@ app.use(function logger (req, res, next) {
 });
 
 
-app.get('/', (req, res) => {
+app.get('/login', (req, res) => {
     res.status(200);
-    //if(sesion)
-    res.redirect('/profile.html');
-    //else
-    //res.redirect('/login.html');
+    res.render("login", {errorMsg:null});
+});
+
+app.get('/login.html', (req, res) =>{
+    res.status(200);
+    res.redirect("/login");
+})
+
+app.post('/login', (req, res) => {
+    res.status(200);
+    let user = req.body.user;
+    dao.userCorrect(user, req.body.password,(err, exists) =>{
+        if(err){console.error(err); return;}        
+        if(exists){
+            req.session.user = user;
+             res.redirect('login');//esto redirigira a perfil o a home no se
+            console.log("usuario existe");//continuar
+        }
+        else{
+            let error = "Usuario y/o contraseña no validos.";
+            res.render("login", {errorMsg:error});
+        }
+        
+    });
+    //res.redirect('/login');
+})
+
+app.get('/register.html', (req, res) => {
+    res.status(200);
+    res.render("register");
+});
+
+function isLogged(req, res, next) {
+    if(req.session.user)
+        next();
+    else
+         res.redirect('/login');
+    
+}
+
+
+
+app.get('/', isLogged, (req, res) => {
+    res.status(200);
+     res.redirect('/profile');
 })
 
 
-app.get('/profile', (req, res) => {
-    let usuario = new Object();
-    usuario.nombre = "Pepito Pérez Rodriguez";
-    usuario.edad = 33;
-    usuario.sexo = "Hombre";
-    usuario.puntos = 100;
-    usuario.foto = "icons/Fatso-01.png";
-    //el render se encarga de llamar al .ejs
+app.get('/profile', isLogged, (req, res) => {
     res.status(200);    
     res.render("profile", {user: usuario})
 });
 
 
 
-/*
-Este middleware sera el encargado de comprobar si el usuario esta iniciado al 
-acceder al login/register.
-Si no hay usuario iniciado, redirige a login.
-Si el usuario está iniciado, redirige a profile.
-*/
-app.use(function chekLogged (req, res, next){
-    let sesion; //quitar, ya veremos sesiones
-    if(!sesion) //Cuidado, si usuario no iniciado y queremos pagina rara redirige a login
-        next();
-    else
-        res.redirect('/profile');
-});
-
-app.get('/login', (req, res) => {
-    res.status(200);
-    res.render("login");
-})
-
-app.get('/register', (req, res) => {
-    res.status(200);
-    res.render("register");
-})
 
 
 
 
-app.listen(3000, () => {
-    console.log(`Server started on port 3000`);
+
+app.listen(config.port, function (err) {
+    if (err) {
+        console.log("No se ha podido iniciar el servidor.")
+        console.log(err);
+    } else {
+        console.log(`Servidor escuchando en puerto ${config.port}.`);
+    }
 });
