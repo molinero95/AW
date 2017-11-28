@@ -113,7 +113,6 @@ app.get("/tasks",(req, res) => {
 });
 
 app.get("/imagenUsuario", (req, res) => {
-    console.log("aqui estoy");
     daoU.getUserImageName(res.locals.userEmail, (err, dato) => {
         if(err){console.error(err);return;}
         if(dato){
