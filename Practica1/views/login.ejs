@@ -7,14 +7,9 @@
         <title>Bienvenido</title>
     </head>
     <body>
-		<!--Si hay sesion poner el menu guay-->
-    	<nav>
-    		<ul>
-    			<li class="elemMenu"><a href="login">Entrar</a></li>
-    			<li class="elemMenu"><a href="register">Nuevo Usuario</a></li>
-    		</ul>
-    	</nav>
-    	<h1 class="titulo">ENTRAR</h1>
+		<%- include("header", {user: null}) %>
+		<h1 class="titulo">ENTRAR</h1>
+		<%- include("flash") %>		
     	<form id="centradoLogReg" method="post" action="/login">
     		<ul>
 	    		<li class="lblcampo">
@@ -30,6 +25,5 @@
 				</li>
     		</ul>
 		</form>
-		<p class="errorMsg"><%= errorMsg %></p>
     </body>
 </html>

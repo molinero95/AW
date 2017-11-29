@@ -1,0 +1,18 @@
+<header>
+    <nav>
+        <% if (!user) {%>
+        <ul>
+            <li class="elemMenu"><a href="login">Entrar</a></li>
+            <li class="elemMenu"><a href="register">Nuevo Usuario</a></li>
+        </ul>
+        <% } else { %>
+            <ul>
+                    <li class="elemMenu"><a href="profile.html">Perfil</a></li>
+                    <li class="elemMenu"><a href="misamigos.html">Amigos</a></li>
+                    <li class="elemMenu"><a href="preguntas.html">Preguntas</a></li>
+                    <li class="elemMenu"><a href="">Desconectar</a></li>
+                    <li class="elemMenu"><span id="puntos"><img src="<%= user.foto %>" id="iconoPuntos"> <%= user.puntos %> pts</span></li>
+                </ul>
+        <% } %>
+    </nav>
+</header>

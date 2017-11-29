@@ -1,8 +1,57 @@
 /*GENERAL*/
 
-.errorMsg {
+.flashError {
+	font-size: 20px; 
 	color: red;
-	margin-left: 40%;
+	margin-bottom: 1%;
+	margin-top: 1%;
+	text-align: center;
+	padding-right: 5%;
+	padding-left: 5%;
+	padding-top: 2%;
+	padding-bottom: 2%;
+	border-style: solid;
+	border-color:rgb(0, 0, 0);
+	border-width:5px;
+	background: #970EB4;
+	margin-right: 30%;
+	margin-left: 30%;
+}
+
+.flashAttention {
+	font-size: 20px; 	
+	color: rgb(226, 120, 21);
+	margin-bottom: 1%;
+	margin-top: 1%;
+	text-align: center;
+	padding-right: 5%;
+	padding-left: 5%;
+	padding-top: 2%;
+	padding-bottom: 2%;
+	border-style: solid;
+	border-color:rgb(0, 0, 0);
+	border-width:5px;
+	background: #970EB4;
+	margin-right: 30%;
+	margin-left: 30%;
+}
+
+.flashCorrect {
+	font-size: 20px; 	
+	color: rgb(115, 235, 115);
+	margin-bottom: 1%;
+	margin-top: 1%;
+	text-align: center;
+	padding-right: 5%;
+	padding-left: 5%;
+	padding-top: 2%;
+	padding-bottom: 2%;
+	border-style: solid;
+	border-color:rgb(0, 0, 0);
+	border-width:5px;
+	background: #970EB4;
+	margin-right: 30%;
+	margin-left: 30%;
 }
 
 @font-face{

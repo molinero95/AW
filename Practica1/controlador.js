@@ -46,13 +46,38 @@ app.use(function logger (req, res, next) {
     console.log(`Recibida peticion: ${req.url}`);
     next();
 });
+//Middleware para mostrar mensajes de error
+/*
+Un objeto flash contendra 2 atributos:
+    - msg: contiene el mensaje.
+    - type: contiene el tipo del mensaje:
+        - 0: error
+        - 1: atención
+        - 2: afirmación
+*/
+app.use((req, res, next) =>{
+    res.setFlash = (msg, type) => {
+        req.session.flashMsg = msg;
+        req.session.flashType = type;
+    };
+    res.locals.getAndClearFlash = () => {
+        let flash = {
+            msg : req.session.flashMsg,
+            type: req.session.flashType
+        }
+        delete req.session.flashMsg;
+        delete req.session.flashType;
+        return flash;
+    };
+    next();
+});
 
 
 app.get('/login', (req, res) => {
     res.status(200);
-    res.render("login", {errorMsg:null});
+    res.render("login");
 });
-
+//cuidado con el flash, tendria que aparecer en verde
 app.post('/login', (req, res) => {
     res.status(200);
     let user = req.body.user;
@@ -64,8 +89,8 @@ app.post('/login', (req, res) => {
             console.log("usuario existe");//continuar
         }
         else{
-            let error = "Usuario y/o contraseña no validos.";
-            res.render("login", {errorMsg:error});
+            res.setFlash("Usuario y/o contraseña no validos.", 0);
+            res.render("login");
         }
         
     });
@@ -73,7 +98,7 @@ app.post('/login', (req, res) => {
 
 app.get('/register', (req, res) => {
     res.status(200);
-    res.render("register", {errorMsg:null});
+    res.render("register");
 });
 
 
@@ -88,29 +113,34 @@ app.post('/register', (req, res) => {
         date: req.body.date,
         img: req.body.img
     };
-    let errores = utilidades.checkRegister(user);
-    if(errores.length == 0){
-        console.log(user);
+    let correct = utilidades.checkRegister(user);
+    if(correct){
+        //console.log(user);
         dao.userExists(user.user,(err, exists) =>{
             if(err){console.error(err); return;}        
             if(exists){//mostrar error aqui
-                let error = "Usuario no valido.";
-                res.render("register", {errorMsg:error});
+                res.setFlash("Usuario no valido", 0);
+                res.render("register");
             }
             else{
                 dao.insertUser(user, (err, insert) =>{
-                    if(err){res.render("register", {errorMsg:"Error insertando el nuevo usuario."})}
+                    if(err){
+                        res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
+                        res.render("register")
+                    }
                     else{
-                        console.log("usuario insertado");
-                        //sesion aqui y a perfil
+                        res.setFlash("Usuario creado correctamente", 2)
+                        res.render("login");
                     }
                 });
             }
             
         });
     }
-    else
-        res.render("register", {errorMsg: errores});    
+    else{
+        res.setFlash("Datos incorrectos", 0);
+        res.render("register");    
+    }
 });
 
 
@@ -126,7 +156,7 @@ function isLogged(req, res, next) {
 
 app.get('/', isLogged, (req, res) => {
     res.status(200);
-     res.redirect('/profile');
+    res.redirect('/profile');
 })
 
 

@@ -1,25 +1,19 @@
 
 //Comprobaciones registro correcto
 function checkName(name){
-    if(name.length == 0)
-        return "usuario vacio ";
-    else
-        return "";
+    if(!name) return false;
+    return true;
 }
 
 function checkDate(date){
-    if(!date)
-        return "fecha vacía ";
-    else
-        return "";
+    if(!date) return false;
+    return true;
     //Comprobar fecha
 }
 
 function checkPass(pass){
-    if(!pass)
-        return "contraseña vacía ";
-    else
-        return "";
+    if(!pass) return false;
+    return true;
 }
 
 function parseGender(user){
@@ -30,12 +24,15 @@ function parseGender(user){
     }
 }
 
+function checkGender(user){
+    if(user.gender){
+        parseGender(user);
+        return true;
+    }
+    return false;
+}
+
+
 exports.checkRegister = function(user) {
-    let res = "Error: ";
-    if(user.gender) parseGender(user);
-    else res += "género no especificado.";
-    res += checkPass(user.pass);
-    res += checkName(user.name);
-    res += checkDate(user.date);
-    return res;
+    return checkGender(user) && checkPass(user.password) && checkName(user.name) && checkDate(user.date);
 }
