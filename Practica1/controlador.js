@@ -13,6 +13,11 @@ const mysqlStore = mysqlSession(session);
 const sessionStore = new mysqlStore(config.mysqlConfig);
 const app = express();
 const ficherosEstaticos = path.join(__dirname, "public");
+const multer = require('multer');
+
+let multerFactory = multer({
+    dest: path.join(__dirname, "uploads")
+})
 
 
 app.set("view engine", "ejs");
@@ -99,7 +104,7 @@ app.get('/register', (req, res) => {
     res.render("register");
 });
 
-
+//utilizar multer para subida de fichero
 app.post('/register', (req, res) => {
     res.status(200);
     let user = utilidades.makeUser(req.body.user, req.body.password, req.body.name, req.body.gender,
@@ -163,7 +168,7 @@ app.get('/profile', isLogged, (req, res) => {
             });
             return;
         }
-        let us = utilidades.makeUser(user, "",datos.nombreCompleto, datos.sexo, datos.nacimiento, path.join(ficherosEstaticos,"icons",datos.imagen), datos.puntos);
+        let us = utilidades.makeUser(user, "",datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
         console.log(us);
         res.render("profile", {user: us});
     }); 
