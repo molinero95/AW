@@ -15,6 +15,8 @@ const app = express();
 const ficherosEstaticos = path.join(__dirname, "public");
 
 
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 const middlewareSession = session({//datos de la sesion
     saveUninitialized:false,
@@ -22,11 +24,8 @@ const middlewareSession = session({//datos de la sesion
     resave: false,
     store: sessionStore
 });
+
 app.use(middlewareSession);
-
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-
 app.use(express.static(ficherosEstaticos));
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -72,12 +71,11 @@ app.use((req, res, next) =>{
     next();
 });
 
-
+//LOGIN
 app.get('/login', (req, res) => {
     res.status(200);
     res.render("login");
 });
-//cuidado con el flash, tendria que aparecer en verde
 app.post('/login', (req, res) => {
     res.status(200);
     let user = req.body.user;
@@ -85,40 +83,33 @@ app.post('/login', (req, res) => {
         if(err){console.error(err); return;}        
         if(exists){
             req.session.user = user;
-            res.redirect('login');//esto redirigira a perfil o a home no se
-            console.log("usuario existe");//continuar
+            res.redirect('profile');
         }
         else{
             res.setFlash("Usuario y/o contraseña no validos.", 0);
             res.render("login");
         }
-        
     });
 });
+//FIN LOGIN
 
+//REGISTRO
 app.get('/register', (req, res) => {
     res.status(200);
     res.render("register");
 });
 
 
-//podria poner un mensaje de error por si acaso
 app.post('/register', (req, res) => {
     res.status(200);
-    let user = {
-        user: req.body.user,
-        password: req.body.password,
-        name: req.body.name,
-        gender: req.body.gender,
-        date: req.body.date,
-        img: req.body.img
-    };
+    let user = utilidades.makeUser(req.body.user, req.body.password, req.body.name, req.body.gender,
+    req.body.age, req.body.img, 0);
+    console.log(user);
     let correct = utilidades.checkRegister(user);
     if(correct){
-        //console.log(user);
         dao.userExists(user.user,(err, exists) =>{
             if(err){console.error(err); return;}        
-            if(exists){//mostrar error aqui
+            if(exists){
                 res.setFlash("Usuario no valido", 0);
                 res.render("register");
             }
@@ -142,6 +133,7 @@ app.post('/register', (req, res) => {
         res.render("register");    
     }
 });
+//FIN REGISTRO
 
 
 function isLogged(req, res, next) {
@@ -159,10 +151,33 @@ app.get('/', isLogged, (req, res) => {
     res.redirect('/profile');
 })
 
-
+//PROFILE
 app.get('/profile', isLogged, (req, res) => {
-    res.status(200);    
-    res.render("profile", {user: usuario})
+    res.status(200);
+    let user = req.session.user;
+    dao.searchUser(user, (err, datos) =>{
+        if(err){
+            req.session.destroy((err) => {
+                if(err){console.error(err); return;}
+                res.redirect("/login");
+            });
+            return;
+        }
+        let us = utilidades.makeUser(user, "",datos.nombreCompleto, datos.sexo, datos.nacimiento, path.join(ficherosEstaticos,"icons",datos.imagen), datos.puntos);
+        console.log(us);
+        res.render("profile", {user: us});
+    }); 
+});
+//post aqui
+//...
+//FIN PROFILE
+
+app.get("/logout", isLogged, (req, res) => {
+    req.session.destroy((err => {
+        if(err){ console.error(err); return;}
+         res.redirect('login');
+    }
+));
 });
 
 

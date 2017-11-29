@@ -32,7 +32,32 @@ function checkGender(user){
     return false;
 }
 
+function decodifyGender(gender) {
+    let gen = "";
+    switch(gender) {
+        case "H": gen='Hombre'; break;
+        case "M": gen='Mujer'; break;
+        case "O": gen='Otro'; break;
+    }
+    return gen;
+}
+
+
+exports.makeUser = function(us, pass, name, gender, age, img, points){
+    if(gender.length == 1){
+        gender = decodifyGender(gender);
+    }
+    return {
+        user: us,
+        name: name,
+        password: pass,
+        gender: gender,
+        age: age,
+        img: img,
+        points: points
+    };
+}
 
 exports.checkRegister = function(user) {
-    return checkGender(user) && checkPass(user.password) && checkName(user.name) && checkDate(user.date);
+    return checkGender(user) && checkPass(user.password) && checkName(user.name) && checkDate(user.age);
 }

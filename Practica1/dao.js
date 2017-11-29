@@ -32,7 +32,8 @@ class DAO {
         if(err)
           callback(err);
         else{
-          con.query("INSERT INTO users (email, password, nombreCompleto, sexo, nacimiento, imagen) VALUES(?,?,?,?,?,?)", [user.user, user.password, user.name, user.gender, user.date, user.img], (err, fila)=>{
+          console.log(user);
+          con.query("INSERT INTO users (email, password, nombreCompleto, sexo, nacimiento, imagen, puntos) VALUES(?,?,?,?,?,?,?)", [user.user, user.password, user.name, user.gender, user.date, user.img, user.points], (err, fila)=>{
             if(err){callback(err); return;}
             else
               callback(null,true);
@@ -41,58 +42,24 @@ class DAO {
         con.release();
       });
     }
-//No probadas a partir de aqui
-    enviarMensaje(usuarioOrigen, usuarioDestino, mensaje, callback) {
-      this.pool.getConnection((err, con) => {
-        if(err)
-          callback(err);
-        else{
-          con.query("INSERT INTO mensajes(idOrigen, idDestino, mensaje, leido) VALUES (?,?,?,?)", [usuarioOrigen.id, usuarioDestino.id, mensaje, false], (err, fila) =>{
-            if(err)
-              callback(err);
-            else
-              callback(fila);
-          })
-        }
-        con.release();
-      });
-    
-    }
 
-    bandejaEntrada(usuario, callback) {
-      this.pool.getConnection((err, con) => {
-        if(err)
-          callback(err);
-        else{
-          con.query("select * from mensajes where idDestino = ?", [usuario.id], (err, fila) =>{
-            if(err)
-              callback(err);
-            else
-              callback(fila);
-          });
-        }
-        con.release();
-      });
-    }
-
-    buscarUsuario(str, callback) {
+    searchUser(user, callback) {
       this.pool.getConnection((err, con) => {
         if(err){
           callback(err);
         }
         else{
-          con.query("select id from usuarios us where nombre like %?%", [str], (err, fila) =>{
-            if(err){
+          con.query("select nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where email = ?", [user], (err, fila) =>{
+            if(err)
               callback(err);
-            }
-            else{
-              callback(fila);
-            }
+            else
+              callback(null, fila[0]);
           });
         }
         con.release();
       });
     }
+//No probadas a partir de aqui
 
     close() {
       this.pool.end();
