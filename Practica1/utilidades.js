@@ -1,4 +1,4 @@
-
+/*UTILIZAR EXPRESS-VALIDATOR*/
 //Comprobaciones registro correcto
 function checkName(name){
     if(!name) return false;
