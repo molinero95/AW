@@ -43,7 +43,7 @@ function decodifyGender(gender) {
 }
 
 
-exports.makeUser = function(us, pass, name, gender, age, img, points){
+function makeUser(us, pass, name, gender, age, img, points) {
     if(gender.length == 1){
         gender = decodifyGender(gender);
     }
@@ -58,6 +58,11 @@ exports.makeUser = function(us, pass, name, gender, age, img, points){
     };
 }
 
-exports.checkRegister = function(user) {
+function checkRegister(user) {
     return checkGender(user) && checkPass(user.password) && checkName(user.name) && checkDate(user.age);
+}
+
+module.exports = {
+    makeUser: makeUser,
+    checkRegister: checkRegister
 }
