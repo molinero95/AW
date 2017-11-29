@@ -15,9 +15,13 @@ const app = express();
 const ficherosEstaticos = path.join(__dirname, "public");
 const multer = require('multer');
 
+let upload = multer();
+
+
+
 let multerFactory = multer({
     dest: path.join(__dirname, "uploads")
-})
+});
 
 
 app.set("view engine", "ejs");
@@ -103,12 +107,16 @@ app.get('/register', (req, res) => {
     res.status(200);
     res.render("register");
 });
-
-//utilizar multer para subida de fichero
-app.post('/register', (req, res) => {
+//preguntar si poner multer.none() en todos lados
+app.post('/register', upload.single("img"),(req, res) => {
     res.status(200);
-    let user = utilidades.makeUser(req.body.user, req.body.password, req.body.name, req.body.gender,
-    req.body.age, req.body.img, 0);
+    let user;
+    if(req.file)
+        user = utilidades.makeUser(req.body.user, req.body.password, req.body.name, req.body.gender,
+    req.body.age, req.file.path, 0);
+    else
+        user = utilidades.makeUser(req.body.user, req.body.password, req.body.name, req.body.gender,
+    req.body.age, "", 0);       
     console.log(user);
     let correct = utilidades.checkRegister(user);
     if(correct){
@@ -169,7 +177,7 @@ app.get('/profile', isLogged, (req, res) => {
             return;
         }
         let us = utilidades.makeUser(user, "",datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
-        console.log(us);
+        //console.log(us);
         res.render("profile", {user: us});
     }); 
 });
@@ -177,6 +185,7 @@ app.get('/profile', isLogged, (req, res) => {
 //...
 //FIN PROFILE
 
+//LOGOUT
 app.get("/logout", isLogged, (req, res) => {
     req.session.destroy((err => {
         if(err){ console.error(err); return;}
@@ -184,6 +193,12 @@ app.get("/logout", isLogged, (req, res) => {
     }
 ));
 });
+//FIN LOGOUT
+//IMAGENES
+app.get("/img/:nombre", (req, res) =>{
+    let ruta = path.join(__dirname, "uploads", req.params.nombre);
+    res.sendfile(ruta);
+})
 
 
 

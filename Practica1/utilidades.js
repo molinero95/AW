@@ -44,7 +44,7 @@ function decodifyGender(gender) {
 
 
 function makeUser(us, pass, name, gender, age, img, points) {
-    if(gender.length == 1){
+    if(gender && gender.length == 1){
         gender = decodifyGender(gender);
     }
     return {
