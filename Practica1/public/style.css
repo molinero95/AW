@@ -289,6 +289,7 @@ nav{
 
 
 #perfil {
+	margin-bottom: 5px;
 	display: flex;
 	justify-content: center;
 }
