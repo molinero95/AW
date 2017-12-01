@@ -1,5 +1,5 @@
 const mysql = require("mysql");
-//Clase reutilizada del ejercicio 2
+//DAOUsers
 class DAO {
     constructor(pool) {
       this.pool = pool;
@@ -32,7 +32,6 @@ class DAO {
         if(err)
           callback(err);
         else{
-          console.log(user);
           con.query("INSERT INTO users (email, password, nombreCompleto, sexo, nacimiento, imagen, puntos) VALUES(?,?,?,?,?,?,?)", [user.user, user.password, user.name, user.gender, user.age, user.img, user.points], (err, fila)=>{
             if(err){callback(err); return;}
             else

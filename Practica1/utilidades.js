@@ -64,5 +64,5 @@ function checkRegister(user) {
 
 module.exports = {
     makeUser: makeUser,
-    checkRegister: checkRegister
+    checkRegister: checkRegister,
 }
