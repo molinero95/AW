@@ -9,18 +9,14 @@ function getRegister (req, res) {
 function postRegister (req, res) {
     res.status(200);
     let user;
-    console.log(req.body);
     if(req.file)
         user = utilidades.makeUser(req.body.user, req.body.password, req.body.name, req.body.gender,
     req.body.age, req.file.filename, 0);
     else
         user = utilidades.makeUser(req.body.user, req.body.password, req.body.name, req.body.gender,
     req.body.age, "default.png", 0);     
-    console.log(user);  
     let correct = utilidades.checkRegister(user);
-    console.log(correct);
     if(correct){
-        console.log(user);
         req.daoUsers.userExists(user.user,(err, exists) =>{
             if(err){console.error(err); return;}        
             if(exists){

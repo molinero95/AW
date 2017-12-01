@@ -15,15 +15,11 @@ function logger(req, res, next) {
 }
 
 
-function setDAOUsers(req, res, next) {
-    req.daoUsers = daoUsuarios;
-    next();
-}
+
 
 
 
 module.exports = {
     isLogged: isLogged,
     logger: logger,
-    setDAOUsers: setDAOUsers,
 }

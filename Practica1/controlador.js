@@ -36,7 +36,11 @@ let daoUsuarios = new daoUsuariosApp(pool);
 app.use(middlewareSession);
 app.use(express.static(ficherosEstaticos));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(middlewares.setDAOUsers);
+ //Este middleware tiene que estar aqui para obtener el DAO
+app.use(function setDAOUsers(req, res, next) { 
+    req.daoUsers = daoUsuarios;
+    next();
+});
 app.use(middlewares.logger);
 //Middleware para mostrar mensajes de error
 /*
