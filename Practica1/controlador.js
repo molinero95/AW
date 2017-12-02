@@ -79,6 +79,7 @@ app.use((req, res, next) =>{
 
 const login = require("./login");
 app.route('/login').get(login.getLogin).post(login.postLogin);
+
 const register = require("./register");
 app.route('/register')
     .get(register.getRegister)
@@ -102,6 +103,12 @@ app.get("/logout", middlewares.isLogged, (req, res) => {
          res.redirect('login');
     }));
 });
+
+//MODIFICAR
+const modificar = require("./modificar");
+app.route("/modificar").get(modificar.getModificar).post(modificar.postModificar);
+
+
 
 //IMAGENES
 app.get("/img/:nombre", (req, res) =>{
