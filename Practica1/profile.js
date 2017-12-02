@@ -3,6 +3,7 @@ const utilidades = require('./utilidades');
 function getProfile(req,res){
     res.status(200);
     let user = req.session.user;
+    console.log(user);
     req.daoUsers.searchUser(user, (err, datos) =>{
         if(err){
             req.session.destroy((err) => {
