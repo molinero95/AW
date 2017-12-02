@@ -8,10 +8,10 @@ function getLogin(req, res){
 function postLogin(req, res) {
     res.status(200);
     let user = req.body.user;
-    req.daoUsers.userCorrect(user, req.body.password,(err, exists) =>{
+    req.daoUsers.userCorrect(user, req.body.password,(err, id) =>{  //seria mejor devolver el ID y meterlo a la sesión.
         if(err){console.error(err); return;}        
-        if(exists){
-            req.session.user = user;
+        if(id){
+            req.session.user = id;//guardamos el id en la sesión para facilitar futuras busquedas
             res.redirect('profile');
         }
         else{

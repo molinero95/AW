@@ -4,7 +4,6 @@ const mysql = require("mysql");//mysql
 const path = require("path");//path
 const bodyParser = require("body-parser");//procesamiento post
 const config = require("./config");//modulo config.js
-const daoUsuariosApp = require("./daoUsuarios");//modulo daoUsuarios_task.js
 const session = require("express-session");//sesiones
 const mysqlSession = require("express-mysql-session");//guardar session para mysql
 const mysqlStore = mysqlSession(session);
@@ -25,20 +24,29 @@ const middlewareSession = session({//datos de la sesion
     store: sessionStore
 });
 
+//Inicialización DAOs
 let pool = mysql.createPool({
     database: config.mysqlConfig.database,
     host: config.mysqlConfig.host,
     user: config.mysqlConfig.user,
     password: config.mysqlConfig.password
 });
+const daoUsuariosApp = require("./daoUsers");
 let daoUsuarios = new daoUsuariosApp(pool);
+const daoFriendsApp = require("./daoFriends")
+let daoFriends = new daoFriendsApp(pool);
 
+//Middlewares de sesion, ficheros estáticos y bodyParser
 app.use(middlewareSession);
 app.use(express.static(ficherosEstaticos));
 app.use(bodyParser.urlencoded({ extended: false }));
- //Este middleware tiene que estar aqui para obtener el DAO
+ //Este middleware para obtener el DAO de usuarios
 app.use(function setDAOUsers(req, res, next) { 
     req.daoUsers = daoUsuarios;
+    next();
+});
+app.use(function setDAOFriends(req, res, next) {
+    req.daoFriends = daoFriends;
     next();
 });
 app.use(middlewares.logger);
@@ -77,6 +85,8 @@ app.route('/register')
     .post(upload.single("img"), register.postRegister);
 const profile = require("./profile");
 app.route('/profile').get(middlewares.isLogged, profile.getProfile);
+const friends = require("./friends");
+app.route('/friends').get(middlewares.isLogged, friends.getFriends);
 //post(middlewares.isLogged, profile.postProfile);
 
 //Peticiones generales aqui: ejemplo '/','/logout','img/:nombre' 

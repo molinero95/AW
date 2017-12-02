@@ -8,10 +8,10 @@ class DAO {
     userCorrect(name, password,callback){
       this.pool.getConnection((err, connect) => {
           if(err) {console.log(err); return;}
-          connect.query("SELECT COUNT (users.id) as resultado FROM users AS users where email = ? and password = ? ",[name, password],(err, filas) =>{
+          connect.query("SELECT users.id as resultado FROM users AS users where email = ? and password = ? ",[name, password],(err, filas) =>{
             connect.release();            
             if(err){callback(err); return;}
-            filas[0].resultado == 1 ? callback(null, true):callback(null, false);
+            filas[0].resultado ? callback(null, filas[0].resultado):callback(null, false);
           });
       });
     }
@@ -58,7 +58,7 @@ class DAO {
         con.release();
       });
     }
-//No probadas a partir de aqui
+
 
     close() {
       this.pool.end();
