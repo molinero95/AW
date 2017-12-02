@@ -1,0 +1,12 @@
+CREATE TABLE USERS(
+    ID INT NOT NULL AUTO_INCREMENT,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    nombreCompleto VARCHAR(100) NOT NULL,
+    nacimiento DATE NOT NULL,
+    sexo VARCHAR(100) NOT NULL,
+    imagen VARCHAR(100) NOT NULL,
+    puntos INT NOT NULL,
+    PRIMARY KEY(ID)
+);
+
