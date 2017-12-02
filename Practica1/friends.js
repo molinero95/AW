@@ -1,7 +1,7 @@
 
 function getFriends(req, res) {
     res.status(200);
-    req.daoFriends.getFriendsRequests
+    //req.daoFriends.getFriendsRequests();
     res.render("friends", {user: req.session.user});//añadir amigos al render
 }
 
