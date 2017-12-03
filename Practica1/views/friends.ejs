@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+    <!-- Contenido de la página web -->
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>Mis amigos</title>
+    </head>
+    <body>
+        <%- include("header", {user: user}) %>
+    	<h1 class="titulo">Solicitudes de amistad</h1>
+    	<ul class ="listaAmigos">
+            <li>
+                <!--CUIDADO posible CSS-->
+                <img id="fotoAmigo" src="icons/Witch-01.png" alt="foto de perfil"> Bruja Piruja 
+                <span id="botonesAmigos">
+                    <input type="submit" name="aceptar" class="boton" value="Aceptar">
+                    <input type="submit" name="rechazar" class="boton" value="Rechazar">
+                </span>
+            </li>
+            <li>
+                <!--CUIDADO posible CSS-->
+                <img id="fotoAmigo" src="icons/Stuart-01.png" alt="foto de perfil"> Stuart Minion 
+                <span id="botonesAmigos">
+                    <input type="submit" name="aceptar" class="boton" value="Aceptar">
+                    <input type="submit" name="rechazar" class="boton" value="Rechazar">
+                </span>
+            </li>
+        </ul>
+        <h1 class="titulo">Búsqueda de amigos</h1>
+        <ul>
+            <li class="busqueda">
+                <p>Buscar por nombre: </p> 
+                <input type="text" name="amigos" value="">
+                <input type="submit" name="buscar" class="boton" value="Buscar">
+            </li>
+        </ul>
+        <h1 class="titulo">Mis amigos</h1>
+        <ul class ="listaAmigos">
+            <li class = "amigo">
+                <!--CUIDADO posible CSS-->
+                <img id="fotoAmigo" src="icons/Mike-01.png" alt="foto de perfil"> Mike Wazowski
+                
+            </li>
+            <li class="amigo">
+                <!--CUIDADO posible CSS-->
+                <img id="fotoAmigo" src="icons/Pinhead-01.png" alt="foto de perfil"> Lucía Pinhead
+            </li>
+        </ul>
+    </body>
+</html>

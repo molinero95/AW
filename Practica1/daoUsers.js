@@ -8,10 +8,11 @@ class DAO {
     userCorrect(name, password,callback){
       this.pool.getConnection((err, connect) => {
           if(err) {console.log(err); return;}
-          connect.query("SELECT COUNT (users.id) as resultado FROM users AS users where email = ? and password = ? ",[name, password],(err, filas) =>{
-            connect.release();            
+          connect.query("SELECT users.id as resultado FROM users where email = ? and password = ? ",[name, password],(err, filas) =>{
+            connect.release();   
+            console.log(filas);         
             if(err){callback(err); return;}
-            filas[0].resultado == 1 ? callback(null, true):callback(null, false);
+            filas.length == 1 ? callback(null, filas[0].resultado):callback(null, false);
           });
       });
     }
@@ -48,7 +49,7 @@ class DAO {
           callback(err);
         }
         else{
-          con.query("select nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where email = ?", [user], (err, fila) =>{
+          con.query("select nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where ID = ?", [user], (err, fila) =>{
             if(err)
               callback(err);
             else
@@ -58,7 +59,7 @@ class DAO {
         con.release();
       });
     }
-//No probadas a partir de aqui
+
 
     close() {
       this.pool.end();
