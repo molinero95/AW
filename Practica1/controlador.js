@@ -76,6 +76,7 @@ const register = require("./register");
 app.route('/register')
     .get(register.getRegister)
     .post(upload.single("img"), register.postRegister);
+
 const profile = require("./profile");
 app.route('/profile').get(middlewares.isLogged, profile.getProfile);
 //post(middlewares.isLogged, profile.postProfile);

@@ -1,3 +1,4 @@
+
 function getModificar(req,res){
     res.status(200);
     res.render("modificar");
