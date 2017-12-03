@@ -43,6 +43,21 @@ class DAO {
       });
     }
 
+    modifyUser(user,callback){
+      this.pool.getConnection((err,con) =>{
+        if(err)
+          callback(err);
+        else{
+          con.query("UPDATE users SET email = ?, password = ?,nombreCompleto = ?, nacimiento = ?,sexo = ?,imagen = ?, puntos = ? WHERE ID = ?",[user.user, user.password, user.name, user.gender, user.age, user.img, user.points, user], (err,fila) => {
+          if(err){callback(err); return;}
+          else
+            callback(null,true);
+        });
+      }
+        con.release();
+      });
+    }
+
     searchUser(user, callback) {
       this.pool.getConnection((err, con) => {
         if(err){

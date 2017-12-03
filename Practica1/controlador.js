@@ -107,7 +107,8 @@ app.get("/logout", middlewares.isLogged, (req, res) => {
 
 //MODIFICAR
 const modificar = require("./modificar");
-app.route("/modificar").get(modificar.getModificar).post(modificar.postModificar);
+app.route("/modificar").get(middlewares.isLogged,modificar.getModificar);
+app.route("/modificar").post(modificar.postModificar);
 
 
 

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+    <!-- Contenido de la página web -->
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title><%= user.name %></title>
+    </head>
+    <body>
+    	<%- include("header", {user: user}) %>
+        <h1 class="titulo">Modificar perfil</h1>
+        <%- include("flash") %>	
+    	<div id="perfilCompleto" method="post" action="/profile" enctype="multipart/form-data">
+	    	<div id="perfil">
+                <!--CUIDADO posible CSS-->
+                <div id = "imagenysubida">
+                    <img id="fotoPerfil" src="/img/<%= user.img %>">
+                    <input type="file" name="img" class="entrada">
+                </div>
+	    		<div id="datosPerfil">
+                    <p>Email: <input type="text" id = "modificar" value= "<%= user.email %>"></p>
+                    <p>Contraseña: <input type="text" id = "modificar"></p>
+	    			<p>Nombre: <input type="text" id = "modificar" value= "<%= user.name %>"></p>
+	    			<p>Nacimiento: <input type="date" value = "<%= user.age %>"> </p>
+	    			<div class="entrada" id="radiosReg">
+		    			<span>Hombre<input type="radio" name="gender" value="hombre"></span>
+		    			<span>Mujer<input type="radio" name="gender" value="mujer"></span>
+		    			<span>Otro<input type="radio" name="gender" value="otro"></span>
+                    </div>    
+	    		</div>
+	    	</div>
+	    	<input type="submit" id="modificaPerfil" name="modificaPerf" value="Aceptar" class="boton">
+        </div>
+    </body>
+</html>

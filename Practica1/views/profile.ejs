@@ -9,7 +9,7 @@
     <body>
     	<%- include("header", {user: user}) %>
     	<h1 class="titulo">Perfil</h1>
-    	<div id="perfilCompleto">
+    	<form id="perfilCompleto" method="post" action="/modificar" enctype="multipart/form-data">
 	    	<div id="perfil">
                 <!--CUIDADO posible CSS-->
 	    		<img id="fotoPerfil" src="/img/<%= user.img %>">
@@ -21,6 +21,6 @@
 	    		</div>
 	    	</div>
 	    	<input type="submit" id="modificaPerfil" name="modificaPerf" value="Modificar Perfil">
-    	</div>
+    	</form>
     </body>
 </html>

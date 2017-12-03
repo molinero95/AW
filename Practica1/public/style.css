@@ -279,7 +279,6 @@ nav{
 	margin-left: 25%;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
 	background-color: #970EB4;
 	border-style: solid;
 	border-color: black;	
@@ -301,6 +300,12 @@ nav{
 #fotoPerfil {
 	height: 180px;
 	width: 180px;
+	margin-bottom: 5%;
+}
+
+#imagenysubida{
+	display: flex;
+	flex-direction: column;
 }
 
 #fotoAmigo{
