@@ -4,7 +4,7 @@ function getModificar(req,res){
     res.status(200);
     let user = req.session.user;
     console.log(user);
-    req.daoUsers.searchUser(user, (err, datos) =>{
+    req.daoUsers.searchUserById(user, (err, datos) =>{
         if(err){
             req.session.destroy((err) => {
                 if(err){console.error(err); return;}
@@ -21,6 +21,7 @@ function getModificar(req,res){
 
 function postModificar(req,res){
     res.status(200);
+    console.log("hola");
     let user = req.session.user;
 
     if(req.file){
@@ -41,7 +42,7 @@ function postModificar(req,res){
     if(req.password){
         user.password = req.password;
     }
-
+    console.log(user);
     req.daoUsers.modifyUser(user);
     res.setFlash("Datos modificados correctamente", 2)
     res.render("modificar", {user: user});
