@@ -12,7 +12,7 @@ function getModificar(req,res){
             });
             return;
         }
-        let us = utilidades.makeUser(user, "",datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
+        let us = utilidades.makeUser(user, datos.email, "",datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
         console.log(us);
         res.render("modificar", {user: us});
     });
