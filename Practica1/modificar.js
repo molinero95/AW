@@ -44,7 +44,7 @@ function postModificar(req,res){
 
     req.daoUsers.modifyUser(user);
     res.setFlash("Datos modificados correctamente", 2)
-    res.render("profile");
+    res.render("modificar", {user: user});
 }
 
 
