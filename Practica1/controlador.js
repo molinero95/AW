@@ -31,9 +31,9 @@ let pool = mysql.createPool({
     user: config.mysqlConfig.user,
     password: config.mysqlConfig.password
 });
-const daoUsuariosApp = require("./daoUsers");
+const daoUsuariosApp = require("./daos/daoUsers");
 let daoUsuarios = new daoUsuariosApp(pool);
-const daoFriendsApp = require("./daoFriends")
+const daoFriendsApp = require("./daos/daoFriends")
 let daoFriends = new daoFriendsApp(pool);
 
 //Middlewares de sesion, ficheros estáticos y bodyParser
@@ -76,20 +76,28 @@ app.use((req, res, next) =>{
     next();
 });
 
-
+//LOGIN
 const login = require("./login");
 app.route('/login').get(login.getLogin).post(login.postLogin);
 
+//REGISTER
 const register = require("./register");
 app.route('/register')
     .get(register.getRegister)
     .post(upload.single("img"), register.postRegister);
 
+//PROFILE
 const profile = require("./profile");
 app.route('/profile').get(middlewares.isLogged, profile.getProfile);
+
+//FRIENDS
 const friends = require("./friends");
 app.route('/friends').get(middlewares.isLogged, friends.getFriends);
 //post(middlewares.isLogged, profile.postProfile);
+app.route('/searchFriend')
+    .get(middlewares.isLogged, friends.getSearchFriend)
+    .post(middlewares.isLogged, friends.postSearchFriend);
+
 
 //Peticiones generales aqui: ejemplo '/','/logout','img/:nombre' 
 app.get('/', middlewares.isLogged, (req, res) => {
@@ -115,7 +123,7 @@ app.route("/modificar").post(modificar.postModificar);
 //IMAGENES
 app.get("/img/:nombre", (req, res) =>{
     let ruta = path.join(__dirname, "uploads", req.params.nombre);
-    res.sendfile(ruta);
+    res.sendFile(ruta);
 })
 
 app.listen(config.port, function (err) {

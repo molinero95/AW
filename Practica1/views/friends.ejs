@@ -10,42 +10,42 @@
         <%- include("header", {user: user}) %>
     	<h1 class="titulo">Solicitudes de amistad</h1>
     	<ul class ="listaAmigos">
+            <% if(friends.requests) { %>
             <li>
                 <!--CUIDADO posible CSS-->
-                <img id="fotoAmigo" src="icons/Witch-01.png" alt="foto de perfil"> Bruja Piruja 
+                <img id="fotoAmigo" src="<%= friends.requests[i].img %>" alt="foto de perfil"> <%= friends.requests[i].name %>
                 <span id="botonesAmigos">
                     <input type="submit" name="aceptar" class="boton" value="Aceptar">
                     <input type="submit" name="rechazar" class="boton" value="Rechazar">
                 </span>
             </li>
-            <li>
-                <!--CUIDADO posible CSS-->
-                <img id="fotoAmigo" src="icons/Stuart-01.png" alt="foto de perfil"> Stuart Minion 
-                <span id="botonesAmigos">
-                    <input type="submit" name="aceptar" class="boton" value="Aceptar">
-                    <input type="submit" name="rechazar" class="boton" value="Rechazar">
-                </span>
-            </li>
+            <% } else{ %>
+                <p class="simpleFlashAttention">No tienes solicitudes de amistad nueva</p>
+            <% } %>
         </ul>
         <h1 class="titulo">Búsqueda de amigos</h1>
         <ul>
             <li class="busqueda">
-                <p>Buscar por nombre: </p> 
-                <input type="text" name="amigos" value="">
-                <input type="submit" name="buscar" class="boton" value="Buscar">
+                <form method="GET" action="/searchFriend" >
+                    <div>
+                        <p>Buscar por nombre: </p> 
+                        <input type="text" name="friend" value="">
+                    </div>
+                    <input type="submit" class="boton" value="Buscar">
+                </form>
             </li>
         </ul>
         <h1 class="titulo">Mis amigos</h1>
         <ul class ="listaAmigos">
-            <li class = "amigo">
-                <!--CUIDADO posible CSS-->
-                <img id="fotoAmigo" src="icons/Mike-01.png" alt="foto de perfil"> Mike Wazowski
-                
-            </li>
-            <li class="amigo">
-                <!--CUIDADO posible CSS-->
-                <img id="fotoAmigo" src="icons/Pinhead-01.png" alt="foto de perfil"> Lucía Pinhead
-            </li>
+            <% if(friends.aggregated) { %>
+                <% for(let i = 0; i < friends.aggregated.length; i++) { %>
+                    <li class = "amigo">
+                        <img id="fotoAmigo" src="<%=friends.aggregated[i].img %>" alt="foto de perfil"><%= friends.aggregated[i].name %>       
+                    </li>
+                <% } %>
+            <% } else { %>
+                <p class="simpleFlashAttention">No tienes amigos...</p>                
+            <% } %>
         </ul>
     </body>
 </html>

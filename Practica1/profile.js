@@ -4,7 +4,7 @@ function getProfile(req,res){
     res.status(200);
     let user = req.session.user;
     console.log(user);
-    req.daoUsers.searchUser(user, (err, datos) =>{
+    req.daoUsers.searchUserById(user, (err, datos) =>{
         if(err){
             req.session.destroy((err) => {
                 if(err){console.error(err); return;}
