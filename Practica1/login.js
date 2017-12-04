@@ -12,6 +12,8 @@ function postLogin(req, res) {
         if(err){console.error(err); return;}        
         if(id){
             req.session.user = id;//guardamos el id en la sesión para facilitar futuras busquedas
+            //¿Guardamos la imagen?
+            //etc?
             res.redirect('profile');
         }
         else{

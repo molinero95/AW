@@ -49,7 +49,24 @@ class DAO {
           callback(err);
         }
         else{
-          con.query("select nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where ID = ?", [user], (err, fila) =>{
+          con.query("select id, nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where nombreCompleto = ?", [user], (err, fila) =>{
+            if(err)
+              callback(err);
+            else
+              callback(null, fila[0]);
+          });
+        }
+        con.release();
+      });
+    }
+
+    searchUserById(id, callback) {
+      this.pool.getConnection((err, con) => {
+        if(err){
+          callback(err);
+        }
+        else{
+          con.query("select nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where ID = ?", [id], (err, fila) =>{
             if(err)
               callback(err);
             else
