@@ -3,7 +3,6 @@ const utilidades = require('./utilidades');
 function getProfile(req,res){
     res.status(200);
     let user = req.session.user;
-    console.log(user);
     req.daoUsers.searchUserById(user, (err, datos) =>{
         if(err){
             req.session.destroy((err) => {
@@ -12,8 +11,7 @@ function getProfile(req,res){
             });
             return;
         }
-        let us = utilidades.makeUser(user, "",datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
-        console.log(us);
+        let us = utilidades.makeUser(user , datos.email, "", datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
         res.render("profile", {user: us});
     }); 
 }

@@ -9,7 +9,7 @@
     <body>
     	<%- include("header", {user: user}) %>
     	<h1 class="titulo">Perfil</h1>
-    	<form id="perfilCompleto" method="post" action="/modificar" enctype="multipart/form-data">
+    	<form id="perfilCompleto" method="GET" action="/modificar" enctype="multipart/form-data">
 	    	<div id="perfil">
                 <!--CUIDADO posible CSS-->
 	    		<img id="fotoPerfil" src="/img/<%= user.img %>">

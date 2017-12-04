@@ -15,11 +15,36 @@ function logger(req, res, next) {
 }
 
 
-
+//Middleware para mostrar mensajes de error
+/*
+Un objeto flash contendra 2 atributos:
+    - msg: contiene el mensaje.
+    - type: contiene el tipo del mensaje:
+        - 0: error
+        - 1: atención
+        - 2: afirmación
+*/
+function flash(req, res, next) {
+    res.setFlash = (msg, type) => {
+        req.session.flashMsg = msg;
+        req.session.flashType = type;
+    };
+    res.locals.getAndClearFlash = () => {
+        let flash = {
+            msg : req.session.flashMsg,
+            type: req.session.flashType
+        }
+        delete req.session.flashMsg;
+        delete req.session.flashType;
+        return flash;
+    };
+    next();
+}
 
 
 
 module.exports = {
     isLogged: isLogged,
     logger: logger,
+    flash: flash
 }

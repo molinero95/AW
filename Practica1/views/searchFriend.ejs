@@ -25,6 +25,8 @@
             <% if(!friend.areFriends) { %>
                 <form method="POST" action="/addFriend" class="botonCentro">
                     <input class= "boton" type="submit" value="Añadir amigo">
+                    <input type="hidden" value="<%= friend.id %>" name="friendId">
+                    <input type="hidden" value="<%= friend.name %>" name="friendName">
                 </form>
             <% } %>
         </div>

@@ -43,11 +43,12 @@ function decodifyGender(gender) {
 }
 
 
-function makeUser(us, pass, name, gender, age, img, points) {
+function makeUser(iden, us, pass, name, gender, age, img, points) {
     if(gender && gender.length == 1){
         gender = decodifyGender(gender);
     }
     return {
+        id: iden,
         user: us,
         name: name,
         password: pass,

@@ -10,7 +10,7 @@
     	<%- include("header", {user: user}) %>
         <h1 class="titulo">Modificar perfil</h1>
         <%- include("flash") %>	
-    	<div id="perfilCompleto" method="post" action="/profile" enctype="multipart/form-data">
+    	<div id="perfilCompleto" method="get" action="/profile" enctype="multipart/form-data">
 	    	<div id="perfil">
                 <!--CUIDADO posible CSS-->
                 <div id = "imagenysubida">

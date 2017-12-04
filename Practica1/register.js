@@ -10,10 +10,10 @@ function postRegister (req, res) {
     res.status(200);
     let user;
     if(req.file)
-        user = utilidades.makeUser(req.body.user, req.body.password, req.body.name, req.body.gender,
+        user = utilidades.makeUser(null, req.body.user, req.body.password, req.body.name, req.body.gender,
     req.body.age, req.file.filename, 0);
     else
-        user = utilidades.makeUser(req.body.user, req.body.password, req.body.name, req.body.gender,
+        user = utilidades.makeUser(null, req.body.user, req.body.password, req.body.name, req.body.gender,
     req.body.age, "default.png", 0);     
     let correct = utilidades.checkRegister(user);
     if(correct){

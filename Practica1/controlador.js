@@ -50,31 +50,8 @@ app.use(function setDAOFriends(req, res, next) {
     next();
 });
 app.use(middlewares.logger);
-//Middleware para mostrar mensajes de error
-/*
-Un objeto flash contendra 2 atributos:
-    - msg: contiene el mensaje.
-    - type: contiene el tipo del mensaje:
-        - 0: error
-        - 1: atención
-        - 2: afirmación
-*/
-app.use((req, res, next) =>{
-    res.setFlash = (msg, type) => {
-        req.session.flashMsg = msg;
-        req.session.flashType = type;
-    };
-    res.locals.getAndClearFlash = () => {
-        let flash = {
-            msg : req.session.flashMsg,
-            type: req.session.flashType
-        }
-        delete req.session.flashMsg;
-        delete req.session.flashType;
-        return flash;
-    };
-    next();
-});
+
+app.use(middlewares.flash);
 
 //LOGIN
 const login = require("./login");
@@ -115,7 +92,7 @@ app.get("/logout", middlewares.isLogged, (req, res) => {
 //MODIFICAR
 const modificar = require("./modificar");
 app.route("/modificar").get(middlewares.isLogged,modificar.getModificar);
-app.route("/modificar").post(modificar.postModificar);
+app.route("/modificar").post(middlewares.isLogged, modificar.postModificar);
 
 
 
