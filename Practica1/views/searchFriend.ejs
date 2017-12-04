@@ -9,7 +9,7 @@
     <body>
     	<%- include("header", {user: user}) %>
         <h1 class="titulo">Perfil</h1>
-        <% if(friend) { %>
+        <% if (friend) { %>
             <%- include("flash") %>
     	<div id="perfilCompleto">
 	    	<div id="perfil">
@@ -22,7 +22,7 @@
 	    			<p><%= friend.points %> puntos</p>
 	    		</div>
             </div>
-            <% if(!areFriends) { %>
+            <% if(!friend.areFriends) { %>
                 <form method="POST" action="/addFriend" class="botonCentro">
                     <input class= "boton" type="submit" value="Añadir amigo">
                 </form>
