@@ -45,12 +45,10 @@ function getSearchFriend(req, res) {
     
 }
 
-function postSearchFriend(req, res) {
+
+function addFriend(req, res) {
     res.status(200);
-    res.redirect("/searchFriend/:i")
 }
-
-
 
 
 function postAcceptFriend(req, res) {
@@ -64,7 +62,7 @@ function postRejectFriend(req, res) {
 module.exports = {
     getFriends: getFriends,
     getSearchFriend: getSearchFriend,
-    postSearchFriend: postSearchFriend,
+    addFriend: addFriend,
     postAcceptFriend: postAcceptFriend,
     postRejectFriend: postRejectFriend,
 }
