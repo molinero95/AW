@@ -22,35 +22,33 @@ function getSearchFriend(req, res) {
         req.daoUsers.searchUser(req.query.friend, (err, fila) => {
             if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
             else{
-                if(fila) {
-                    let user = utilidades.makeUser(null, null, fila.nombreCompleto, fila.sexo, fila.nacimiento, fila.imagen, fila.puntos);
-                    req.daoFriends.requestSent(req.session.user, fila.id,(err, res) => {
-                        if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
-                        console.log(res);
-                        if(res){
-                            if(fila.id === req.session.user || res.accepted)
-                                res.render("searchFriend", {user: req.session.user, friend: user, areFriends: true} ); 
-                            else
-                                res.render("searchFriend", {user: req.session.user, friend: user, areFriends: false} ); 
+                if(fila) { //Existe el usuario
+                    let us = utilidades.makeUser(null, null, fila.nombreCompleto, fila.sexo, fila.nacimiento, fila.imagen, fila.puntos);
+                    req.daoFriends.requestSent(req.session.user, fila.id,(err, resultado) => {
+                        if(err){console.error(err); res.status(404);}
+                        if(resultado.length >= 1){ //usuario existente, aparece en friends con el logueado.
+                            us.areFriends = resultado.accepted;
+                            res.render("searchFriend", {user: req.session.user, friend: us} ); 
                         }
-                        else
-                            res.render("searchFriend", {user: req.session.user, friend: user, areFriends: null} );                                               
+                        else{//usuario existente, no aparece en friends con el logueado.
+                            us.areFriends = fila.id === req.session.user;
+                            res.render("searchFriend", {user: req.session.user, friend: us});
+                        }
                     });
                 }
-                else
-                    res.render("searchFriend", {user: req.session.user, friend: null, areFriends: null});
+                else{//vacio/usuario inexistente
+                    res.render("searchFriend", {user: req.session.user, friend: null});
+                }
             }
         });
     }
     
 }
 
-function postSearchFriend(req, res) {
+
+function addFriend(req, res) {
     res.status(200);
-    res.redirect("/searchFriend/:i")
 }
-
-
 
 
 function postAcceptFriend(req, res) {
@@ -64,7 +62,7 @@ function postRejectFriend(req, res) {
 module.exports = {
     getFriends: getFriends,
     getSearchFriend: getSearchFriend,
-    postSearchFriend: postSearchFriend,
+    addFriend: addFriend,
     postAcceptFriend: postAcceptFriend,
     postRejectFriend: postRejectFriend,
 }

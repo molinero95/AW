@@ -94,9 +94,8 @@ app.route('/profile').get(middlewares.isLogged, profile.getProfile);
 const friends = require("./friends");
 app.route('/friends').get(middlewares.isLogged, friends.getFriends);
 //post(middlewares.isLogged, profile.postProfile);
-app.route('/searchFriend')
-    .get(middlewares.isLogged, friends.getSearchFriend)
-    .post(middlewares.isLogged, friends.postSearchFriend);
+app.route('/searchFriend').get(middlewares.isLogged, friends.getSearchFriend);
+app.route('/addFriend').post(middlewares.isLogged, friends.addFriend);
 
 
 //Peticiones generales aqui: ejemplo '/','/logout','img/:nombre' 
