@@ -19,6 +19,9 @@ function getFriends(req, res) {
 
 }
 
+
+//Esto está mal, hay que hacer una busqueda de usuarios y despues seleccionar el perfil.
+//Search friend es un ejs que muestra una lista de usuarios.
 function getSearchFriend(req, res) {
     res.status(200);
     //res.send(req.params.friend);

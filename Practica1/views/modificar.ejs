@@ -15,7 +15,7 @@
                 <!--CUIDADO posible CSS-->
                 <div id = "imagenysubida">
                     <img id="fotoPerfil" src="/img/<%= user.img %>">
-                    <input type="file" name="img" class="entrada">
+                    <input type="file" name="img">
                 </div>
 	    		<div id="datosPerfil">
                     <p>Email: <input type="text" id = "modificar" value= "<%= user.email %>"></p>
@@ -28,8 +28,10 @@
 		    			<span>Otro<input type="radio" name="gender" value="otro"></span>
                     </div>    
 	    		</div>
-	    	</div>
-	    	<input type="submit" id="modificaPerfil" name="modificaPerf" value="Aceptar" class="boton">
+            </div>
+            <div class="botonCentro">
+                <input type="submit" id="modificaPerfil" name="modificaPerf" value="Aceptar" class="boton">
+            </div>
         </div>
     </body>
 </html>

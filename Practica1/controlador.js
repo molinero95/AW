@@ -54,21 +54,28 @@ app.use(middlewares.logger);
 app.use(middlewares.flash);
 
 //LOGIN
-const login = require("./login");
+const login = require("./modulos/login");
 app.route('/login').get(login.getLogin).post(login.postLogin);
 
 //REGISTER
-const register = require("./register");
+const register = require("./modulos/register");
 app.route('/register')
     .get(register.getRegister)
     .post(upload.single("img"), register.postRegister);
 
 //PROFILE
-const profile = require("./profile");
+const profile = require("./modulos/profile");
 app.route('/profile').get(middlewares.isLogged, profile.getProfile);
 
+
+//MODIFICAR
+const modificar = require("./modulos/modificar");
+app.route("/modificar").get(middlewares.isLogged,modificar.getModificar);
+app.route("/modificar").post(middlewares.isLogged, modificar.postModificar);
+
+
 //FRIENDS
-const friends = require("./friends");
+const friends = require("./modulos/friends");
 app.route('/friends').get(middlewares.isLogged, friends.getFriends);
 //post(middlewares.isLogged, profile.postProfile);
 app.route('/searchFriend').get(middlewares.isLogged, friends.getSearchFriend);
@@ -88,11 +95,6 @@ app.get("/logout", middlewares.isLogged, (req, res) => {
          res.redirect('login');
     }));
 });
-
-//MODIFICAR
-const modificar = require("./modificar");
-app.route("/modificar").get(middlewares.isLogged,modificar.getModificar);
-app.route("/modificar").post(middlewares.isLogged, modificar.postModificar);
 
 
 

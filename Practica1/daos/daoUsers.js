@@ -64,11 +64,11 @@ class DAO {
           callback(err);
         }
         else{
-          con.query("select id, nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where nombreCompleto = ?", [user], (err, fila) =>{
+          con.query("select id, nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where nombreCompleto like ?", [user], (err, filas) =>{
             if(err)
               callback(err);
             else
-              callback(null, fila[0]);
+              callback(null, filas);
           });
         }
         con.release();
