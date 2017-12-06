@@ -1,5 +1,3 @@
-El proyecto inicializarlo con npm init
-Los paquetes de js instalarlos con npm install paquete --save
+COSAS POR HACER IMPORTANTES:
 
-MYSQL:
-Pool de conexiones: host, user, password(vacia por defecto), database(nombre) creamos el objeto pool y hacemos un getConnection((err, connection)=>{ ... })
+  -Middleware para consultar en la BD los datos del usuario logueado para cada vez que cambie de pagina tener siempre su icono y su puntuación.
