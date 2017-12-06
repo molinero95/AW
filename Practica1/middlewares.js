@@ -41,10 +41,22 @@ function flash(req, res, next) {
     next();
 }
 
+function userLoggedData (req, res, next) {
+    req.daoUsers.searchUserById(req.session.user, (err, datos) => {
+        if(err){console.error(err); return;}
+        if(datos) {  //Se deberia cumplir siempre
+            req.img = datos.imagen;
+            req.points = datos.puntos;
+            next();
+        }
+    });
+}
+
 
 
 module.exports = {
     isLogged: isLogged,
     logger: logger,
-    flash: flash
+    flash: flash,
+    userLoggedData: userLoggedData,
 }

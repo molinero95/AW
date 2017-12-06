@@ -32,7 +32,7 @@ class DAO {
         if(err)
           callback(err);
         else{
-          con.query("INSERT INTO users (email, password, nombreCompleto, sexo, nacimiento, imagen, puntos) VALUES(?,?,?,?,?,?,?)", [user.user, user.password, user.name, user.gender, user.age, user.img, user.points], (err, fila)=>{
+          con.query("INSERT INTO users (email, password, nombreCompleto, sexo, nacimiento, imagen, puntos) VALUES(?,?,?,?,?,?,?)", [user.email, user.password, user.name, user.gender, user.age, user.img, user.points], (err, fila)=>{
             if(err){callback(err); return;}
             else
               callback(null,true);
@@ -47,7 +47,7 @@ class DAO {
         if(err)
           callback(err);
         else{
-          con.query("UPDATE users SET email = ?, password = ?,nombreCompleto = ?, nacimiento = ?,sexo = ?,imagen = ?, puntos = ? WHERE ID = ?",[user.user, user.password, user.name, user.gender, user.age, user.img, user.points, user], (err,fila) => {
+          con.query("UPDATE users SET email = ?, password = ?,nombreCompleto = ?, nacimiento = ?,sexo = ?,imagen = ?, puntos = ? WHERE ID = ?",[user.email, user.password, user.name, user.gender, user.age, user.img, user.points, user], (err,fila) => {
           if(err){callback(err); return;}
           else
             callback(null,true);
@@ -81,7 +81,7 @@ class DAO {
           callback(err);
         }
         else{
-          con.query("select nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where ID = ?", [id], (err, fila) =>{
+          con.query("select email, nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where ID = ?", [id], (err, fila) =>{
             if(err)
               callback(err);
             else

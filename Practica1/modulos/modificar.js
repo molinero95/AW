@@ -1,19 +1,20 @@
 const utilidades = require('./utilidades');
 
-function getModificar(req,res){
-    res.status(200);
-    let user = req.session.user;
-    console.log(user);
-    req.daoUsers.searchUserById(user, (err, datos) =>{
-        if(err){
-            req.session.destroy((err) => {
+/* Esto veremos si lo metemos en el err
+req.session.destroy((err) => {
                 if(err){console.error(err); return;}
                 res.redirect("/profile");
-            });
-            return;
-        }
-        let us = utilidades.makeUser(user, datos.email, "",datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
-        console.log(us);
+            }); */
+function getModificar(req,res){
+    res.status(200);
+    let user = {
+        id:req.session.user,
+        points: req.points,
+        img: req.img,
+    };
+    req.daoUsers.searchUserById(user.id, (err, datos) =>{
+        if(err){ console.error(err); return;}
+        let us = utilidades.makeUser(user.id, datos.email, "",datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
         res.render("modificar", {user: us});
     });
    
@@ -22,28 +23,32 @@ function getModificar(req,res){
 function postModificar(req,res){
     res.status(200);
     console.log("hola");
-    let user = req.session.user;
-
+    let user = {
+        id:req.session.user,
+        points: req.points,
+        img: req.img,
+    };
     if(req.file){
-        user.file = req.file;  
+        user.file = req.file.filename;  
     } 
-    if(req.nacimiento){
-        user.nacimiento = req.nacimento;
+    if(req.body.age){
+        user.age = req.body.age;
     }
-    if(req.nombreCompleto){
-        user.nombreCompleto = req.nombreCompleto;
+    if(req.body.name){
+        user.name = req.name;
     }
-    if(req.sexo){
-        user.sexo = req.sexo;
+    if(req.body.gender){
+        user.gender = req.body.gender;
     }
-    if(req.email){
-        user.email = req.email;
+    if(req.body.email){
+        user.email = req.body.email;
     }
-    if(req.password){
-        user.password = req.password;
+    if(req.body.password){
+        user.password = req.body.password;
     }
+    console.log(req.body);
     console.log(user);
-    req.daoUsers.modifyUser(user);
+    //req.daoUsers.modifyUser(user);
     res.setFlash("Datos modificados correctamente", 2)
     res.render("modificar", {user: user});
 }

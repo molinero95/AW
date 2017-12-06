@@ -63,24 +63,26 @@ app.route('/register')
     .get(register.getRegister)
     .post(upload.single("img"), register.postRegister);
 
-//PROFILE
+//PROFILE 
+//no necesitamos el middleware userLoggedData ya que vamos a recoger si o si todos los datos de usuario
 const profile = require("./modulos/profile");
 app.route('/profile').get(middlewares.isLogged, profile.getProfile);
 
 
 //MODIFICAR
+//El get no necesita userLoggedData porque ya buscamos al usuario una vez.
 const modificar = require("./modulos/modificar");
 app.route("/modificar").get(middlewares.isLogged, modificar.getModificar);
-app.route("/modificar").post(middlewares.isLogged, modificar.postModificar);
+app.route("/modificar").post(middlewares.isLogged, middlewares.userLoggedData, upload.single("img"), modificar.postModificar);
 
 
 //FRIENDS
 const friends = require("./modulos/friends");
-app.route('/friends').get(middlewares.isLogged, friends.getFriends);
+app.route('/friends').get(middlewares.isLogged, middlewares.userLoggedData, friends.getFriends);
 //post(middlewares.isLogged, profile.postProfile);
-app.route('/searchFriend').get(middlewares.isLogged, friends.getSearchFriend);
-app.route('/searchUser/:user').get(middlewares.isLogged, friends.searchUser);
-app.route('/addFriend').post(middlewares.isLogged, friends.addFriend);
+app.route('/searchFriend').get(middlewares.isLogged, middlewares.userLoggedData, friends.getSearchFriend);
+app.route('/searchUser/:user').get(middlewares.isLogged, middlewares.userLoggedData, friends.searchUser);
+app.route('/addFriend').post(middlewares.isLogged, middlewares.userLoggedData,friends.addFriend);
 
 
 //Peticiones generales aqui: ejemplo '/','/logout','img/:nombre' 

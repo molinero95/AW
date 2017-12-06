@@ -10,7 +10,7 @@
 		<%- include("header", {user: user}) %>
 		<% if (searched) { %>
     	<h1 class="titulo">Perfil</h1>
-    	<form id="perfilCompleto" method="GET" actsearchedion="/modificar" enctype="multipart/form-data">
+    	<form id="perfilCompleto" method="get" action="/modificar">
 	    	<div id="perfil">
                 <!--CUIDADO posible CSS-->
 	    		<img id="fotoPerfil" src="/img/<%= searched.img %>">
@@ -22,7 +22,7 @@
 	    		</div>
 			</div>
 		<% if (searched.id === user.id) { %>
-			<input type="submit" id="modificaPerfil" name="modificaPerf" value="Modificar Perfil">
+			<input type="submit" id="modificaPerfil"value="Modificar Perfil">
 			<% } %>
 		</form>
 		<% } else { %>

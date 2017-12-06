@@ -49,7 +49,7 @@ function makeUser(iden, us, pass, name, gender, age, img, points) {
     }
     return {
         id: iden,
-        user: us,
+        email: us,
         name: name,
         password: pass,
         gender: gender,
