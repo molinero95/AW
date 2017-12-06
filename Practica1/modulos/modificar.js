@@ -15,42 +15,45 @@ function getModificar(req,res){
     req.daoUsers.searchUserById(user.id, (err, datos) =>{
         if(err){ console.error(err); return;}
         let us = utilidades.makeUser(user.id, datos.email, "",datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
+        console.log(us);
         res.render("modificar", {user: us});
     });
    
 }
 
+//NECESITA VALIDACION DE FORMULARIOS
+//Hay que ver como poner lo de la edad
 function postModificar(req,res){
     res.status(200);
     console.log("hola");
     let user = {
         id:req.session.user,
+        img: req.img,        
+        email: req.body.email,
+        password: req.body.password,
+        name: req.body.name,
+        gender: req.body.gender,
+        age: req.body.age,
         points: req.points,
-        img: req.img,
     };
-    if(req.file){
-        user.file = req.file.filename;  
+    
+    if(req.file) {//Si cambia la imagen.
+        user.img = req.file.filename;
+    }//No necesita else, ya esta en user.
+
+    console.log(user);    
+    //No poner el req.daoUsers.modify... hasta que tengamos lo de las fechas arreglado.
+    if(user.password.length == 0){
+        //modificar user sin contraseña
+        //req.daoUsers.modifyUserNewPass(user) <- CREAR función
+    }
+    else{
+        //modificar user con contraseña
+        //req.daoUsers.modifyUser(user); No poner hasta que esté correcto lo de las fechas
     } 
-    if(req.body.age){
-        user.age = req.body.age;
-    }
-    if(req.body.name){
-        user.name = req.name;
-    }
-    if(req.body.gender){
-        user.gender = req.body.gender;
-    }
-    if(req.body.email){
-        user.email = req.body.email;
-    }
-    if(req.body.password){
-        user.password = req.body.password;
-    }
-    console.log(req.body);
-    console.log(user);
-    //req.daoUsers.modifyUser(user);
-    res.setFlash("Datos modificados correctamente", 2)
-    res.render("modificar", {user: user});
+    //lo dejo asi para no modificar la bd hasta que esten bien recogidos los datos
+    res.setFlash("Datos modificados correctamente", 2); //Este flash ira dentro de cada callback del DAO, como en el resto de funciones.
+    res.render("profile", {user: user, searched: user});
 }
 
 

@@ -23,9 +23,19 @@
 	    			<p>Nombre: <input type="text" id = "modificar" name="name" value= "<%= user.name %>"></p>
 	    			<p>Nacimiento: <input type="date" name="age" value = "<%= user.age %>"> </p>
 	    			<div class="entrada" id="radiosReg">
-		    			<span>Hombre<input type="radio" name="gender" value="hombre"></span>
-		    			<span>Mujer<input type="radio" name="gender" value="mujer"></span>
-		    			<span>Otro<input type="radio" name="gender" value="otro"></span>
+                        <% if (user.gender === 'Hombre') { %>
+                            <span>Hombre<input type="radio" name="gender" value="hombre" checked></span>
+                        <% } else { %>
+                            <span>Hombre<input type="radio" name="gender" value="hombre"></span>
+                        <% } if (user.gender === 'Mujer') { %>
+                            <span>Mujer<input type="radio" name="gender" value="mujer" checked></span>
+                        <% } else { %>
+                            <span>Mujer<input type="radio" name="gender" value="mujer"></span>
+                        <% } if (user.gender === 'Otro') { %>
+                            <span>Otro<input type="radio" name="gender" value="otro" checked></span>
+                        <% } else { %>    
+                            <span>Otro<input type="radio" name="gender" value="otro"></span>
+                        <% } %>
                     </div>    
 	    		</div>
             </div>
