@@ -3,24 +3,30 @@
     <!-- Contenido de la página web -->
     <head>
         <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <title><%= user.name %></title>
+        <link rel="stylesheet" type="text/css" href="/style.css">
+        <title>Usuario</title>
     </head>
     <body>
-    	<%- include("header", {user: user}) %>
+		<%- include("header", {user: user}) %>
+		<% if (searched) { %>
     	<h1 class="titulo">Perfil</h1>
-    	<form id="perfilCompleto" method="GET" action="/modificar" enctype="multipart/form-data">
+    	<form id="perfilCompleto" method="GET" actsearchedion="/modificar" enctype="multipart/form-data">
 	    	<div id="perfil">
                 <!--CUIDADO posible CSS-->
-	    		<img id="fotoPerfil" src="/img/<%= user.img %>">
+	    		<img id="fotoPerfil" src="/img/<%= searched.img %>">
 	    		<div id="datosPerfil">
-	    			<p><%= user.name %></p>
-	    			<p><%= user.age %> años</p>
-	    			<p><%= user.gender %></p>
-	    			<p><%= user.points %> puntos</p>
+	    			<p><%= searched.name %></p>
+	    			<p><%= searched.age %> años</p>
+	    			<p><%= searched.gender %></p>
+	    			<p><%= searched.points %> puntos</p>
 	    		</div>
-	    	</div>
-	    	<input type="submit" id="modificaPerfil" name="modificaPerf" value="Modificar Perfil">
-    	</form>
+			</div>
+		<% if (searched.id === user.id) { %>
+			<input type="submit" id="modificaPerfil" name="modificaPerf" value="Modificar Perfil">
+			<% } %>
+		</form>
+		<% } else { %>
+			<p class="flashAttention">Usuario no encontrado.</p>
+		<% } %>
     </body>
 </html>

@@ -7,10 +7,9 @@ class DAO {
 
     userCorrect(name, password,callback){
       this.pool.getConnection((err, connect) => {
-          if(err) {console.log(err); return;}
+          if(err) {console.error(err); return;}
           connect.query("SELECT users.id as resultado FROM users where email = ? and password = ? ",[name, password],(err, filas) =>{
             connect.release();   
-            console.log(filas);         
             if(err){callback(err); return;}
             filas.length == 1 ? callback(null, filas[0].resultado):callback(null, false);
           });
@@ -19,7 +18,7 @@ class DAO {
 
     userExists(name, callback) {
       this.pool.getConnection((err, connect) => {
-        if(err){console.log(err); return;}
+        if(err){console.error(err); return;}
         connect.query("SELECT COUNT (users.id) as resultado FROM users AS users where email = ? ",[name],(err, filas) =>{
           connect.release();            
           if(err){callback(err); return;}
@@ -58,13 +57,14 @@ class DAO {
       });
     }
 
-    searchUser(user, callback) {
+    searchUsers(user, callback) {
       this.pool.getConnection((err, con) => {
         if(err){
           callback(err);
         }
         else{
-          con.query("select id, nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where nombreCompleto like ?", [user], (err, filas) =>{
+          let us = "%"+user+"%";
+          con.query("select id, nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where nombreCompleto like ?", [us], (err, filas) =>{
             if(err)
               callback(err);
             else
@@ -91,7 +91,6 @@ class DAO {
         con.release();
       });
     }
-
 
     close() {
       this.pool.end();

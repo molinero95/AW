@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+    <!-- Contenido de la página web -->
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>Mis amigos</title>
+    </head>
+    <body>
+        <%- include("header", {user: user}) %>
+    	<h1 class="titulo">Busqueda de usuarios</h1>
+    	<ul class ="listaAmigos">
+            <% if(searched) { %>
+                <% for(let i = 0; i < searched.length; i++) { %>
+                <a href="/searchUser/<%= searched[i].id %>">                       
+                    <li class="amigo">
+                        <img id="fotoAmigo" src="/img/<%=searched[i].img %>"> 
+                        <span><%= searched[i].name %></span> 
+                    </li>
+                </a>
+                <% } %>
+            <li>
+            <% } else{ %>
+                <p class="simpleFlashAttention">No existen usuarios para esta búsqueda</p>
+            <% } %>
+        </ul> 
+    </body>
+</html>

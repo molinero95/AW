@@ -4,8 +4,7 @@ function getFriends(req, res) {
     res.status(200);
     req.daoFriends.getFriendsRequests(req.session.user, (err, datos) =>{
         if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
-        else{//Dificultad por aqui. CUIDADO, es asincrono. PREGUNTAR AL PROFE
-            console.log(datos);
+        else{
             datos.forEach(element => {
                 req.daoUsers.searchUserById(element.ID1, (err, info) => {
                     if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
@@ -20,18 +19,35 @@ function getFriends(req, res) {
 }
 
 
-//Esto está mal, hay que hacer una busqueda de usuarios y despues seleccionar el perfil.
-//Search friend es un ejs que muestra una lista de usuarios.
+
 function getSearchFriend(req, res) {
     res.status(200);
     //res.send(req.params.friend);
     if(!req.query.friend){
-        res.render("searchFriend", {user: req.session.user, friend: null});
+        res.render("searchUsers", {user: req.session.user, searched: null});
     }
     else{
-        req.daoUsers.searchUser(req.query.friend, (err, fila) => {
+        req.daoUsers.searchUsers(req.query.friend, (err, filas) => {
             if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
-            else{
+            if(filas.length > 0){
+                console.log(filas);
+                let result = [];
+                filas.forEach(us => {
+                    result.push(utilidades.makeUser(us.id, null, null, us.nombreCompleto, us.sexo, us.nacimiento, us.imagen, us.puntos));
+                });
+                res.render("searchUsers", {user: req.session.user, searched: result});
+            }
+            else
+                res.render("searchUsers", {user: req.session.user, searched: null});
+        });
+    }
+    
+}
+
+/*
+
+else{
+                console.log(filas);
                 if(fila) { //Existe el usuario
                     let us = utilidades.makeUser(fila.id, null, null, fila.nombreCompleto, fila.sexo, fila.nacimiento, fila.imagen, fila.puntos);
                     req.daoFriends.requestSent(req.session.user, fila.id,(err, resultado) => {
@@ -50,10 +66,22 @@ function getSearchFriend(req, res) {
                     res.render("searchFriend", {user: req.session.user, friend: null});
                 }
             }
-        });
-    }
-    
-}
+
+*/
+
+function searchUser(req, res) {
+    res.status(200);
+    req.daoUsers.searchUserById(req.params.user, (err, us) => {
+        if(err){console.error(err);res.status(404); res.send("Ha ocurrido un error");}
+        if(us){
+            let u = utilidades.makeUser(req.params.user, null, null, us.nombreCompleto, us.sexo, us.nacimiento, us.imagen, us.puntos);
+            res.render("profile", {user: req.session.user, searched: u});
+        }
+        else{
+            res.render("profile", {user: req.session.user, searched: null});
+        }
+    });
+};
 
 
 function addFriend(req, res) {
@@ -79,6 +107,7 @@ function postRejectFriend(req, res) {
 module.exports = {
     getFriends: getFriends,
     getSearchFriend: getSearchFriend,
+    searchUser: searchUser,
     addFriend: addFriend,
     postAcceptFriend: postAcceptFriend,
     postRejectFriend: postRejectFriend,

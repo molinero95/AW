@@ -18,6 +18,8 @@
 	margin-left: 30%;
 }
 
+
+
 .flashAttention {
 	font-size: 20px; 	
 	color: rgb(226, 120, 21);
@@ -336,8 +338,30 @@ nav{
 }
 
 .listaAmigos{
-    margin-left: 20%;
-    margin-right: 20%;
+    margin-left: 30%;
+    margin-right: 30%;
+}
+
+.listaAmigos > a > li {
+	margin-bottom: 10px;
+}
+
+
+.amigo {
+	display: flex;
+	justify-content: flex-start;
+	align-content: center;
+	background-color: #970EB4;
+	border: black solid;
+	
+}
+
+.amigo > span {
+	margin-left: 5%;
+	text-decoration: none;
+	color: white;
+	font-size: 25px;
+	margin-top: 5px;
 }
 
 

@@ -70,7 +70,7 @@ app.route('/profile').get(middlewares.isLogged, profile.getProfile);
 
 //MODIFICAR
 const modificar = require("./modulos/modificar");
-app.route("/modificar").get(middlewares.isLogged,modificar.getModificar);
+app.route("/modificar").get(middlewares.isLogged, modificar.getModificar);
 app.route("/modificar").post(middlewares.isLogged, modificar.postModificar);
 
 
@@ -79,6 +79,7 @@ const friends = require("./modulos/friends");
 app.route('/friends').get(middlewares.isLogged, friends.getFriends);
 //post(middlewares.isLogged, profile.postProfile);
 app.route('/searchFriend').get(middlewares.isLogged, friends.getSearchFriend);
+app.route('/searchUser/:user').get(middlewares.isLogged, friends.searchUser);
 app.route('/addFriend').post(middlewares.isLogged, friends.addFriend);
 
 
