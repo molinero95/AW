@@ -47,7 +47,7 @@ class DAO {
         if(err)
           callback(err);
         else{
-          con.query("UPDATE users SET email = ?,nombreCompleto = ?, nacimiento = ?,sexo = ?,imagen = ?, puntos = ? WHERE ID = ?",[user.email, user.name, user.gender, user.age, user.img, user.points, user.id], (err,fila) => {
+          con.query("UPDATE users SET email = ?,nombreCompleto = ?, nacimiento = ?,sexo = ?,imagen = ?, puntos = ? WHERE ID = ?",[user.email, user.name, user.age, user.gender, user.img, user.points, user.id], (err,fila) => {
           if(err){callback(err); return;}
           else
             callback(null,true);
@@ -62,7 +62,7 @@ class DAO {
           callback(err);
         else{
           console.log(user.password);
-          con.query("UPDATE users SET email = ?,nombreCompleto = ?,password = ?, nacimiento = ?,sexo = ?,imagen = ?, puntos = ? WHERE ID = ?",[user.email, user.name, user.password,user.gender, user.age, user.img, user.points, user.id], (err,fila) => {
+          con.query("UPDATE users SET email = ?,nombreCompleto = ?,password = ?, nacimiento = ?,sexo = ?,imagen = ?, puntos = ? WHERE ID = ?",[user.email, user.name, user.password,user.age, user.gender, user.img, user.points, user.id], (err,fila) => {
           if(err){callback(err); return;}
           else
             callback(null,true);

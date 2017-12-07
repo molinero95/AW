@@ -38,9 +38,12 @@ function decodifyGender(gender) {
         case "H": gen='Hombre'; break;
         case "M": gen='Mujer'; break;
         case "O": gen='Otro'; break;
+        case "1": 'Hombre'; break;
     }
     return gen;
 }
+
+
 
 
 function makeUser(iden, us, pass, name, gender, age, img, points) {
@@ -99,4 +102,6 @@ module.exports = {
     makeUser: makeUser,
     checkRegister: checkRegister,
     getAge: getAge,
+    parseGender: parseGender, 
+    decodifyGender: decodifyGender
 }

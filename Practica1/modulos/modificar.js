@@ -25,7 +25,6 @@ function getModificar(req,res){
 //Hay que ver como poner lo de la edad
 function postModificar(req,res){
     res.status(200);
-    console.log("hola");
     console.log(req.body.age);
     let user = {
         id:req.session.user,
@@ -38,6 +37,10 @@ function postModificar(req,res){
         points: req.points,
     };
     let edad = utilidades.getAge(user.age);
+    console.log(user.gender);
+    utilidades.parseGender(user);
+    console.log(user.gender);
+   
 
     if(req.file) {//Si cambia la imagen.
         user.img = req.file.filename;
@@ -64,10 +67,12 @@ function postModificar(req,res){
             if(err){
                 console.error(err);
                 res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
+                user.gender = utilidades.decodifyGender(user.gender);
                 res.render("modificar", {user:user});
             }
             else{
                 res.setFlash("Datos modificados correctamente", 2);
+                user.gender = utilidades.decodifyGender(user.gender);
                 res.render("profile", {user: user, searched: user, edad: edad});
             }
         }); 
