@@ -25,7 +25,6 @@ function getModificar(req,res){
 //Hay que ver como poner lo de la edad
 function postModificar(req,res){
     res.status(200);
-    console.log(req.body.age);
     let user = {
         id:req.session.user,
         img: req.img,        
@@ -36,11 +35,9 @@ function postModificar(req,res){
         age: req.body.age,
         points: req.points,
     };
+
     let edad = utilidades.getAge(user.age);
-    console.log(user.gender);
     utilidades.parseGender(user);
-    console.log(user.gender);
-   
 
     if(req.file) {//Si cambia la imagen.
         user.img = req.file.filename;
