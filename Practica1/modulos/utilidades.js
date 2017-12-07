@@ -63,7 +63,36 @@ function checkRegister(user) {
     return checkGender(user) && checkPass(user.password) && checkName(user.name) && checkDate(user.age);
 }
 
+function getAge(date){
+    var cadena = date.toString();
+    var fecha = cadena.split("-");
+    var dia = fecha[2];
+    var mes = fecha[1];
+    var ano = fecha[0];
+
+    console.log(ano);
+
+    var hoy = new Date();
+    var anoAct = hoy.getYear()+1900;
+    var mesAct = hoy.getMonth()+1;
+    var diaAct = hoy.getDate();
+
+    var edad = anoAct - ano;
+    
+    if(mesAct < mes){
+        edad--;
+    }
+    if (mesAct === mes && diaAct < dia){
+        edad--;
+    }
+    
+    console.log(edad);
+    return edad;
+
+}
+
 module.exports = {
     makeUser: makeUser,
     checkRegister: checkRegister,
+    getAge: getAge,
 }
