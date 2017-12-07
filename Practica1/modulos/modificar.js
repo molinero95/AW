@@ -26,6 +26,7 @@ function getModificar(req,res){
 function postModificar(req,res){
     res.status(200);
     console.log("hola");
+    console.log(req.body.age);
     let user = {
         id:req.session.user,
         img: req.img,        
@@ -43,17 +44,19 @@ function postModificar(req,res){
 
     console.log(user);    
     //No poner el req.daoUsers.modify... hasta que tengamos lo de las fechas arreglado.
-    if(user.password.length == 0){
+    if(user.password.length != 0){
         //modificar user sin contraseña
-        //req.daoUsers.modifyUserNewPass(user) <- CREAR función
+        req.daoUsers.modifyUserNewPass(user);
     }
     else{
         //modificar user con contraseña
-        //req.daoUsers.modifyUser(user); No poner hasta que esté correcto lo de las fechas
+        req.daoUsers.modifyUser(user); 
     } 
     //lo dejo asi para no modificar la bd hasta que esten bien recogidos los datos
     res.setFlash("Datos modificados correctamente", 2); //Este flash ira dentro de cada callback del DAO, como en el resto de funciones.
-    res.render("profile", {user: user, searched: user});
+    let edad = utilidades.getAge(user.age);
+    console.log(user.age);
+    res.render("profile", {user: user, searched: user, edad: edad});
 }
 
 

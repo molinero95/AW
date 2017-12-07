@@ -13,8 +13,7 @@ function getProfile(req,res){
         }
         let us = utilidades.makeUser(user , datos.email, "", datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
         let edad = utilidades.getAge(datos.nacimiento);
-        console.log(edad);
-        res.render("profile", {user: us, searched: us, age: edad});
+        res.render("profile", {user: us, searched: us, edad: edad});
     }); 
 }
 

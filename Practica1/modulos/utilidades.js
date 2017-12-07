@@ -64,14 +64,19 @@ function checkRegister(user) {
 }
 
 function getAge(date){
-    var cadena = date.toString();
-    var fecha = cadena.split("-");
-    var dia = fecha[2];
-    var mes = fecha[1];
-    var ano = fecha[0];
 
-    console.log(ano);
-
+    if(typeof(date) === "string"){
+        var values = date.split("-");
+        var dia = values[2];
+        var mes = values[1];
+        var ano = values[0];
+    }
+   else{
+        var ano = date.getYear()+1900;
+        var mes = date.getMonth()+1;
+        var dia = date.getDate();
+   }
+    
     var hoy = new Date();
     var anoAct = hoy.getYear()+1900;
     var mesAct = hoy.getMonth()+1;
@@ -86,7 +91,6 @@ function getAge(date){
         edad--;
     }
     
-    console.log(edad);
     return edad;
 
 }
