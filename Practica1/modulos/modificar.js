@@ -37,26 +37,42 @@ function postModificar(req,res){
         age: req.body.age,
         points: req.points,
     };
-    
+    let edad = utilidades.getAge(user.age);
+
     if(req.file) {//Si cambia la imagen.
         user.img = req.file.filename;
     }//No necesita else, ya esta en user.
 
-    console.log(user);    
-    //No poner el req.daoUsers.modify... hasta que tengamos lo de las fechas arreglado.
-    if(user.password.length != 0){
-        //modificar user sin contraseña
-        req.daoUsers.modifyUserNewPass(user);
+    if(user.password.length !== 0){
+        //modificar user con contraseña
+        req.daoUsers.modifyUserNewPass(user, (err, insert) =>{
+            if(err){
+                console.error(err);
+                res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
+                res.render("modificar");
+            }
+            else{
+                res.setFlash("Datos modificados correctamente", 2);
+                res.render("profile", {user: user, searched: user, edad: edad});
+            }
+        }); 
     }
     else{
-        //modificar user con contraseña
-        req.daoUsers.modifyUser(user); 
+        //modificar user sin contraseña
+        user.password = req.password;
+        req.daoUsers.modifyUser(user, (err, insert) =>{
+            if(err){
+                console.error(err);
+                res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
+                res.render("modificar", {user:user});
+            }
+            else{
+                res.setFlash("Datos modificados correctamente", 2);
+                res.render("profile", {user: user, searched: user, edad: edad});
+            }
+        }); 
     } 
-    //lo dejo asi para no modificar la bd hasta que esten bien recogidos los datos
-    res.setFlash("Datos modificados correctamente", 2); //Este flash ira dentro de cada callback del DAO, como en el resto de funciones.
-    let edad = utilidades.getAge(user.age);
-    console.log(user.age);
-    res.render("profile", {user: user, searched: user, edad: edad});
+    
 }
 
 
