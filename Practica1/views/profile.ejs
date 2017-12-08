@@ -7,7 +7,7 @@
         <title>Usuario</title>
     </head>
     <body>
-		<%- include("header", {user: user}, {edad: edad}) %>
+		<%- include("header", {user: user}) %>
 		<% if (searched) { %>
     	<h1 class="titulo">Perfil</h1>
     	<form id="perfilCompleto" method="get" action="/modificar">
@@ -16,7 +16,7 @@
 	    		<img id="fotoPerfil" src="/img/<%= searched.img %>">
 	    		<div id="datosPerfil">
 	    			<p><%= searched.name %></p>
-	    			<p><%= edad %> años</p>
+	    			<p><%= user.age %> años</p>
 	    			<p><%= searched.gender %></p>
 	    			<p><%= searched.points %> puntos</p>
 	    		</div>
