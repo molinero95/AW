@@ -31,10 +31,12 @@ let pool = mysql.createPool({
     user: config.mysqlConfig.user,
     password: config.mysqlConfig.password
 });
-const daoUsuariosApp = require("./daos/daoUsers");
-let daoUsuarios = new daoUsuariosApp(pool);
+const daoUsersApp = require("./daos/daoUsers");
+let daoUsers = new daoUsersApp(pool);
 const daoFriendsApp = require("./daos/daoFriends")
 let daoFriends = new daoFriendsApp(pool);
+const daoQuestionsApp = require("./daos/daoQuestions");
+let daoQuestions = new daoQuestionsApp(pool);
 
 //Middlewares de sesion, ficheros estáticos y bodyParser
 app.use(middlewareSession);
@@ -42,15 +44,18 @@ app.use(express.static(ficherosEstaticos));
 app.use(bodyParser.urlencoded({ extended: false }));
  //Este middleware para obtener el DAO de usuarios
 app.use(function setDAOUsers(req, res, next) { 
-    req.daoUsers = daoUsuarios;
+    req.daoUsers = daoUsers;
     next();
 });
 app.use(function setDAOFriends(req, res, next) {
     req.daoFriends = daoFriends;
     next();
 });
+app.use(function setDAOQuestions(req, res, next) {
+    req.daoQuestions = daoQuestions;
+    next();
+});
 app.use(middlewares.logger);
-
 app.use(middlewares.flash);
 
 //LOGIN
@@ -79,11 +84,15 @@ app.route("/modificar").post(middlewares.isLogged, middlewares.userLoggedData, u
 //FRIENDS
 const friends = require("./modulos/friends");
 app.route('/friends').get(middlewares.isLogged, middlewares.userLoggedData, friends.getFriends);
-//post(middlewares.isLogged, profile.postProfile);
 app.route('/searchFriend').get(middlewares.isLogged, middlewares.userLoggedData, friends.getSearchFriend);
 app.route('/searchUser/:user').get(middlewares.isLogged, middlewares.userLoggedData, friends.searchUser);
 app.route('/addFriend').post(middlewares.isLogged, middlewares.userLoggedData,friends.addFriend);
+app.route('/actionRequest/:friendId').post(middlewares.isLogged, middlewares.userLoggedData, friends.actionRequest);
 
+//Questions
+const questions = require("./modulos/questions");
+app.route('/questions').get(middlewares.isLogged, middlewares.userLoggedData, questions.getQuestions);
+app.route('/addQuestion').get(middlewares.isLogged, middlewares.userLoggedData, questions.addQuestion);
 
 //Peticiones generales aqui: ejemplo '/','/logout','img/:nombre' 
 app.get('/', middlewares.isLogged, (req, res) => {

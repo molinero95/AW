@@ -1,5 +1,8 @@
+
 const utilidades = require("./utilidades");
 
+
+//friends, colocar mas bonito (utilizando funciones para no repetir codigo)
 function getFriends(req, res) {
     res.status(200);
     let user = {
@@ -9,22 +12,66 @@ function getFriends(req, res) {
     };
     req.daoFriends.getFriendsRequests(req.session.user, (err, datos) =>{
         if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
-        else{
+        let requ = [];
+        if(datos.length > 0){   //Si tenemos requests       
             datos.forEach(element => {
                 req.daoUsers.searchUserById(element.ID1, (err, info) => {
                     if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
-
-                });
-                
+                    requ.push({
+                        id: element.ID1,
+                        name: info.nombreCompleto,
+                        img: info.imagen,
+                    });
+                    if(element === datos[datos.length - 1]){ //ultimo elemento de todos
+                        req.daoFriends.getUserFriends(req.session.user, (err, datos) =>{
+                            if(datos.length > 0){
+                                let ag = [];
+                                datos.forEach(elem => {
+                                    req.daoUsers.searchUserById(elem, (err, aggreg) => {
+                                        ag.push({
+                                            id: elem,
+                                            name: aggreg.nombreCompleto,
+                                            img: aggreg.imagen,
+                                        });
+                                        if(elem === datos[datos.length - 1]){
+                                            console.log("AQUI");                                                                                    
+                                            res.render("friends", {user: user, friends: {requests: requ, aggregated: ag}});   
+                                        }                                     
+                                    })
+                                });
+                            }
+                            else
+                                res.render("friends", {user: user, friends: {requests: requ, aggregated: null}});
+                        });
+                    }
+                });        
             });
-            res.render("friends", {user: user, friends: {requests: null}});
         }
+        else{   //Si no tenemos requests
+            req.daoFriends.getUserFriends(req.session.user, (err, datos) =>{
+                if(datos.length > 0){
+                    let ag = [];
+                    datos.forEach(elem => {
+                        req.daoUsers.searchUserById(elem, (err, aggreg) => {
+                            ag.push({
+                                id: elem,
+                                name: aggreg.nombreCompleto,
+                                img: aggreg.imagen,
+                            });
+                            if(elem === datos[datos.length - 1])
+                                res.render("friends", {user: user, friends: {requests: null, aggregated: ag}});
+                        })
+                    });                    
+                }
+                else
+                    res.render("friends", {user: user, friends: {requests: null, aggregated: null}});                        
+            });
+        }   
     });
-
 }
 
 
-
+//Utilizada para la busqueda de amigos tras escribir el nombre
 function getSearchFriend(req, res) {
     res.status(200);
     let user = {
@@ -32,7 +79,6 @@ function getSearchFriend(req, res) {
         points: req.points,
         img: req.img,
     };
-    //res.send(req.params.friend);
     if(!req.query.friend){
         res.render("searchUsers", {user: req.session.user, searched: null});
     }
@@ -40,7 +86,6 @@ function getSearchFriend(req, res) {
         req.daoUsers.searchUsers(req.query.friend, (err, filas) => {
             if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
             if(filas.length > 0){
-                console.log(filas);
                 let result = [];
                 filas.forEach(us => {
                     result.push(utilidades.makeUser(us.id, null, null, us.nombreCompleto, us.sexo, us.nacimiento, us.imagen, us.puntos));
@@ -54,31 +99,7 @@ function getSearchFriend(req, res) {
     
 }
 
-/*
-
-else{
-                console.log(filas);
-                if(fila) { //Existe el usuario
-                    let us = utilidades.makeUser(fila.id, null, null, fila.nombreCompleto, fila.sexo, fila.nacimiento, fila.imagen, fila.puntos);
-                    req.daoFriends.requestSent(req.session.user, fila.id,(err, resultado) => {
-                        if(err){console.error(err); res.status(404);}
-                        if(resultado.length >= 1){ //usuario existente, aparece en friends con el logueado.
-                            us.areFriends = true;   //Solicitud enviada o son amigos
-                            res.render("searchFriend", {user: req.session.user, friend: us} );
-                        }
-                        else{//usuario existente, no aparece en friends con el logueado.
-                            us.areFriends = fila.id === req.session.user;
-                            res.render("searchFriend", {user: req.session.user, friend: us});
-                        }
-                    });
-                }
-                else{//vacio/usuario inexistente
-                    res.render("searchFriend", {user: req.session.user, friend: null});
-                }
-            }
-
-*/
-
+//Cuando seleccionas un usuario
 function searchUser(req, res) {
     res.status(200);
     let user = {
@@ -90,7 +111,11 @@ function searchUser(req, res) {
         if(err){console.error(err);res.status(404); res.send("Ha ocurrido un error");}
         if(us){
             let u = utilidades.makeUser(req.params.user, null, null, us.nombreCompleto, us.sexo, us.nacimiento, us.imagen, us.puntos);
-            res.render("profile", {user: user, searched: u});
+            u.age = utilidades.getAge(u.age);
+            req.daoFriends.requestSent(user.id, req.params.user, (err, areFriends) => {
+                if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error");}
+                res.render("profile", {user: user, searched: u, areFriends: areFriends});                
+            });
         }
         else{
             res.render("profile", {user: user, searched: null});
@@ -98,7 +123,7 @@ function searchUser(req, res) {
     });
 };
 
-
+//Al pulsar sobre añadir amigo
 function addFriend(req, res) {
     res.status(200);
     let user = {
@@ -107,21 +132,34 @@ function addFriend(req, res) {
         img: req.img,
     };
     req.daoFriends.insertFriendRequest(req.session.user, req.body.friendId, (err, sol) =>{
-        if(err){console.log(err); res.status(404); res.send("Ha ocurrido un error.");}
-        console.log(sol);
+        if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
         res.setFlash("Solicitud enviada correctamente", 2);
-        res.redirect(`http://localhost:3000/searchFriend?friend=${req.body.friendName}`);
+        res.redirect("friends");
     });
 
 }
 
 
-function postAcceptFriend(req, res) {
-
+function actionRequest(req, res) {
+    res.status(200);   
+    if(req.body.aceptar)
+        req.daoFriends.acceptFriendRequest(req.session.user, req.params.friendId, (err, result) => {
+            if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
+            res.redirect("/friends");
+        });
+    else   //rechazar
+        req.daoFriends.rejectFriendRequest(req.session.user, req.params.friendId, (err, result) => {
+            if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
+            res.redirect("/friends");
+        });
+    
 }
 
-function postRejectFriend(req, res) {
 
+
+function postRejectFriend(req, res) {
+    res.status(200);
+    
 }
 
 module.exports = {
@@ -129,6 +167,5 @@ module.exports = {
     getSearchFriend: getSearchFriend,
     searchUser: searchUser,
     addFriend: addFriend,
-    postAcceptFriend: postAcceptFriend,
-    postRejectFriend: postRejectFriend,
+    actionRequest: actionRequest,
 }

@@ -1,10 +1,6 @@
 const utilidades = require('./utilidades');
 
-/* Esto veremos si lo metemos en el err
-req.session.destroy((err) => {
-                if(err){console.error(err); return;}
-                res.redirect("/profile");
-            }); */
+
 function getModificar(req,res){
     res.status(200);
     let user = {
@@ -35,8 +31,12 @@ function postModificar(req,res){
         age: req.body.age,
         points: req.points,
     };
+<<<<<<< HEAD
 
     let edad = utilidades.getAge(user.age);
+=======
+    console.log(user.gender);
+>>>>>>> 67b0c8dcca2e4aa335521ea11c9cd39786552f37
     utilidades.parseGender(user);
 
     if(req.file) {//Si cambia la imagen.
@@ -51,14 +51,15 @@ function postModificar(req,res){
                 res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
                 res.render("modificar");
             }
-            else{
-                res.setFlash("Datos modificados correctamente", 2);
-                res.render("profile", {user: user, searched: user, edad: edad});
-            }
+            user.age = utilidades.getAge(user.age);     //Importante esta modificación aquí       
+            res.setFlash("Datos modificados correctamente", 2);
+            res.render("profile", {user: user, searched: user});
+        
         }); 
     }
     else{
         //modificar user sin contraseña
+        console.log("Inserto sin pass");        
         user.password = req.password;
         req.daoUsers.modifyUser(user, (err, insert) =>{
             if(err){
@@ -67,11 +68,10 @@ function postModificar(req,res){
                 user.gender = utilidades.decodifyGender(user.gender);
                 res.render("modificar", {user:user});
             }
-            else{
-                res.setFlash("Datos modificados correctamente", 2);
-                user.gender = utilidades.decodifyGender(user.gender);
-                res.render("profile", {user: user, searched: user, edad: edad});
-            }
+            user.age = utilidades.getAge(user.age);        //Importante esta modificación aquí     
+            res.setFlash("Datos modificados correctamente", 2);
+            user.gender = utilidades.decodifyGender(user.gender);
+            res.render("profile", {user: user, searched: user});    
         }); 
     } 
     

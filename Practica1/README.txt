@@ -1,5 +1,6 @@
 COSAS POR HACER IMPORTANTES:
 
-  - Funcion para el tipo date de Mysql necesaria para el perfil, mostrar amigos, modificar... etc
   - Validacion de formularios para register y modificar.
-  - Crear en daoUsers modifyUserNewPass(user, callback)
+  - Comrpobar bugs añadiendo amigos etc etc
+  - Comenzar con preguntas
+  - Middleware para no permitir logear si hay sesion iniciada

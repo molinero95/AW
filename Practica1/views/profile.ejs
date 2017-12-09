@@ -7,8 +7,8 @@
         <title>Usuario</title>
     </head>
     <body>
-		<%- include("header", {user: user}, {edad: edad}) %>
-		<% if (searched) { %>
+		<%- include("header", {user: user}) %>
+		<% if (searched.id == user.id) { %>
     	<h1 class="titulo">Perfil</h1>
     	<form id="perfilCompleto" method="get" action="/modificar">
 	    	<div id="perfil">
@@ -16,15 +16,42 @@
 	    		<img id="fotoPerfil" src="/img/<%= searched.img %>">
 	    		<div id="datosPerfil">
 	    			<p><%= searched.name %></p>
-	    			<p><%= edad %> años</p>
+	    			<p><%= searched.age %> años</p>
 	    			<p><%= searched.gender %></p>
 	    			<p><%= searched.points %> puntos</p>
 	    		</div>
 			</div>
-		<% if (searched.id === user.id) { %>
 			<input type="submit" id="modificaPerfil"value="Modificar Perfil">
-			<% } %>
+		</form>		
+		<% } else if (!areFriends) { %>
+    	<h1 class="titulo">Perfil</h1>
+    	<form id="perfilCompleto" method="post" action="/addFriend">
+	    	<div id="perfil">
+                <!--CUIDADO posible CSS-->
+	    		<img id="fotoPerfil" src="/img/<%= searched.img %>">
+	    		<div id="datosPerfil">
+	    			<p><%= searched.name %></p>
+	    			<p><%= searched.age %> años</p>
+	    			<p><%= searched.gender %></p>
+	    			<p><%= searched.points %> puntos</p>
+	    		</div>
+			</div>
+			<input type="hidden" value="<%= searched.id %>"name=friendId>
+			<input id="modificaPerfil" type="submit" id="addFriend" value="Añadir amigo">
 		</form>
+		<% } else if(areFriends) { %>
+			<h1 class="titulo">Perfil</h1>
+			<div id="perfilCompleto">
+				<div id="perfil">
+					<img id="fotoPerfil" src="/img/<%= searched.img %>">
+					<div id="datosPerfil">
+						<p><%= searched.name %></p>
+						<p><%= searched.age %> años</p>
+						<p><%= searched.gender %></p>
+						<p><%= searched.points %> puntos</p>
+					</div>
+				</div>
+			</div>
 		<% } else { %>
 			<p class="flashAttention">Usuario no encontrado.</p>
 		<% } %>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+    <!-- Contenido de la página web -->
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>Preguntas</title>
+    </head>
+    <body>
+    	<%- include("header", {user: user}) %>
+        <h1 class="titulo">Preguntas seleccionadas aleatoriamente</h1>
+        <ul>
+            <li><a class="preguntas" href="" >¿Cuál es la peor película de la historia?</a></li>
+            <li><a class="preguntas" href="">¿En qué escuela primaria estudiaste?</a></li>
+            <li><a class="preguntas" href="">¿Nintendo Switch, PS4 o Xbox One?</a></li>
+            <li><a class="preguntas" href="">¿Cuál es tu plato favorito?</a></li>
+            <li><a class="preguntas" href="">¿Cuál es el personaje más irritante de juego de tronos?</a></li>
+        </ul>
+        <h1 class="titulo">¡Añade tus preguntas!</h1>
+        <form method="get" action="/addQuestion">
+            <div class = "botonCentro">
+                <input type="submit" name="crearpr" class="boton" value="Crear nueva pregunta" id="preg">
+            </div>
+        </form>
+    </body>    
+</html>
