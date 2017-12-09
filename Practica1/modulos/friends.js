@@ -1,5 +1,7 @@
 const utilidades = require("./utilidades");
 
+
+//friends
 function getFriends(req, res) {
     res.status(200);
     let user = {
@@ -24,7 +26,7 @@ function getFriends(req, res) {
 }
 
 
-
+//Utilizada para la busqueda de amigos tras escribir el nombre
 function getSearchFriend(req, res) {
     res.status(200);
     let user = {
@@ -32,7 +34,6 @@ function getSearchFriend(req, res) {
         points: req.points,
         img: req.img,
     };
-    //res.send(req.params.friend);
     if(!req.query.friend){
         res.render("searchUsers", {user: req.session.user, searched: null});
     }
@@ -53,7 +54,7 @@ function getSearchFriend(req, res) {
     
 }
 
-
+//Cuando seleccionas un usuario
 function searchUser(req, res) {
     res.status(200);
     let user = {
@@ -67,8 +68,6 @@ function searchUser(req, res) {
             let u = utilidades.makeUser(req.params.user, null, null, us.nombreCompleto, us.sexo, us.nacimiento, us.imagen, us.puntos);
             req.daoFriends.requestSent(user.id, req.params.user, (err, areFriends) => {
                 if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error");}
-                console.log(user);
-                console.log(u);
                 if(areFriends)
                     res.render("profile", {user: user, searched: u, areFriends: areFriends});                    
                 else{
@@ -82,7 +81,7 @@ function searchUser(req, res) {
     });
 };
 
-
+//Al pulsar sobre añadir amigo
 function addFriend(req, res) {
     res.status(200);
     let user = {

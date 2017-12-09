@@ -8,7 +8,7 @@
     </head>
     <body>
 		<%- include("header", {user: user}) %>
-		<% if (searched) { %>
+		<% if (searched.id == user.id) { %>
     	<h1 class="titulo">Perfil</h1>
     	<form id="perfilCompleto" method="get" action="/modificar">
 	    	<div id="perfil">
@@ -21,11 +21,22 @@
 	    			<p><%= searched.points %> puntos</p>
 	    		</div>
 			</div>
-		<% if (searched.id == user.id) { %>
 			<input type="submit" id="modificaPerfil"value="Modificar Perfil">
-		<% } else if(!areFriends) { %>
+		</form>		
+		<% } else if (!areFriends) { %>
+    	<h1 class="titulo">Perfil</h1>
+    	<form id="perfilCompleto" method="get" action="/addFriend">
+	    	<div id="perfil">
+                <!--CUIDADO posible CSS-->
+	    		<img id="fotoPerfil" src="/img/<%= searched.img %>">
+	    		<div id="datosPerfil">
+	    			<p><%= searched.name %></p>
+	    			<p><%= user.age %> años</p>
+	    			<p><%= searched.gender %></p>
+	    			<p><%= searched.points %> puntos</p>
+	    		</div>
+			</div>
 			<input id="modificaPerfil" type="submit" id="addFriend" value="Añadir amigo">
-		<% } %>
 		</form>
 		<% } else { %>
 			<p class="flashAttention">Usuario no encontrado.</p>
