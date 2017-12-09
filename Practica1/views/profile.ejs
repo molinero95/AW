@@ -39,6 +39,19 @@
 			<input type="hidden" value="<%= searched.id %>"name=friendId>
 			<input id="modificaPerfil" type="submit" id="addFriend" value="Añadir amigo">
 		</form>
+		<% } else if(areFriends) { %>
+			<h1 class="titulo">Perfil</h1>
+			<div id="perfilCompleto">
+				<div id="perfil">
+					<img id="fotoPerfil" src="/img/<%= searched.img %>">
+					<div id="datosPerfil">
+						<p><%= searched.name %></p>
+						<p><%= user.age %> años</p>
+						<p><%= searched.gender %></p>
+						<p><%= searched.points %> puntos</p>
+					</div>
+				</div>
+			</div>
 		<% } else { %>
 			<p class="flashAttention">Usuario no encontrado.</p>
 		<% } %>

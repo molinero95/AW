@@ -1,3 +1,4 @@
+
 const utilidades = require("./utilidades");
 
 
@@ -11,16 +12,25 @@ function getFriends(req, res) {
     };
     req.daoFriends.getFriendsRequests(req.session.user, (err, datos) =>{
         if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
-        else{
+        let requ = [];
+        if(datos.length > 0){
             datos.forEach(element => {
                 req.daoUsers.searchUserById(element.ID1, (err, info) => {
                     if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
-
-                });
-                
+                    requ.push({
+                        id: element.ID1,
+                        name: info.nombreCompleto,
+                        img: info.imagen,
+                    });
+                    if(element === datos[datos.length - 1]){ //ultimo elemento de todos
+                        console.log(requ);
+                        res.render("friends", {user: user, friends: {requests: requ}});                        
+                    }
+                });        
             });
-            res.render("friends", {user: user, friends: {requests: null}});
         }
+        else
+            res.render("friends", {user: user, friends: {requests: null}});
     });
 
 }

@@ -346,6 +346,14 @@ nav{
 	margin-bottom: 10px;
 }
 
+#solicitudAmigo {
+	display: flex;
+	justify-content: space-around;
+	align-content: center;
+	background-color: #970EB4;
+	border: black solid;
+}
+
 
 .amigo {
 	display: flex;
