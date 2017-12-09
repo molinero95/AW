@@ -1,10 +1,6 @@
 const utilidades = require('./utilidades');
 
-/* Esto veremos si lo metemos en el err
-req.session.destroy((err) => {
-                if(err){console.error(err); return;}
-                res.redirect("/profile");
-            }); */
+
 function getModificar(req,res){
     res.status(200);
     let user = {
@@ -53,7 +49,7 @@ function postModificar(req,res){
                 res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
                 res.render("modificar");
             }
-            user.age = utilidades.getAge(user.age);            
+            user.age = utilidades.getAge(user.age);     //Importante esta modificación aquí       
             res.setFlash("Datos modificados correctamente", 2);
             res.render("profile", {user: user, searched: user});
         
@@ -70,7 +66,7 @@ function postModificar(req,res){
                 user.gender = utilidades.decodifyGender(user.gender);
                 res.render("modificar", {user:user});
             }
-            user.age = utilidades.getAge(user.age);            
+            user.age = utilidades.getAge(user.age);        //Importante esta modificación aquí     
             res.setFlash("Datos modificados correctamente", 2);
             user.gender = utilidades.decodifyGender(user.gender);
             res.render("profile", {user: user, searched: user});    

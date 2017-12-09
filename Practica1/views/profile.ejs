@@ -21,7 +21,7 @@
 	    			<p><%= searched.points %> puntos</p>
 	    		</div>
 			</div>
-		<% if (searched.id === user.id) { %>
+		<% if (searched.id == user.id) { %>
 			<input type="submit" id="modificaPerfil"value="Modificar Perfil">
 		<% } else if(!areFriends) { %>
 			<input id="modificaPerfil" type="submit" id="addFriend" value="Añadir amigo">
