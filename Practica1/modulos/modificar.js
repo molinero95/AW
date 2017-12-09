@@ -36,7 +36,6 @@ function postModificar(req,res){
         age: req.body.age,
         points: req.points,
     };
-    let edad = utilidades.getAge(user.age);
     console.log(user.gender);
     utilidades.parseGender(user);
     console.log(user.gender);
@@ -54,14 +53,15 @@ function postModificar(req,res){
                 res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
                 res.render("modificar");
             }
-            else{
-                res.setFlash("Datos modificados correctamente", 2);
-                res.render("profile", {user: user, searched: user, edad: edad});
-            }
+            user.age = utilidades.getAge(user.age);            
+            res.setFlash("Datos modificados correctamente", 2);
+            res.render("profile", {user: user, searched: user});
+        
         }); 
     }
     else{
         //modificar user sin contraseña
+        console.log("Inserto sin pass");        
         user.password = req.password;
         req.daoUsers.modifyUser(user, (err, insert) =>{
             if(err){
@@ -70,11 +70,10 @@ function postModificar(req,res){
                 user.gender = utilidades.decodifyGender(user.gender);
                 res.render("modificar", {user:user});
             }
-            else{
-                res.setFlash("Datos modificados correctamente", 2);
-                user.gender = utilidades.decodifyGender(user.gender);
-                res.render("profile", {user: user, searched: user, edad: edad});
-            }
+            user.age = utilidades.getAge(user.age);            
+            res.setFlash("Datos modificados correctamente", 2);
+            user.gender = utilidades.decodifyGender(user.gender);
+            res.render("profile", {user: user, searched: user});    
         }); 
     } 
     
