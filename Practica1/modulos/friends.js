@@ -2,7 +2,7 @@
 const utilidades = require("./utilidades");
 
 
-//friends, colocar mas bonito
+//friends, colocar mas bonito (utilizando funciones para no repetir codigo)
 function getFriends(req, res) {
     res.status(200);
     let user = {
@@ -33,14 +33,15 @@ function getFriends(req, res) {
                                             name: aggreg.nombreCompleto,
                                             img: aggreg.imagen,
                                         });
-                                        if(element === datos[datos.length - 1])
-                                            res.render("friends", {user: user, friends: {requests: requ, aggregated: ag}});                                        
+                                        if(elem === datos[datos.length - 1]){
+                                            console.log("AQUI");                                                                                    
+                                            res.render("friends", {user: user, friends: {requests: requ, aggregated: ag}});   
+                                        }                                     
                                     })
                                 });
                             }
                             else
-                                res.render("friends", {user: user, friends: {requests: requ, aggregated: null}});                        
-                            
+                                res.render("friends", {user: user, friends: {requests: requ, aggregated: null}});
                         });
                     }
                 });        
@@ -110,13 +111,10 @@ function searchUser(req, res) {
         if(err){console.error(err);res.status(404); res.send("Ha ocurrido un error");}
         if(us){
             let u = utilidades.makeUser(req.params.user, null, null, us.nombreCompleto, us.sexo, us.nacimiento, us.imagen, us.puntos);
+            u.age = utilidades.getAge(u.age);
             req.daoFriends.requestSent(user.id, req.params.user, (err, areFriends) => {
                 if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error");}
-                if(areFriends)
-                    res.render("profile", {user: user, searched: u, areFriends: areFriends});                    
-                else{
-                    res.render("profile", {user: user, searched: u, areFriends: areFriends});
-                }
+                res.render("profile", {user: user, searched: u, areFriends: areFriends});                
             });
         }
         else{
