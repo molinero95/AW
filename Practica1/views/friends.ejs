@@ -13,7 +13,7 @@
     	<ul class ="listaAmigos">
             <% for (let i = 0; i < friends.requests.length; i++) { %>                    
             <li id="solicitudAmigo">
-                <form method="post" action="/acceptFriend/<%= friends.requests[i].id%>">
+                <form method="post" action="/actionRequest/<%= friends.requests[i].id%>">
                     <img id="fotoAmigo" src="/img/<%= friends.requests[i].img %>" alt="foto de perfil"> <%= friends.requests[i].name %>
                     <span id="botonesAmigos">
                         <input type="hidden" value="<%= friends.requests[i].id %>">

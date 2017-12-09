@@ -83,7 +83,7 @@ app.route('/friends').get(middlewares.isLogged, middlewares.userLoggedData, frie
 app.route('/searchFriend').get(middlewares.isLogged, middlewares.userLoggedData, friends.getSearchFriend);
 app.route('/searchUser/:user').get(middlewares.isLogged, middlewares.userLoggedData, friends.searchUser);
 app.route('/addFriend').post(middlewares.isLogged, middlewares.userLoggedData,friends.addFriend);
-app.route('/acceptFriend/:friendId').post(middlewares.isLogged, middlewares.userLoggedData, friends.postAcceptFriend);
+app.route('/actionRequest/:friendId').post(middlewares.isLogged, middlewares.userLoggedData, friends.actionRequest);
 
 
 //Peticiones generales aqui: ejemplo '/','/logout','img/:nombre' 

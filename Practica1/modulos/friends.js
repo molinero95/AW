@@ -140,20 +140,26 @@ function addFriend(req, res) {
 }
 
 
-function postAcceptFriend(req, res) {
-    res.status(200);
-    req.daoFriends.acceptFriendRequest(req.session.user, req.params.friendId, (err, result) => {
-        if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
-        res.redirect("/friends");
-    });
+function actionRequest(req, res) {
+    res.status(200);   
+    if(req.body.aceptar)
+        req.daoFriends.acceptFriendRequest(req.session.user, req.params.friendId, (err, result) => {
+            if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
+            res.redirect("/friends");
+        });
+    else   //rechazar
+        req.daoFriends.rejectFriendRequest(req.session.user, req.params.friendId, (err, result) => {
+            if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
+            res.redirect("/friends");
+        });
+    
 }
+
+
 
 function postRejectFriend(req, res) {
     res.status(200);
-    req.daoFriends.acceptFriendRequest(req.session.user, req.params.friendId, (err, result) => {
-        if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
-        res.redirect("/friends");
-    });
+    
 }
 
 module.exports = {
@@ -161,6 +167,5 @@ module.exports = {
     getSearchFriend: getSearchFriend,
     searchUser: searchUser,
     addFriend: addFriend,
-    postAcceptFriend: postAcceptFriend,
-    postRejectFriend: postRejectFriend,
+    actionRequest: actionRequest,
 }
