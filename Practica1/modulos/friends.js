@@ -93,7 +93,7 @@ function addFriend(req, res) {
         if(err){console.log(err); res.status(404); res.send("Ha ocurrido un error.");}
         console.log(sol);
         res.setFlash("Solicitud enviada correctamente", 2);
-        res.redirect(`http://localhost:3000/searchFriend?friend=${req.body.friendName}`);
+        res.redirect("friends");
     });
 
 }

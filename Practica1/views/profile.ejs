@@ -25,7 +25,7 @@
 		</form>		
 		<% } else if (!areFriends) { %>
     	<h1 class="titulo">Perfil</h1>
-    	<form id="perfilCompleto" method="get" action="/addFriend">
+    	<form id="perfilCompleto" method="post" action="/addFriend">
 	    	<div id="perfil">
                 <!--CUIDADO posible CSS-->
 	    		<img id="fotoPerfil" src="/img/<%= searched.img %>">
@@ -36,6 +36,7 @@
 	    			<p><%= searched.points %> puntos</p>
 	    		</div>
 			</div>
+			<input type="hidden" value="<%= searched.id %>"name=friendId>
 			<input id="modificaPerfil" type="submit" id="addFriend" value="Añadir amigo">
 		</form>
 		<% } else { %>
