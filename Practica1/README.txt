@@ -1,6 +1,7 @@
 COSAS POR HACER IMPORTANTES:
 
   - Validacion de formularios para register y modificar.
-  - Aceptar rechazar amigos
+  - Rechazar amigos
+  - Comrpobar bugs añadiendo amigos etc etc
   - Comenzar con preguntas
   - Middleware para no permitir logear si hay sesion

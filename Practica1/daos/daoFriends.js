@@ -5,9 +5,23 @@ class DAO {
       this.pool = pool;
     }
 
-    hasFriends(user, callback){
-
+    getUserFriends(userId, callback) {
+        this.pool.getConnection((err, con) => {
+            if(err) {callback(err); return;}
+            con.query("select ID1, ID2 FROM FRIENDS WHERE ACCEPTED = 1 AND (ID1 = ? OR ID2 = ?)", [userId, userId], (err, resul) => {
+                let dev = [];
+                resul.forEach(element => {
+                    if(element.ID1 === userId)
+                        dev.push(element.ID2);
+                    else
+                        dev.push(element.ID1);
+                });
+                callback(null, dev);
+            })
+        });
     }
+
+    
 
     //Para en friends mostrar los amigos
     getFriendsRequests(userId, callback){
@@ -41,6 +55,30 @@ class DAO {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
             con.query("INSERT INTO FRIENDS (ID1, ID2, ACCEPTED) VALUES (?,?,0)", [userId, friendId], (err, fila) =>{
+                if(err){ callback(err); return;}
+                callback(null, fila);
+            });
+            con.release();
+        });
+    }
+
+    acceptFriendRequest(userId, friendId, callback) {
+        this.pool.getConnection((err, con) => {
+            if(err) {callback(err); return;}
+            console.log(userId, friendId);
+            con.query("UPDATE FRIENDS SET ACCEPTED = 1 WHERE ID1 = ? AND ID2 = ?", [friendId, userId], (err, fila) =>{
+                if(err){ callback(err); return;}
+                console.log("UPDATE");                
+                callback(null, fila);
+            });
+            con.release();
+        });
+    }
+
+    rejectFriendRequest(userId, friendId, callback) {
+        this.pool.getConnection((err, con) => {
+            if(err) {callback(err); return;}
+            con.query("DELETE FROM FRIENDS WHERE ID1 = ? AND ID2 = ?", [friendId, userId], (err, fila) =>{
                 if(err){ callback(err); return;}
                 callback(null, fila);
             });
