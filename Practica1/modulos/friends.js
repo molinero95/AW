@@ -69,9 +69,9 @@ function searchUser(req, res) {
             req.daoFriends.requestSent(user.id, req.params.user, (err, areFriends) => {
                 if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error");}
                 if(areFriends)
-                    res.render("profile", {user: user, searched: u});                    
+                    res.render("profile", {user: user, searched: u, areFriends: true});                    
                 else{
-                    //poner boton de añadir amigo
+                    res.render("profile", {user: user, searched: u, areFriends: false});
                 }
             });
         }
