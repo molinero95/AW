@@ -54,30 +54,6 @@ function getSearchFriend(req, res) {
     
 }
 
-/*
-
-else{
-                console.log(filas);
-                if(fila) { //Existe el usuario
-                    let us = utilidades.makeUser(fila.id, null, null, fila.nombreCompleto, fila.sexo, fila.nacimiento, fila.imagen, fila.puntos);
-                    req.daoFriends.requestSent(req.session.user, fila.id,(err, resultado) => {
-                        if(err){console.error(err); res.status(404);}
-                        if(resultado.length >= 1){ //usuario existente, aparece en friends con el logueado.
-                            us.areFriends = true;   //Solicitud enviada o son amigos
-                            res.render("searchFriend", {user: req.session.user, friend: us} );
-                        }
-                        else{//usuario existente, no aparece en friends con el logueado.
-                            us.areFriends = fila.id === req.session.user;
-                            res.render("searchFriend", {user: req.session.user, friend: us});
-                        }
-                    });
-                }
-                else{//vacio/usuario inexistente
-                    res.render("searchFriend", {user: req.session.user, friend: null});
-                }
-            }
-
-*/
 
 function searchUser(req, res) {
     res.status(200);
@@ -90,7 +66,14 @@ function searchUser(req, res) {
         if(err){console.error(err);res.status(404); res.send("Ha ocurrido un error");}
         if(us){
             let u = utilidades.makeUser(req.params.user, null, null, us.nombreCompleto, us.sexo, us.nacimiento, us.imagen, us.puntos);
-            res.render("profile", {user: user, searched: u});
+            req.daoFriends.requestSent(user.id, req.params.user, (err, areFriends) => {
+                if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error");}
+                if(areFriends)
+                    res.render("profile", {user: user, searched: u});                    
+                else{
+                    //poner boton de añadir amigo
+                }
+            });
         }
         else{
             res.render("profile", {user: user, searched: null});

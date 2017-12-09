@@ -9,7 +9,7 @@ class DAO {
 
     }
 
-
+    //Para en friends mostrar los amigos
     getFriendsRequests(userId, callback){
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
@@ -20,18 +20,23 @@ class DAO {
             con.release();            
         })
     }
-
+    //Para comprobar si ha habido una solicitud de amistad entre ambos.
+    /*
+    Si ha habido una solicitud de uno a otro ó son amigos se devuelve fila*/
     requestSent(userId, friendId, callback){
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
             con.query("SELECT ACCEPTED as accepted FROM FRIENDS WHERE ID1 = ? AND ID2 = ? OR ID1 = ? AND ID2 = ?", [userId, friendId, friendId, userId], (err, fila) =>{
                 if(err){ callback(err); return;}
-                callback(null, fila);
+                if(fila.length > 0)
+                    callback(null, true);
+                else
+                    callback(null, false);
             });
             con.release();
         });
     };
-
+    //Solicitud de amistad
     insertFriendRequest(userId, friendId, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
