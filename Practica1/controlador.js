@@ -92,7 +92,9 @@ app.route('/actionRequest/:friendId').post(middlewares.isLogged, middlewares.use
 //Questions
 const questions = require("./modulos/questions");
 app.route('/questions').get(middlewares.isLogged, middlewares.userLoggedData, questions.getQuestions);
-app.route('/addQuestion').get(middlewares.isLogged, middlewares.userLoggedData, questions.addQuestion);
+app.route('/addQuestion')
+    .get(middlewares.isLogged, middlewares.userLoggedData, questions.addQuestion)
+    .post(middlewares.isLogged, middlewares.userLoggedData, questions.postAddQuestion);
 
 //Peticiones generales aqui: ejemplo '/','/logout','img/:nombre' 
 app.get('/', middlewares.isLogged, (req, res) => {

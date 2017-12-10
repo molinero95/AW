@@ -7,7 +7,8 @@
         <title>Preguntas</title>
     </head>
     <body>
-    	<%- include("header", {user: user}) %>
+        <%- include("header", {user: user}) %>
+        <%- include("flash") %>		        
         <h1 class="titulo">Preguntas seleccionadas aleatoriamente</h1>
         <ul>
             <li><a class="preguntas" href="" >¿Cuál es la peor película de la historia?</a></li>
@@ -19,7 +20,7 @@
         <h1 class="titulo">¡Añade tus preguntas!</h1>
         <form method="get" action="/addQuestion">
             <div class = "botonCentro">
-                <input type="submit" name="crearpr" class="boton" value="Crear nueva pregunta" id="preg">
+                <input type="submit" class="boton" value="Crear nueva pregunta" id="preg">
             </div>
         </form>
     </body>    

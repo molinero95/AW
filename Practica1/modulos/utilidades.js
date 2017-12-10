@@ -62,6 +62,14 @@ function makeUser(iden, us, pass, name, gender, age, img, points) {
     };
 }
 
+function makeQuestion(id, question, numRes) {
+    return {
+        id: id,
+        question: question,
+        numRes: numRes
+    }
+}
+
 function checkRegister(user) {
     return checkGender(user) && checkPass(user.password) && checkName(user.name) && checkDate(user.age);
 }

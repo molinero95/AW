@@ -31,12 +31,7 @@ function postModificar(req,res){
         age: req.body.age,
         points: req.points,
     };
-<<<<<<< HEAD
-
-    let edad = utilidades.getAge(user.age);
-=======
     console.log(user.gender);
->>>>>>> 67b0c8dcca2e4aa335521ea11c9cd39786552f37
     utilidades.parseGender(user);
 
     if(req.file) {//Si cambia la imagen.

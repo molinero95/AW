@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+    <!-- Contenido de la página web -->
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>Preguntas</title>
+    </head>
+    <body>
+    	<%- include("header", {user: user}) %>
+        <form class="centradoFondoMorado" method="post" action="addQuestion">
+            <ul>
+                <li class="pregunta">
+                    Pregunta: <input type="text" name="pregunta">
+                </li>
+                <li class="pregunta">
+                    <p>Respuestas (una por linea por favor).</p>
+                    <textarea name="respuestas"></textarea>
+                </li>
+                <li class="botonCentro">
+                    <input type="submit" class="boton" >
+                </li>
+            </ul>
+            
+        </form>
+    </body>    
+</html>
