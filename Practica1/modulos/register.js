@@ -17,15 +17,14 @@ function postRegister (req, res) {
     req.body.age, "default.png", 0);     
     let correct = utilidades.checkRegister(user);
     if(correct){
-        console.log(user.email);
         req.daoUsers.userExists(user.email,(err, exists) =>{
             if(err){
                 console.error(err);
                 res.status(404); 
                 res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
                 res.render("register");            
-            }        
-            console.log(exists);
+            }
+            console.log(user);      
             if(exists){
                 res.setFlash("Usuario no valido", 0);
                 res.render("register");

@@ -62,6 +62,12 @@ function makeUser(iden, us, pass, name, gender, age, img, points) {
     };
 }
 
+
+
+function getDate(date){
+    
+}
+
 function makeQuestion(id, question, numRes) {
     return {
         id: id,
