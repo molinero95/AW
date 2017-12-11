@@ -211,6 +211,7 @@ FIN MENUS
 	display: flex;
 	flex-direction: column;
 	margin-bottom: 5px;
+	text-decoration: none;
 }
 
 .pregunta > input {

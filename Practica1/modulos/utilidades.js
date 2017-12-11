@@ -113,5 +113,6 @@ module.exports = {
     checkRegister: checkRegister,
     getAge: getAge,
     parseGender: parseGender, 
+    makeQuestion: makeQuestion,
     decodifyGender: decodifyGender
 }

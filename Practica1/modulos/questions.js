@@ -1,3 +1,4 @@
+const utilidades = require('./utilidades');
 
 function getQuestions(req, res) {
     res.status(200);
@@ -10,7 +11,12 @@ function getQuestions(req, res) {
     req.daoQuestions.getRandomQuestions((err, filas) => {
         if(err){res.status(404); res.send("Ha ocurrido un error...");}
         if(filas.length > 0){
-            res.render("questions", {user: user, questions: null});
+            let questions = []
+            filas.forEach(elem => {
+                questions.push(utilidades.makeQuestion(elem.ID, elem.PREGUNTA, elem.NUM_RESPUESTAS_INICIAL));
+            });
+            
+            res.render("questions", {user: user, questions: questions});
         }
         else
             res.render("questions", {user: user, questions: null});

@@ -10,13 +10,15 @@
         <%- include("header", {user: user}) %>
         <%- include("flash") %>		        
         <h1 class="titulo">Preguntas seleccionadas aleatoriamente</h1>
+        <% if(questions){ %>
         <ul>
-            <li><a class="preguntas" href="" >¿Cuál es la peor película de la historia?</a></li>
-            <li><a class="preguntas" href="">¿En qué escuela primaria estudiaste?</a></li>
-            <li><a class="preguntas" href="">¿Nintendo Switch, PS4 o Xbox One?</a></li>
-            <li><a class="preguntas" href="">¿Cuál es tu plato favorito?</a></li>
-            <li><a class="preguntas" href="">¿Cuál es el personaje más irritante de juego de tronos?</a></li>
+            <% for(let i = 0; i < questions.length; i++) { %>
+            <li><a class="pregunta" href="/question/<%= questions[i].id %>"><%= questions[i].question %></a></li>
+            <% } %>
         </ul>
+        <% } else { %>
+            <p class="simpleFlashAttention">No hay preguntas aún...</p>
+        <% } %>
         <h1 class="titulo">¡Añade tus preguntas!</h1>
         <form method="get" action="/addQuestion">
             <div class = "botonCentro">
