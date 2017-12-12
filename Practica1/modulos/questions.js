@@ -95,7 +95,7 @@ function getQuestionById(req, res){
                                 friends.push({
                                     id: e.ID_USER,
                                     name: f.nombreCompleto,
-                                    img: f.imagen
+                                    img: f.imagen,
                                 });
                                 if(data[data.length - 1] == e){//En la ultima vuelta render.
                                     if(respondido)
@@ -186,6 +186,14 @@ function postAnswerQuestion(req, res) {
     }
 }
 
+function getFriendQuiz(req, res){
+    res.status(200);
+}
+
+function postFriendQuiz(req, res){
+    res.status(200);
+}
+
 
 module.exports = {
     getQuestions: getQuestions,
@@ -194,4 +202,6 @@ module.exports = {
     getQuestionById: getQuestionById,
     answerQuestion: answerQuestion,
     postAnswerQuestion: postAnswerQuestion,
+    getFriendQuiz: getFriendQuiz,
+    postFriendQuiz: postFriendQuiz,
 }

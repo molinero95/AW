@@ -25,9 +25,9 @@
                 <% for(let i = 0; i < friends.length; i++) { %>                        
                 <li>
                     <img id="fotoAmigo" src="/img/<%= friends[i].img %>" alt="foto de amigo"> <%= friends[i].name %>
-                    <span id="botonesAmigos">
-                       <input type="submit" name="adivinar" class="boton" value="Adivinar">
-                    </span>
+                    <form id="botonesAmigos" method="get" action="/friendQuiz/<%= question.id %>/<%= friends[i].id %>">
+                       <input type="submit" class="boton" value="Adivinar">
+                    </form>
                 </li>
                 <% } %>
             </ul>
