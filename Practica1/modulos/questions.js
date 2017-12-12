@@ -69,6 +69,7 @@ function postAddQuestion(req, res) {
 
 
 //Al seleccionar una pregunta se llama a esta función.
+//PREGUNTAR A PROFESOR: FOR EACH y BD van en orden?
 function getQuestionById(req, res){
     res.status(200);
     let user = {
@@ -80,8 +81,41 @@ function getQuestionById(req, res){
         if(err){res.status(404); res.send("Ha ocurrido un error...");}
         if(datos.length > 0){
             let question = utilidades.makeQuestion(datos[0].ID, datos[0].PREGUNTA, datos[0].NUM_RESPUESTAS_INICIAL);
-            console.log(question);
-            res.render("question", {user:user, question: question, answer: null});        
+            req.daoQuestions.getUserAnswer(req.params.idQuestion, user.id,(err, resp) => {
+                if(err){res.status(404); res.send("Ha ocurrido un error...");}
+                let respondido = false;
+                if(resp.length > 0)//Ha respondido
+                    respondido = true;
+                req.daoQuestions.getFriendsWhoAnswered(req.params.idQuestion, user.id, (err, data) => {
+                    if(err){res.status(404); console.error(err),res.send("Ha ocurrido un error...");}
+                    let friends = [];
+                    if(data.length > 0) {//Tiene amigos que han respondido
+                        data.forEach(e => {//Para cada amigo e
+                            req.daoUsers.searchUserById(e.ID_USER, (err, f) => {//Buscamos a cada amigo para obtener sus datos
+                                friends.push({
+                                    id: e.ID_USER,
+                                    name: f.nombreCompleto,
+                                    img: f.imagen
+                                });
+                                if(data[data.length - 1] == e){//En la ultima vuelta render.
+                                    console.log(friends);
+                                    if(respondido)
+                                        res.render("question", {user:user, question: question, answer: resp[0].RESPUESTA, friends: friends});
+                                    else
+                                        res.render("question", {user:user, question: question, answer: null, friends:friends});
+                                }
+                            });
+                        });
+                    }
+                    else if(respondido){
+                        console.log("1");
+                        res.render("question", {user:user, question: question, answer: resp[0].RESPUESTA, friends: friends});
+                    }
+                    else
+                        res.render("question", {user:user, question: question, answer: null, friends:friends});
+                    
+                });
+            });
         }else{
             res.setFlash("No se ha encontrado la pregunta", 0);
             res.redirect("/questions");
@@ -121,7 +155,39 @@ function answerQuestion(req, res){
 
 //Al responder la pregunta...
 function postAnswerQuestion(req, res) {
-
+    res.status(200);
+    //res.send(req.body);
+    if(req.body.answer){
+        let respuesta = req.body.answer;
+        if(respuesta == "otra"){
+            if(req.body.otraInput.length == 0){
+                res.setFlash("No se ha introducido una respuesta", 0);        
+                res.redirect("/questions");
+            }
+            else{//tenemos que guardar la respuesta y además la respuesta del usuario
+                respuesta = req.body.otraInput;
+                req.daoQuestions.insertAnswer(respuesta, req.params.idQuestion, (err, data) => {
+                    if(err){res.status(404); res.send("Ha ocurrido un error...");}
+                    req.daoQuestions.insertUserAnswer(req.params.idQuestion, req.session.user, respuesta, (err, result) => {
+                        if(err){res.status(404); res.send("Ha ocurrido un error...");}
+                        res.setFlash("Respuesta introducida correctamente", 2);        
+                        res.redirect("/questions");
+                    });
+                });
+            }
+        }
+        else{//Guardamos sólo la respuesta del usuario, no hay respuesta nueva.
+            req.daoQuestions.insertUserAnswer(req.params.idQuestion, req.session.user, respuesta, (err, data) => {
+                if(err){res.status(404); res.send("Ha ocurrido un error...");}
+                    res.setFlash("Respuesta introducida correctamente", 2);        
+                    res.redirect("/questions");
+            });
+        }
+    }
+    else{
+        res.setFlash("No se ha introducido una respuesta", 0);        
+        res.redirect("/questions");
+    }
 }
 
 

@@ -50,13 +50,49 @@ class DAO {
             });
         });
     }
-
+    //Utilidaza al crear la pregunta o al meter una respuesta nueva
     insertAnswer(response, idQuestion, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
             con.query("INSERT INTO ANSWERS (ID_PREGUNTA, RESPUESTA) VALUES (?,?)", [idQuestion, response],(err, resp) => {
                 if(err) {callback(err); return;}
                 callback(null, true);
+                con.release();                            
+            });
+        });
+    }
+    //Utilizada para que los usuarios metan sus propias respuestas
+    insertUserAnswer(idQuestion, idUser, response, callback) {
+        this.pool.getConnection((err, con) => {
+            if(err) {callback(err); return;}
+            con.query("INSERT INTO ANSWER_USER (ID_PREGUNTA, ID_USER, RESPUESTA) VALUES (?,?,?)", [idQuestion, idUser, response],(err, resp) => {
+                if(err) {callback(err); return;}
+                callback(null, true);
+                con.release();                            
+            });
+        });
+    }
+
+    getUserAnswer(idQuestion, idUser, callback) {
+        this.pool.getConnection((err, con) => {
+            if(err) {callback(err); return;}
+            con.query("SELECT RESPUESTA FROM ANSWER_USER WHERE ID_PREGUNTA = ? AND ID_USER = ?", [idQuestion, idUser],(err, resp) => {
+                if(err) {callback(err); return;}
+                callback(null, resp);
+                con.release();                            
+            });
+        });
+    }
+
+
+    getFriendsWhoAnswered(idQuestion, idUser, callback){
+        this.pool.getConnection((err, con) => {
+            if(err) {callback(err); return;}
+            con.query("SELECT * FROM ANSWER_USER AS A WHERE A.ID_PREGUNTA = ? AND"
+            + " A.ID_USER = (SELECT ID1 FROM FRIENDS WHERE ID2=?) "
+            + " OR A.ID_USER = (SELECT ID2 FROM FRIENDS WHERE ID1=?)", [idQuestion, idUser, idUser],(err, resp) => {
+                if(err) {callback(err); return;}
+                callback(null, resp);
                 con.release();                            
             });
         });

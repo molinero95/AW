@@ -16,39 +16,23 @@
                 <input type="submit" class="boton" value="Contestar pregunta" id="contestar">
             </form>
             <% } else { %>
-            <p>Tu respuesta: <%= answer %></p>
+            <span class="simpleFlashAttention">Tu respuesta: <%= answer %></span>
             <% } %>
-            <p>Los siguientes amigos han contestado a esta pregunta: </p>
         </div>
-        <ul class ="listaAmigos">
-            <li>
-                <!--CUIDADO posible CSS-->
-                <img id="fotoAmigo" src="icons/Witch-01.png" alt="foto de perfil"> Bruja Piruja 
-                <span id="botonesAmigos">
-                   <input type="submit" name="adivinar" class="boton" value="Adivinar">
-                </span>
-            </li>
-            <li>
-                <!--CUIDADO posible CSS-->
-                <img id="fotoAmigo" src="icons/Hannibal-01.png" alt="foto de perfil"> Hannibal Gómez 
-                <span id="botonesAmigos">
-                    <input type="submit" name="adivinar" class="boton" value="Adivinar">
-                </span>
-            </li>
-            <li>
-                <!--CUIDADO posible CSS-->
-                <img id="fotoAmigo" src="icons/Stuart-01.png" alt="foto de perfil"> Stuart Minion 
-                <span id="botonesAmigos">
-                    <p id="acertado"> Has acertado</p>
-                </span>
-            </li>
-            <li>
-                <!--CUIDADO posible CSS-->
-                <img id="fotoAmigo" src="icons/Goomba-01.png" alt="foto de perfil"> Goomba
-                <span id="botonesAmigos">
-                    <p id="fallado"> Has fallado</p>
-                </span>
-            </li>
-        </ul>
+        <% if(friends.length > 0) { %>
+            <p class="info">Los siguientes amigos han contestado a esta pregunta: </p>
+            <ul class ="listaAmigos">
+                <% for(let i = 0; i < friends.length; i++) { %>                        
+                <li>
+                    <img id="fotoAmigo" src="/img/<%= friends[i].img %>" alt="foto de amigo"> <%= friends[i].name %>
+                    <span id="botonesAmigos">
+                       <input type="submit" name="adivinar" class="boton" value="Adivinar">
+                    </span>
+                </li>
+                <% } %>
+            </ul>
+        <% } else { %>
+            <p class="simpleFlashAttention">Tus amigos aún no han respondido a esta pregunta...</p>
+        <% } %>
     </body>
 </html>
