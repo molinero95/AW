@@ -175,6 +175,21 @@ function postAnswerQuestion(req, res) {
 
 function getFriendQuiz(req, res){
     res.status(200);
+    let user = {
+        id:req.session.user,
+        points: req.points,
+        img: req.img,
+    };
+    let idQuestion = req.params.idQuestion;
+    let idFriend = req.params.idFriend;
+    console.log(idQuestion);
+    //Necesitamos una funcion que obtenga respuestas aleatorias y la buena
+    //getQuizAnswers(idQuestion, respCorrecta). Importante numRes y obtener el resto diferente a respCorrecta
+    req.daoQuestions.getUserAnswer(idQuestion, idFriend, (err, ans) => {
+        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+        res.send(ans);
+    
+    });
 }
 
 function postFriendQuiz(req, res){

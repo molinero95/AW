@@ -28,7 +28,6 @@ class DAO {
         });
     }
 
-
     getRandomAnswersById(id, numRes, callback){
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
