@@ -13,6 +13,25 @@ const ficherosEstaticos = path.join(__dirname, "public");
 const multer = require('multer');
 const middlewares = require("./middlewares");
 let upload = multer({ dest: path.join(__dirname, "uploads") });
+const expressValidator = require("express-validator");
+
+app.use(expressValidator());
+
+app.post("/modificar", (req, res) => {
+    // El campo login ha de ser no vacío.
+    req.checkBody("login","Nombre de usuario vacío").notEmpty();
+    // El campo login solo puede contener caracteres alfanuméricos.
+    req.checkBody("login","Nombre de usuario no válido").matches(/^[A-Z0-9]*$/i);
+    // El campo pass ha de tener entre 6 y 10 caracteres.
+    req.checkBody("password","La contraseña no es válida").isLength({ min: 6, max: 10 });   
+    // El campo email ha de ser una dirección de correo válida.
+    req.checkBody("email","Dirección de correo no válida").isEmail();
+    // El campo fechaNacimiento ha de contener una fecha en formato
+    // mm/dd/aaaa anterior a la fecha actual.
+    req.checkBody("age","Fecha de nacimiento no válida").isBefore();
+});
+
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
