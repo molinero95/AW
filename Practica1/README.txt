@@ -8,12 +8,3 @@ COSAS POR HACER IMPORTANTES:
   - Los con.release() de los DAOS como en daoQuestions
   - Cuidado con las mayusculas en el registrar
 
-
-QUERYS a modificar:
-  - Questions:
-    - postAddQuestion
-    - getQuestionById
-    - answerQuestion
-    - postAnswerQuestion
-
-    Una vez hechas, limpiar lo sobrante.
