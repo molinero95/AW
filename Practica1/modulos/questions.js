@@ -10,7 +10,7 @@ function getQuestions(req, res) {
     };
 
     req.daoQuestions.getRandomQuestions((err, filas) => {
-        if(err){res.status(404); res.send("Ha ocurrido un error...");}
+        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
         if(filas.length > 0){
             let questions = []
             filas.forEach(elem => {
@@ -53,11 +53,11 @@ function postAddQuestion(req, res) {
     }
     question.responses = respuestas;
     req.daoQuestions.insertQuestion(question, (err, result) => {
-        if(err){res.status(404); res.send("Ha ocurrido un error...");}
+        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
         question.id = result.insertId;
         question.responses.forEach(element => {
             req.daoQuestions.insertAnswer(element, question.id, (err, datos) => {
-                if(err){res.status(404); res.send("Ha ocurrido un error...");}
+                if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                 if(element === question.responses[question.numRes - 1]){ //ultimo elemento, 
                     res.setFlash("Pregunta y respuesta/s añadidas correctamente", 2);                    
                     res.redirect("/questions");
@@ -78,11 +78,11 @@ function getQuestionById(req, res){
         img: req.img,
     };
     req.daoQuestions.getQuestionById(req.params.idQuestion, (err, datos) => {
-        if(err){res.status(404); res.send("Ha ocurrido un error...");}
+        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
         if(datos.length > 0){
             let question = utilidades.makeQuestion(datos[0].ID, datos[0].PREGUNTA, datos[0].NUM_RESPUESTAS_INICIAL);
             req.daoQuestions.getUserAnswer(req.params.idQuestion, user.id,(err, resp) => {
-                if(err){res.status(404); res.send("Ha ocurrido un error...");}
+                if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                 let respondido = false;
                 if(resp.length > 0)//Ha respondido
                     respondido = true;
@@ -98,7 +98,6 @@ function getQuestionById(req, res){
                                     img: f.imagen
                                 });
                                 if(data[data.length - 1] == e){//En la ultima vuelta render.
-                                    console.log(friends);
                                     if(respondido)
                                         res.render("question", {user:user, question: question, answer: resp[0].RESPUESTA, friends: friends});
                                     else
@@ -107,13 +106,10 @@ function getQuestionById(req, res){
                             });
                         });
                     }
-                    else if(respondido){
-                        console.log("1");
+                    else if(respondido)
                         res.render("question", {user:user, question: question, answer: resp[0].RESPUESTA, friends: friends});
-                    }
                     else
                         res.render("question", {user:user, question: question, answer: null, friends:friends});
-                    
                 });
             });
         }else{
@@ -132,11 +128,11 @@ function answerQuestion(req, res){
         img: req.img,
     };
     req.daoQuestions.getQuestionById(req.params.idQuestion, (err, datos) => {
-        if(err){res.status(404); res.send("Ha ocurrido un error...");}
+        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
         if(datos.length > 0){
             let question = utilidades.makeQuestion(datos[0].ID, datos[0].PREGUNTA, datos[0].NUM_RESPUESTAS_INICIAL);
             req.daoQuestions.getRandomAnswersById(question.id, question.numRes, (err, answ) => {
-                if(err){res.status(404); res.send("Ha ocurrido un error...");}
+                if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                 let answers = [];
                 answ.forEach(a => {
                     answers.push({
@@ -167,9 +163,9 @@ function postAnswerQuestion(req, res) {
             else{//tenemos que guardar la respuesta y además la respuesta del usuario
                 respuesta = req.body.otraInput;
                 req.daoQuestions.insertAnswer(respuesta, req.params.idQuestion, (err, data) => {
-                    if(err){res.status(404); res.send("Ha ocurrido un error...");}
+                    if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                     req.daoQuestions.insertUserAnswer(req.params.idQuestion, req.session.user, respuesta, (err, result) => {
-                        if(err){res.status(404); res.send("Ha ocurrido un error...");}
+                        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                         res.setFlash("Respuesta introducida correctamente", 2);        
                         res.redirect("/questions");
                     });
@@ -178,7 +174,7 @@ function postAnswerQuestion(req, res) {
         }
         else{//Guardamos sólo la respuesta del usuario, no hay respuesta nueva.
             req.daoQuestions.insertUserAnswer(req.params.idQuestion, req.session.user, respuesta, (err, data) => {
-                if(err){res.status(404); res.send("Ha ocurrido un error...");}
+                if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                     res.setFlash("Respuesta introducida correctamente", 2);        
                     res.redirect("/questions");
             });
