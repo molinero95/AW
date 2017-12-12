@@ -88,9 +88,11 @@ class DAO {
     getFriendsWhoAnswered(idQuestion, idUser, callback){
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
-            con.query("SELECT * FROM ANSWER_USER AS A WHERE A.ID_PREGUNTA = ? AND"
-            + " A.ID_USER = (SELECT ID1 FROM FRIENDS WHERE ID2=?) "
-            + " OR A.ID_USER = (SELECT ID2 FROM FRIENDS WHERE ID1=?)", [idQuestion, idUser, idUser],(err, resp) => {
+            con.query("SELECT U.ID, U.NOMBRECOMPLETO, U.IMAGEN FROM (SELECT A.ID_USER FROM "
+            + "ANSWER_USER AS A WHERE A.ID_PREGUNTA = ? AND (A.ID_USER = "
+            + "(SELECT ID1 FROM FRIENDS WHERE ID2 = ?) OR A.ID_USER = "
+            + "(SELECT ID2 FROM FRIENDS WHERE ID1 = ?))) AS T1 JOIN USERS AS U "
+            + "ON T1.ID_USER = U.ID", [idQuestion, idUser, idUser],(err, resp) => {
                 if(err) {callback(err); return;}
                 callback(null, resp);
                 con.release();                            

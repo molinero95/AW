@@ -5,6 +5,7 @@ class DAO {
       this.pool = pool;
     }
 
+    //Utilizada para la llamada a /friends
     getFriendsPage(userId, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
@@ -18,10 +19,7 @@ class DAO {
         });
     }
 
-    /*Cuando pulsamos sobre un usuario al buscar por ID necesitamos sus datos personales
-    y además comprobar si el usuario es o no amigo.
-    Si el usuario es el propio usuario logueado permitiremos encontrarlo y modificar los datos.
-    */
+    //Utilizada al buscar un usuario en friends
     searchUserAndStatusById(userId, searchId, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
@@ -54,7 +52,6 @@ class DAO {
             console.log(userId, friendId);
             con.query("UPDATE FRIENDS SET ACCEPTED = 1 WHERE ID1 = ? AND ID2 = ?", [friendId, userId], (err, fila) =>{
                 if(err){ callback(err); return;}
-                console.log("UPDATE");                
                 callback(null, fila);
             });
             con.release();

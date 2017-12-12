@@ -10,13 +10,10 @@ COSAS POR HACER IMPORTANTES:
 
 
 QUERYS a modificar:
-
   - Questions:
     - postAddQuestion
     - getQuestionById
     - answerQuestion
     - postAnswerQuestion
-  - Register:
-    - postRegister
 
     Una vez hechas, limpiar lo sobrante.

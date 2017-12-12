@@ -77,47 +77,34 @@ function getQuestionById(req, res){
         points: req.points,
         img: req.img,
     };
-    req.daoQuestions.getQuestionById(req.params.idQuestion, (err, datos) => {
+
+    req.daoQuestions.getQuestionById(req.params.idQuestion, (err, q) => {
         if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-        if(datos.length > 0){
-            let question = utilidades.makeQuestion(datos[0].ID, datos[0].PREGUNTA, datos[0].NUM_RESPUESTAS_INICIAL);
-            req.daoQuestions.getUserAnswer(req.params.idQuestion, user.id,(err, resp) => {
+        if(q.length > 0){
+            let question = utilidades.makeQuestion(q[0].ID, q[0].PREGUNTA, q[0].NUM_RESPUESTAS_INICIAL);
+            req.daoQuestions.getUserAnswer(req.params.idQuestion, user.id, (err, resp) => {
                 if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-                let respondido = false;
-                if(resp.length > 0)//Ha respondido
-                    respondido = true;
-                req.daoQuestions.getFriendsWhoAnswered(req.params.idQuestion, user.id, (err, data) => {
-                    if(err){res.status(404); console.error(err),res.send("Ha ocurrido un error...");}
+                let answer = null;
+                if(resp.length > 0) answer = resp[0].RESPUESTA;
+                req.daoQuestions.getFriendsWhoAnswered(question.id, user.id,(err, f) =>{
+                    if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                     let friends = [];
-                    if(data.length > 0) {//Tiene amigos que han respondido
-                        data.forEach(e => {//Para cada amigo e
-                            req.daoUsers.searchUserById(e.ID_USER, (err, f) => {//Buscamos a cada amigo para obtener sus datos
-                                friends.push({
-                                    id: e.ID_USER,
-                                    name: f.nombreCompleto,
-                                    img: f.imagen,
-                                });
-                                if(data[data.length - 1] == e){//En la ultima vuelta render.
-                                    if(respondido)
-                                        res.render("question", {user:user, question: question, answer: resp[0].RESPUESTA, friends: friends});
-                                    else
-                                        res.render("question", {user:user, question: question, answer: null, friends:friends});
-                                }
-                            });
+                    f.forEach(e=>{
+                        friends.push({
+                            id: e.ID,
+                            name: e.NOMBRECOMPLETO,
+                            img: e.IMAGEN,
                         });
-                    }
-                    else if(respondido)
-                        res.render("question", {user:user, question: question, answer: resp[0].RESPUESTA, friends: friends});
-                    else
-                        res.render("question", {user:user, question: question, answer: null, friends:friends});
-                });
-            });
-        }else{
+                    });//fin forEach 
+                    res.render("question", {user:user, question: question, answer: answer, friends: friends});
+                });    
+            });          
+        }
+        else{
             res.setFlash("No se ha encontrado la pregunta", 0);
             res.redirect("/questions");
         }
     });
-
 }
 //Al darle a responder a pregunta...
 function answerQuestion(req, res){
