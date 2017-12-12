@@ -6,13 +6,17 @@ COSAS POR HACER IMPORTANTES:
   - Middleware para no permitir logear si hay sesion iniciada
   - Arreglar (y mucho) el diseño
   - Los con.release() de los DAOS como en daoQuestions
+  - Cuidado con las mayusculas en el registrar
 
 
 QUERYS a modificar:
-  - Friends:
-    - getFriends
-    - searchUser
+
   - Questions:
     - postAddQuestion
     - getQuestionById
     - answerQuestion
+    - postAnswerQuestion
+  - Register:
+    - postRegister
+
+    Una vez hechas, limpiar lo sobrante.

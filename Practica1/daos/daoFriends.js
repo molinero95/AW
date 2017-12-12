@@ -5,51 +5,37 @@ class DAO {
       this.pool = pool;
     }
 
-    getUserFriends(userId, callback) {
+    getFriendsPage(userId, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
-            con.query("select ID1, ID2 FROM FRIENDS WHERE ACCEPTED = 1 AND (ID1 = ? OR ID2 = ?)", [userId, userId], (err, resul) => {
-                let dev = [];
-                resul.forEach(element => {
-                    if(element.ID1 === userId)
-                        dev.push(element.ID2);
-                    else
-                        dev.push(element.ID1);
-                });
-                callback(null, dev);
+            con.query("SELECT ID1, ID, NOMBRECOMPLETO, IMAGEN, ACCEPTED FROM (SELECT * FROM USERS AS U JOIN FRIENDS AS F1 ON U.ID = F1.ID1 UNION " 
+                + "SELECT * FROM USERS AS U JOIN FRIENDS AS F2 ON U.ID = F2.ID2) AS T1 WHERE "
+                + "ID <> ? AND (ID1 = ? OR ID2 = ?);", [userId, userId, userId], (err, resul) => {
+                if(err) {callback(err); return;}
+                callback(null, resul);
+                con.release();
             })
         });
     }
 
-    
-
-    //Para en friends mostrar los amigos
-    getFriendsRequests(userId, callback){
+    /*Cuando pulsamos sobre un usuario al buscar por ID necesitamos sus datos personales
+    y además comprobar si el usuario es o no amigo.
+    Si el usuario es el propio usuario logueado permitiremos encontrarlo y modificar los datos.
+    */
+    searchUserAndStatusById(userId, searchId, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
-            con.query("SELECT ID1, ID2, ACCEPTED AS accepted FROM FRIENDS WHERE ACCEPTED = 0 AND ID2 = ?", [userId], (err, filas) =>{
-                if(err){callback(err); return}
-                callback(null,filas);
-            });
-            con.release();            
-        })
-    }
-    //Para comprobar si ha habido una solicitud de amistad entre ambos.
-    /*
-    Si ha habido una solicitud de uno a otro ó son amigos se devuelve fila*/
-    requestSent(userId, friendId, callback){
-        this.pool.getConnection((err, con) => {
-            if(err) {callback(err); return;}
-            con.query("SELECT ACCEPTED as accepted FROM FRIENDS WHERE ID1 = ? AND ID2 = ? OR ID1 = ? AND ID2 = ?", [userId, friendId, friendId, userId], (err, fila) =>{
-                if(err){ callback(err); return;}
-                if(fila.length > 0)
-                    callback(null, true);
-                else
-                    callback(null, false);
-            });
-            con.release();
+            con.query("SELECT * FROM (SELECT * FROM USERS WHERE ID = ?) AS T1, "
+            +"(SELECT * FROM FRIENDS WHERE (ID1 = ? AND ID2 = ?) OR (ID1 = ? AND ID2 = ?)) AS T2", 
+            [searchId, searchId, userId, userId, searchId], (err, resul) => {
+                if(err) {callback(err); return;}
+                callback(null, resul);
+                con.release();
+            })
         });
-    };
+    }
+
+
     //Solicitud de amistad
     insertFriendRequest(userId, friendId, callback) {
         this.pool.getConnection((err, con) => {

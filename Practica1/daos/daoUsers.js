@@ -70,6 +70,8 @@ class DAO {
         con.release();
       });
     }
+
+    //Búsqueda de usuario por nombre
     searchUsers(user, callback) {
       this.pool.getConnection((err, con) => {
         if(err){
@@ -87,7 +89,7 @@ class DAO {
         con.release();
       });
     }
-
+    //Busqueda de usuario por ID
     searchUserById(id, callback) {
       this.pool.getConnection((err, con) => {
         if(err){
