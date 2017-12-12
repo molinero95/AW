@@ -72,6 +72,7 @@ function makeQuestion(id, question, numRes) {
     }
 }
 
+
 function checkRegister(user) {
     return checkGender(user) && checkPass(user.password) && checkName(user.name) && checkDate(user.age);
 }

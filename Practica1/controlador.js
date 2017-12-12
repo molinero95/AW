@@ -95,6 +95,10 @@ app.route('/questions').get(middlewares.isLogged, middlewares.userLoggedData, qu
 app.route('/addQuestion')
     .get(middlewares.isLogged, middlewares.userLoggedData, questions.addQuestion)
     .post(middlewares.isLogged, middlewares.userLoggedData, questions.postAddQuestion);
+app.route('/question/:idQuestion').get(middlewares.isLogged, middlewares.userLoggedData, questions.getQuestionById);
+app.route('/answerQuestion/:idQuestion')
+    .get(middlewares.isLogged, middlewares.userLoggedData, questions.answerQuestion)
+    .post(middlewares.isLogged, middlewares.userLoggedData, questions.postAnswerQuestion);
 
 //Peticiones generales aqui: ejemplo '/','/logout','img/:nombre' 
 app.get('/', middlewares.isLogged, (req, res) => {

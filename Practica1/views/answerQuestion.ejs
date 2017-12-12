@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+    <!-- Contenido de la página web -->
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="/style.css">
+        <title>Preguntas</title>
+    </head>
+    <body>
+        <%- include("header", {user: user}) %>            
+        <h1 class="titulo"><%= question.question %> </h1>
+        <form method="post" action="/answerQuestion">
+            <ul>
+                <% for(let i = 0; i < answers.length; i++) { %>
+                <li class="eleccion">
+                    <span>
+                        <input type="radio" name="answer" value="<%= answers[i].answer %>"><%= answers[i].answer %>
+                    </span>
+                </li>
+                <% } %>
+                <li class="eleccion" id="otra">
+                        <span>
+                            <input type="radio" name="answer" value="otra"> Otra:   
+                        </span>  
+                            <input type="text" id="otraText">
+                    </li>
+                <li class="botonCentro">
+                    <input type="submit" name="crearpr" class="boton" value="Responder" id="preg">
+                </li>
+            </ul>
+        </form>
+    </body>
+</html>

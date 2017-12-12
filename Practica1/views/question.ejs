@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+    <!-- Contenido de la página web -->
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="/style.css">
+        <title>Preguntas</title>
+    </head>
+    <body>
+        <%- include("header", {user: user}) %>            
+        <h1 class="titulo"><%= question.question %></h1>
+        <div class="info">
+            <% if(!answer) { %>
+            <p>No has contestado a esta pregunta.</p>
+            <form method="get" action="/answerQuestion/<%= question.id %>">              
+                <input type="submit" class="boton" value="Contestar pregunta" id="contestar">
+            </form>
+            <% } else { %>
+            <p>Tu respuesta: <%= answer %></p>
+            <% } %>
+            <p>Los siguientes amigos han contestado a esta pregunta: </p>
+        </div>
+        <ul class ="listaAmigos">
+            <li>
+                <!--CUIDADO posible CSS-->
+                <img id="fotoAmigo" src="icons/Witch-01.png" alt="foto de perfil"> Bruja Piruja 
+                <span id="botonesAmigos">
+                   <input type="submit" name="adivinar" class="boton" value="Adivinar">
+                </span>
+            </li>
+            <li>
+                <!--CUIDADO posible CSS-->
+                <img id="fotoAmigo" src="icons/Hannibal-01.png" alt="foto de perfil"> Hannibal Gómez 
+                <span id="botonesAmigos">
+                    <input type="submit" name="adivinar" class="boton" value="Adivinar">
+                </span>
+            </li>
+            <li>
+                <!--CUIDADO posible CSS-->
+                <img id="fotoAmigo" src="icons/Stuart-01.png" alt="foto de perfil"> Stuart Minion 
+                <span id="botonesAmigos">
+                    <p id="acertado"> Has acertado</p>
+                </span>
+            </li>
+            <li>
+                <!--CUIDADO posible CSS-->
+                <img id="fotoAmigo" src="icons/Goomba-01.png" alt="foto de perfil"> Goomba
+                <span id="botonesAmigos">
+                    <p id="fallado"> Has fallado</p>
+                </span>
+            </li>
+        </ul>
+    </body>
+</html>

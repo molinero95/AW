@@ -3,7 +3,7 @@
     <!-- Contenido de la página web -->
     <head>
         <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="/style.css">
         <title>Preguntas</title>
     </head>
     <body>
@@ -13,7 +13,7 @@
         <% if(questions){ %>
         <ul>
             <% for(let i = 0; i < questions.length; i++) { %>
-            <li><a class="pregunta" href="/question/<%= questions[i].id %>"><%= questions[i].question %></a></li>
+            <li><a class="eleccion" href="/question/<%= questions[i].id %>"><%= questions[i].question %></a></li>
             <% } %>
         </ul>
         <% } else { %>

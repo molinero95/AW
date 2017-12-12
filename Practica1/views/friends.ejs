@@ -8,6 +8,7 @@
     </head>
     <body>
         <%- include("header", {user: user}) %>
+        <%- include("flash") %>	        
         <h1 class="titulo">Solicitudes de amistad</h1>
         <% if(friends.requests) { %>
     	<ul class ="listaAmigos">

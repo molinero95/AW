@@ -118,7 +118,8 @@ function searchUser(req, res) {
             });
         }
         else{
-            res.render("profile", {user: user, searched: null});
+            res.setFlash("No se ha encontrado el usuario", 0);
+            res.redirect("/friends");
         }
     });
 };
