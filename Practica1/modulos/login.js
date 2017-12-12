@@ -4,7 +4,8 @@ function getLogin(req, res){
     res.status(200);
     res.render("login");
 }
-//CUIDADO CON ESTA FUNCION
+
+
 function postLogin(req, res) {
     res.status(200);
     let user = req.body.user;
