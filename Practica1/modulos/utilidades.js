@@ -77,6 +77,16 @@ function checkRegister(user) {
     return checkGender(user) && checkPass(user.password) && checkName(user.name) && checkDate(user.age);
 }
 
+function getDate(date){
+    let year = date.getFullYear();
+    let month = Number(date.getMonth() + 1);
+    if(month < 10){
+        month = "1"+String(month);
+    }
+    let day = date.getDate();
+    return year + "-" + month + "-" + day;
+}
+
 function getAge(date){
 
     if(typeof(date) === "string"){
@@ -104,9 +114,7 @@ function getAge(date){
     if (mesAct === mes && diaAct < dia){
         edad--;
     }
-    
     return edad;
-
 }
 
 module.exports = {
@@ -115,5 +123,6 @@ module.exports = {
     getAge: getAge,
     parseGender: parseGender, 
     makeQuestion: makeQuestion,
-    decodifyGender: decodifyGender
+    decodifyGender: decodifyGender,
+    getDate: getDate,
 }

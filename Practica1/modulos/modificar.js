@@ -12,7 +12,7 @@ function getModificar(req,res){
         if(err){ console.error(err); return;}
         let us = utilidades.makeUser(user.id, datos.email, "",datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
         let date = new Date(datos.nacimiento);
-        us.age = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+        us.age = utilidades.getDate(us.age);
         console.log(us);
         res.render("modificar", {user: us});
     });
