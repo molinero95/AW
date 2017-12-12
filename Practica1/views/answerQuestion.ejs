@@ -9,7 +9,7 @@
     <body>
         <%- include("header", {user: user}) %>            
         <h1 class="titulo"><%= question.question %> </h1>
-        <form method="post" action="/answerQuestion">
+        <form method="post" action="/answerQuestion/<%= question.id %>">
             <ul>
                 <% for(let i = 0; i < answers.length; i++) { %>
                 <li class="eleccion">
