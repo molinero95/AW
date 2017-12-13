@@ -51,7 +51,7 @@ function getSearchFriend(req, res) {
                 let result = [];
                 filas.forEach(us => {
                     console.log(us);
-                    result.push(utilidades.makeUser(us.id, null, null, us.nombreCompleto, us.sexo, us.nacimiento, us.imagen, us.puntos));
+                    result.push(utilidades.makeUser(us.ID, null, null, us.NOMBRECOMPLETO, us.SEXO, us.NACIMIENTO, us.IMAGEN, us.PUNTOS));
                 });
                 res.render("searchUsers", {user: user, searched: result});
             }
@@ -63,9 +63,6 @@ function getSearchFriend(req, res) {
 }
 
 //Cuando seleccionas un usuario
-/*
-Necesitamos buscar un usuario por ID y comprobar si es amigo
- */
 function searchUser(req, res) {
     res.status(200);
     let user = {
@@ -78,36 +75,31 @@ function searchUser(req, res) {
     else{
         req.daoFriends.searchUserAndStatusById(user.id, req.params.user, (err, us) => {
             if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error");}
-            if(us.length > 0){
+            if(us.length > 0){  //Son amigos ó ha habido solicitud de amistad
                 let areFriends = Boolean(us[0].ACCEPTED);
                 let searched = utilidades.makeUser(req.params.user, null,null, us[0].NOMBRECOMPLETO, us[0].SEXO, us[0].NACIMIENTO, us[0].IMAGEN, us[0].PUNTOS);
-                console.log(us);
                 searched.age = utilidades.getAge(searched.age);
-                res.render("profile", {user: user, searched: searched, areFriends: areFriends});
+                if(!areFriends) //Para dar información sobre qué ocurre con la solicitud de amistad
+                    res.setFlash("Hay una petición pendiente por aprobar con este usuario", 1);
+                res.render("profile", {user: user, searched: searched, areFriends: true});  //Es true ya que no debe aparecer el boton añadir amigo
             }
-            else{
-                res.setFlash("No se ha encontrado el usuario", 0);
-                res.redirect("/friends");
+            else{//Comprobar si existe usuario y buscar por Id, si no error
+                req.daoUsers.searchUserById(req.params.user, (err, d)=>{
+                    if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error");}
+                    console.log(d);
+                    if(d){
+                        let searched = utilidades.makeUser(req.params.user, null,null, d.NOMBRECOMPLETO, d.SEXO, d.NACIMIENTO, d.IMAGEN, d.PUNTOS);
+                        searched.age = utilidades.getAge(searched.age);
+                        res.render("profile", {user: user, searched: searched, areFriends: false});  //No son amigos ni ha habido solicitud de amistad                   
+                    }
+                    else{//El usuario no existe
+                        res.setFlash("No se ha encontrado el usuario", 0);
+                        res.redirect("/friends");
+                    }
+                });
             }
         });
     }
-    /*
-    req.daoUsers.searchUserById(req.params.user, (err, us) => {
-        if(err){console.error(err);res.status(404); res.send("Ha ocurrido un error");}
-        if(us){
-            let u = utilidades.makeUser(req.params.user, null, null, us.nombreCompleto, us.sexo, us.nacimiento, us.imagen, us.puntos);
-            u.age = utilidades.getAge(u.age);
-            req.daoFriends.requestSent(user.id, req.params.user, (err, areFriends) => {
-                if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error");}
-                res.render("profile", {user: user, searched: u, areFriends: areFriends});                
-            });
-        }
-        else{
-            res.setFlash("No se ha encontrado el usuario", 0);
-            res.redirect("/friends");
-        }
-    });
-    */
 };
 
 //Al pulsar sobre añadir amigo

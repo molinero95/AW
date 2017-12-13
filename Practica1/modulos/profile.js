@@ -12,8 +12,8 @@ function getProfile(req,res){
             return;
         }
         if(datos){
-            let us = utilidades.makeUser(user , datos.email, "", datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
-            us.age = utilidades.getAge(datos.nacimiento);
+            let us = utilidades.makeUser(user , datos.EMAIL, "", datos.NOMBRECOMPLETO, datos.SEXO, datos.NACIMIENTO, datos.IMAGEN, datos.PUNTOS);
+            us.age = utilidades.getAge(datos.NACIMIENTO);
             res.render("profile", {user: us, searched: us});
         }
         else{//Ojo aqui, si no se encuentra el perfil, del usuario logeado... 

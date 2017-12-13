@@ -8,6 +8,7 @@
     </head>
     <body>
 		<%- include("header", {user: user}) %>
+		<%- include("flash") %>			
 		<% if (searched.id == user.id) { %>
     	<h1 class="titulo">Perfil</h1>
     	<form id="perfilCompleto" method="get" action="/modificar">

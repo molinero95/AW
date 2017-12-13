@@ -5,13 +5,12 @@ function getModificar(req,res){
     res.status(200);
     let user = {
         id:req.session.user,
-        points: req.points,
-        img: req.img,
     };
     req.daoUsers.searchUserById(user.id, (err, datos) =>{
         if(err){ console.error(err); return;}
-        let us = utilidades.makeUser(user.id, datos.email, "",datos.nombreCompleto, datos.sexo, datos.nacimiento, datos.imagen, datos.puntos);
-        let date = new Date(datos.nacimiento);
+        console.log(datos);
+        let us = utilidades.makeUser(user.id, datos.EMAIL, "",datos.NOMBRECOMPLETO, datos.SEXO, datos.NACIMIENTO, datos.IMAGEN, datos.PUNTOS);
+        let date = new Date(datos.NACIMIENTO);
         us.age = utilidades.getDate(us.age);
         res.render("modificar", {user: us});
     });
@@ -32,7 +31,6 @@ function postModificar(req,res){
         age: req.body.age,
         points: req.points,
     };
-    console.log(user.gender);
     utilidades.parseGender(user);
 
     if(req.file) {//Si cambia la imagen.

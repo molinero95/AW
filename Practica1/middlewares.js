@@ -45,8 +45,8 @@ function userLoggedData (req, res, next) {
     req.daoUsers.searchUserById(req.session.user, (err, datos) => {
         if(err){console.error(err); return;}
         if(datos) {  //Se deberia cumplir siempre
-            req.img = datos.imagen;
-            req.points = datos.puntos;
+            req.img = datos.IMAGEN;
+            req.points = datos.PUNTOS;
             next();
         }
     });

@@ -8,3 +8,4 @@ COSAS POR HACER IMPORTANTES:
   - Los con.release() de los DAOS como en daoQuestions
   - Cuidado con las mayusculas en el registrar
   - Cuidado con las respuestas repetidas
+  - searchUserAndStatusById hay que arreglar en daoFriends

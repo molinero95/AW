@@ -22,6 +22,19 @@ class DAO {
         });
     }
 
+
+    checkIfAreFriends(userId, searchId, callback) {
+        this.pool.getConnection((err, con) => {
+            if(err) {callback(err); return;}
+            con.query("SELECT COUNT(*) AS RES FROM FRIENDS WHERE (ID1 = ? AND ID2= ?) OR (ID1 = ? AND ID2 = ?)", 
+            [searchId, userId, userId, searchId], (err, resul) => {
+                if(err) {callback(err); return;}
+                resul[0].RES === 0 ?  callback(null, false):callback(null, true);
+                con.release();
+            })
+        });
+    }
+
     //Utilizada al buscar un usuario en friends
     searchUserAndStatusById(userId, searchId, callback) {
         this.pool.getConnection((err, con) => {
