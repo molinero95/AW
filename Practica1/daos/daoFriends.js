@@ -6,10 +6,13 @@ class DAO {
     }
 
     //Utilizada para la llamada a /friends
+    //Obtenemos todas las personas que deben aparecer en esta vista
+    //Sean o no amigos
     getFriendsPage(userId, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
-            con.query("SELECT ID1, ID, NOMBRECOMPLETO, IMAGEN, ACCEPTED FROM (SELECT * FROM USERS AS U JOIN FRIENDS AS F1 ON U.ID = F1.ID1 UNION " 
+            con.query("SELECT ID1, ID, NOMBRECOMPLETO, IMAGEN, ACCEPTED FROM "
+                + "(SELECT * FROM USERS AS U JOIN FRIENDS AS F1 ON U.ID = F1.ID1 UNION " 
                 + "SELECT * FROM USERS AS U JOIN FRIENDS AS F2 ON U.ID = F2.ID2) AS T1 WHERE "
                 + "ID <> ? AND (ID1 = ? OR ID2 = ?);", [userId, userId, userId], (err, resul) => {
                 if(err) {callback(err); return;}

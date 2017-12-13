@@ -99,6 +99,17 @@ class DAO {
         });
     }
 
+    getQuizAnswers(idQuestion, idFriend, numRes, callback) {
+        this.pool.getConnection((err, con) => {
+            if(err) {callback(err); return;}
+            con.query("SELECT RESPUESTA FROM ANSWER_USER WHERE ID_PREGUNTA = ? AND ID_USER <>  ? ORDER BY RAND LIMIT ?; ", [idQuestion, idFriend, numRes],(err, resp) => {
+                if(err) {callback(err); return;}
+                callback(null, resp);
+                con.release();                            
+            });
+        });
+    }
+
     close() {
         this.pool.end();
     }

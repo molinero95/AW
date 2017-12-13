@@ -184,12 +184,20 @@ function getFriendQuiz(req, res){
     let idFriend = req.params.idFriend;
     console.log(idQuestion);
     //Necesitamos una funcion que obtenga respuestas aleatorias y la buena
-    //getQuizAnswers(idQuestion, respCorrecta). Importante numRes y obtener el resto diferente a respCorrecta
-    req.daoQuestions.getUserAnswer(idQuestion, idFriend, (err, ans) => {
-        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-        res.send(ans);
-    
+    //getQuizAnswers(idQuestion, idFriend). Importante numRes y obtener el resto diferente a respCorrecta
+    req.daoQuestions.getQuestionById(idQuestion,(err, q) => {
+        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
+        res.send(q);       
+        if(q.length > 0){
+            let question = utilidades.makeQuestion(q[0].ID, q[0].PREGUNTA, q[0].NUM_RESPUESTAS_INICIAL);
+        }
+        /*req.daoQuestions.getUserAnswer(idQuestion, idFriend, (err, ans) => {
+            if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+            req.daoQuestions.getQuizAnswers(ans[0].id)
+            res.send(ans);
+        });*/
     });
+    
 }
 
 function postFriendQuiz(req, res){

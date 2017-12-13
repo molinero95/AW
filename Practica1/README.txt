@@ -7,4 +7,4 @@ COSAS POR HACER IMPORTANTES:
   - Arreglar (y mucho) el diseño
   - Los con.release() de los DAOS como en daoQuestions
   - Cuidado con las mayusculas en el registrar
-
+  - Cuidado con las respuestas repetidas
