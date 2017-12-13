@@ -13,7 +13,7 @@
 	border-style: solid;
 	border-color:rgb(0, 0, 0);
 	border-width:5px;
-	background: rgb(247, 100, 132);
+	background: rgb(228, 56, 96);
 	margin-right: 30%;
 	margin-left: 30%;
 }
@@ -60,6 +60,7 @@
 	background:rgb(115, 235, 115);
 	margin-right: 30%;
 	margin-left: 30%;
+	opacity: 90%;
 }
 
 @font-face{
@@ -320,6 +321,7 @@ nav{
 	border-color: black;	
 	padding: 20px;
 	margin-bottom: 5%;
+	font-size: 17px;
 }
 
 
