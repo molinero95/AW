@@ -47,8 +47,10 @@ function getSearchFriend(req, res) {
         req.daoUsers.searchUsers(req.query.friend, (err, filas) => {
             if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
             if(filas.length > 0){
+                console.log(filas);
                 let result = [];
                 filas.forEach(us => {
+                    console.log(us);
                     result.push(utilidades.makeUser(us.id, null, null, us.nombreCompleto, us.sexo, us.nacimiento, us.imagen, us.puntos));
                 });
                 res.render("searchUsers", {user: user, searched: result});
@@ -78,9 +80,9 @@ function searchUser(req, res) {
             if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error");}
             if(us.length > 0){
                 let areFriends = Boolean(us[0].ACCEPTED);
-                let searched = utilidades.makeUser(req.params.user, null,null, us[0].nombreCompleto, us[0].sexo, us[0].nacimiento, us[0].imagen, us[0].puntos);
+                let searched = utilidades.makeUser(req.params.user, null,null, us[0].NOMBRECOMPLETO, us[0].SEXO, us[0].NACIMIENTO, us[0].IMAGEN, us[0].PUNTOS);
+                console.log(us);
                 searched.age = utilidades.getAge(searched.age);
-                console.log(areFriends);
                 res.render("profile", {user: user, searched: searched, areFriends: areFriends});
             }
             else{
