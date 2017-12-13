@@ -89,6 +89,7 @@ function getQuestionById(req, res){
                 req.daoQuestions.getFriendsWhoAnswered(question.id, user.id,(err, f) =>{
                     if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                     let friends = [];
+                    console.log(f);
                     f.forEach(e=>{
                         friends.push({
                             id: e.ID,
