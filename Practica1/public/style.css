@@ -106,8 +106,8 @@ nav > ul {
 	text-align: center;
 }
 
-.elemMenu:hover {
-	background: #503554;	
+.elemMenu a:hover {
+	color:black;	
 }
 
 .elemMenu > a {
