@@ -276,9 +276,8 @@ FIN MENUS
 
 
 #botonesAmigos{
-    display: flex;
-    float:right;
-    justify-content: space-around;
+	display: flex;
+	float: right;
 }
 
 /*Botones FIN*/
@@ -352,42 +351,33 @@ nav{
 #fotoAmigo{
     height: 50px;
 	width: 50px;
+	margin-right: 3px;
     border: black 1px solid;
 }
 
 .listaAmigos{
     margin-left: 30%;
-    margin-right: 30%;
+	margin-right: 30%;
 }
 
-.listaAmigos > a > li {
+.listaAmigos li {
 	margin-bottom: 10px;
-}
-
-#solicitudAmigo {
-	display: flex;
-	justify-content: space-around;
-	align-content: center;
-	background-color: #970EB4;
-	border: black solid;
 }
 
 
 .amigo {
 	display: flex;
-	justify-content: flex-start;
-	align-content: center;
+	font-size: 20px;
+	color: white;
 	background-color: #970EB4;
 	border: black solid;
 	
 }
 
-.amigo > span {
-	margin-left: 5%;
-	text-decoration: none;
-	color: white;
-	font-size: 25px;
-	margin-top: 5px;
+.amigo span {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 10px;
 }
 
 

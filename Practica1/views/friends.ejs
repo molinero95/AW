@@ -13,7 +13,7 @@
         <% if(friends.requests) { %>
     	<ul class ="listaAmigos">
             <% for (let i = 0; i < friends.requests.length; i++) { %>                    
-            <li id="solicitudAmigo">
+            <li class = "amigo">
                 <form method="post" action="/actionRequest/<%= friends.requests[i].id%>">
                     <img id="fotoAmigo" src="/img/<%= friends.requests[i].img %>" alt="foto de perfil"> <%= friends.requests[i].name %>
                     <span id="botonesAmigos">
@@ -41,7 +41,7 @@
             </li>
         </ul>
         <h1 class="titulo">Mis amigos</h1>
-        <ul class ="listaAmigos">
+        <ul class = "listaAmigos">
             <% if(friends.aggregated) { %>
                 <% for(let i = 0; i < friends.aggregated.length; i++) { %>
                     <a href="/searchUser/<%= friends.aggregated[i].id %>">                        
