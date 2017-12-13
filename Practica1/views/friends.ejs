@@ -12,17 +12,16 @@
         <% if(friends.requests) { %>
     	<ul class ="listaAmigos">
             <% for (let i = 0; i < friends.requests.length; i++) { %>                    
-            <li class = "amigo">
-                <div>
-                    <form method="post" action="/actionRequest/<%= friends.requests[i].id%>">
-                        <img id="fotoAmigo" src="/img/<%= friends.requests[i].img %>" alt="foto de perfil"> <%= friends.requests[i].name %>
-                        <span id="botonesAmigos">
-                            <input type="hidden" value="<%= friends.requests[i].id %>">
-                            <input type="submit" name="aceptar" class="boton" value="Aceptar">
-                            <input type="submit" name="rechazar" class="boton" value="Rechazar">
-                        </span>
-                    </form>
-                </div>
+            <li class="amigo">
+                <form method="post" action="/actionRequest/<%= friends.requests[i].id%>">
+                    <img id="fotoAmigo" src="/img/<%= friends.requests[i].img %>" alt="foto de perfil"> 
+                    <span><%= friends.requests[i].name %></span>
+                    <span id="botonesAmigos">
+                        <input type="hidden" value="<%= friends.requests[i].id %>">
+                        <input type="submit" name="aceptar" class="boton" value="Aceptar">
+                        <input type="submit" name="rechazar" class="boton" value="Rechazar">
+                    </span>
+                </form>
             </li>
             <% } %>
         </ul>
@@ -47,7 +46,8 @@
                 <% for(let i = 0; i < friends.aggregated.length; i++) { %>
                     <a href="/searchUser/<%= friends.aggregated[i].id %>">                        
                         <li class = "amigo">
-                                <img id="fotoAmigo" src="/img/<%=friends.aggregated[i].img %>" alt="foto de perfil"><%= friends.aggregated[i].name %>           
+                                <img id="fotoAmigo" src="/img/<%=friends.aggregated[i].img %>" alt="foto de perfil">
+                                <span><%= friends.aggregated[i].name %></span>      
                         </li>
                     </a>
                 <% } %>

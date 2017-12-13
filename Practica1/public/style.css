@@ -2,7 +2,7 @@
 
 .flashError {
 	font-size: 20px; 
-	color: red;
+	color: black;
 	margin-bottom: 1%;
 	margin-top: 1%;
 	text-align: center;
@@ -13,7 +13,7 @@
 	border-style: solid;
 	border-color:rgb(0, 0, 0);
 	border-width:5px;
-	background: #970EB4;
+	background: rgb(247, 100, 132);
 	margin-right: 30%;
 	margin-left: 30%;
 }
@@ -22,7 +22,7 @@
 
 .flashAttention {
 	font-size: 20px; 	
-	color: rgb(226, 120, 21);
+	color: black;
 	margin-bottom: 1%;
 	margin-top: 1%;
 	text-align: center;
@@ -33,7 +33,7 @@
 	border-style: solid;
 	border-color:rgb(0, 0, 0);
 	border-width:5px;
-	background: #970EB4;
+	background: rgb(240, 149, 70);
 	margin-right: 30%;
 	margin-left: 30%;
 }
@@ -41,12 +41,12 @@
 .simpleFlashAttention {
 	font-size: 20px;
 	text-align: center;	
-	color: rgb(226, 120, 21);	
+	color: rgb(240, 149, 70);	
 }
 
 .flashCorrect {
 	font-size: 20px; 	
-	color: rgb(115, 235, 115);
+	color: black;
 	margin-bottom: 1%;
 	margin-top: 1%;
 	text-align: center;
@@ -57,7 +57,7 @@
 	border-style: solid;
 	border-color:rgb(0, 0, 0);
 	border-width:5px;
-	background: #970EB4;
+	background:rgb(115, 235, 115);
 	margin-right: 30%;
 	margin-left: 30%;
 }
@@ -360,25 +360,17 @@ nav{
 
 .listaAmigos li {
 	margin-bottom: 30px;
-	padding-bottom: 22px;
+	padding-bottom: 9px;
 }
 
 
 .amigo {
-	font-size: 20px;
+	font-size: 28px;
 	color: white;
 	background-color: #970EB4;
 	border: black solid;
 	
 }
-
-.amigo span {
-	display: flex;
-	justify-content: flex-end;
-	margin-top: 10px;
-}
-
-
 
 #modificaPerfil {
 	margin-left: 20%;
