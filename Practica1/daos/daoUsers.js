@@ -103,9 +103,7 @@ class DAO {
     //Busqueda de usuario por ID
     searchUserById(id, callback) {
       this.pool.getConnection((err, con) => {
-        if(err){
-          callback(err);
-        }
+        if(err){callback(err);}
         else{
           con.query("select email, nombreCompleto, sexo, nacimiento, imagen, puntos from users AS us where ID = ?", [id], (err, fila) =>{
             if(err)

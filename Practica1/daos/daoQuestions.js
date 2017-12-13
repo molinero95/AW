@@ -98,7 +98,7 @@ class DAO {
             });
         });
     }
-
+    //Obtenemos numRes - 1 respuestas aleatorias diferentes a la correcta.
     getQuizAnswers(idQuestion, idFriend, numRes, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}

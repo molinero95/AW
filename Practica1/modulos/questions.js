@@ -182,22 +182,37 @@ function getFriendQuiz(req, res){
     };
     let idQuestion = req.params.idQuestion;
     let idFriend = req.params.idFriend;
-    console.log(idQuestion);
     //Reducir consultas
     req.daoQuestions.getQuestionById(idQuestion,(err, q) => {
         if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
         if(q.length > 0){
             let question = utilidades.makeQuestion(q[0].ID, q[0].PREGUNTA, q[0].NUM_RESPUESTAS_INICIAL);
-            req.daoUsers.userExistsById(idFriend, (err, exists) => {
-                if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
-                if(exists){//Por aqui vamos bien
-                    req.daoQuestions.getUserAnswer(idQuestion, idFriend, (err, resCorrecta)=>{
+            req.daoUsers.searchUserById(idFriend, (err, us) => {
+                if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+                if(us){//Por aqui vamos bien
+                    let friend = {
+                        id: us.id,
+                        name: us.nombreCompleto,
+                        img: us.imagen
+                    }
+                    req.daoQuestions.getUserAnswer(idQuestion, idFriend, (err, resCorrecta) => {
+                        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+                        let correcta = resCorrecta[0].RESPUESTA;
+                        req.daoQuestions.getQuizAnswers(idQuestion, friend.id, question.numRes, (err, respuestas) => {
+                            if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
+                            res.send(respuestas);
+                            //res.send(respuestas);
+                            //res.render("answerFriendQuestion", [])
+                        });                     
+                    });
+                    /*req.daoQuestions.getUserAnswer(idQuestion, idFriend, (err, resCorrecta)=>{
                         if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
                         req.daoQuestions.getQuizAnswers(idQuestion, q, question.numRes, (err, respuestas) => {
                             if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
                             res.send(respuestas);
+                            res.render("answerFriendQuestion", [])
                         });
-                    });
+                    });*/
                 }
                 else{
                     res.setFlash("Usuario no encontrado...", 0);
