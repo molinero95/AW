@@ -15,6 +15,7 @@
             <li class = "amigo">
                 <form method="post" action="/actionRequest/<%= friends.requests[i].id%>">
                     <img id="fotoAmigo" src="/img/<%= friends.requests[i].img %>" alt="foto de perfil"> <%= friends.requests[i].name %>
+
                     <span id="botonesAmigos">
                         <input type="hidden" value="<%= friends.requests[i].id %>">
                         <input type="submit" name="aceptar" class="boton" value="Aceptar">

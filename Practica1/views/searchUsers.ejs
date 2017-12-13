@@ -14,8 +14,7 @@
                 <% for(let i = 0; i < searched.length; i++) { %>
                 <a href="/searchUser/<%= searched[i].id %>">                       
                     <li class="amigo">
-                        <img id="fotoAmigo" src="/img/<%=searched[i].img %>" alt="foto de perfil"> 
-                        <span><%= searched[i].name %></span> 
+                        <img id="fotoAmigo" src="/img/<%=searched[i].img %>" alt="foto de perfil"><%= searched[i].name %>
                     </li>
                 </a>
                 <% } %>

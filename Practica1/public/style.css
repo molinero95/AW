@@ -91,21 +91,16 @@ a {
 
 /*MENUS*/
 nav{
-	margin-top: 1.5%;
-	margin-right: 10%;
-	margin-left: 10%;
 	background-color: #970EB4;
 }
 
 nav > ul {
 	list-style: none;
 	display: flex;
-	justify-content: space-around;
 	flex-direction: row;
 }
 
 .elemMenu {
-	border-style: solid;
 	width: 50%;
 	text-align: center;
 }
@@ -278,6 +273,7 @@ FIN MENUS
 #botonesAmigos{
 	display: flex;
 	float: right;
+	margin-top: 5px;
 }
 
 /*Botones FIN*/
@@ -351,22 +347,24 @@ nav{
 #fotoAmigo{
     height: 50px;
 	width: 50px;
+	display: flex;
 	margin-right: 3px;
-    border: black 1px solid;
+	float: left;
+	font-size: 20px;
 }
 
 .listaAmigos{
     margin-left: 30%;
-	margin-right: 30%;
+	margin-right: 30%;	
 }
 
 .listaAmigos li {
-	margin-bottom: 10px;
+	margin-bottom: 30px;
+	padding-bottom: 22px;
 }
 
 
 .amigo {
-	display: flex;
 	font-size: 20px;
 	color: white;
 	background-color: #970EB4;
