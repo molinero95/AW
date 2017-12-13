@@ -6,3 +6,5 @@ COSAS POR HACER IMPORTANTES:
   - Middleware para no permitir logear si hay sesion iniciada
   - Arreglar (y mucho) el diseño
   - Los con.release() de los DAOS como en daoQuestions
+  - Cuidado con las mayusculas en el registrar
+  - Cuidado con las respuestas repetidas

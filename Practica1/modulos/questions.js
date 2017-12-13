@@ -77,47 +77,34 @@ function getQuestionById(req, res){
         points: req.points,
         img: req.img,
     };
-    req.daoQuestions.getQuestionById(req.params.idQuestion, (err, datos) => {
+
+    req.daoQuestions.getQuestionById(req.params.idQuestion, (err, q) => {
         if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-        if(datos.length > 0){
-            let question = utilidades.makeQuestion(datos[0].ID, datos[0].PREGUNTA, datos[0].NUM_RESPUESTAS_INICIAL);
-            req.daoQuestions.getUserAnswer(req.params.idQuestion, user.id,(err, resp) => {
+        if(q.length > 0){
+            let question = utilidades.makeQuestion(q[0].ID, q[0].PREGUNTA, q[0].NUM_RESPUESTAS_INICIAL);
+            req.daoQuestions.getUserAnswer(req.params.idQuestion, user.id, (err, resp) => {
                 if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-                let respondido = false;
-                if(resp.length > 0)//Ha respondido
-                    respondido = true;
-                req.daoQuestions.getFriendsWhoAnswered(req.params.idQuestion, user.id, (err, data) => {
-                    if(err){res.status(404); console.error(err),res.send("Ha ocurrido un error...");}
+                let answer = null;
+                if(resp.length > 0) answer = resp[0].RESPUESTA;
+                req.daoQuestions.getFriendsWhoAnswered(question.id, user.id,(err, f) =>{
+                    if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                     let friends = [];
-                    if(data.length > 0) {//Tiene amigos que han respondido
-                        data.forEach(e => {//Para cada amigo e
-                            req.daoUsers.searchUserById(e.ID_USER, (err, f) => {//Buscamos a cada amigo para obtener sus datos
-                                friends.push({
-                                    id: e.ID_USER,
-                                    name: f.nombreCompleto,
-                                    img: f.imagen,
-                                });
-                                if(data[data.length - 1] == e){//En la ultima vuelta render.
-                                    if(respondido)
-                                        res.render("question", {user:user, question: question, answer: resp[0].RESPUESTA, friends: friends});
-                                    else
-                                        res.render("question", {user:user, question: question, answer: null, friends:friends});
-                                }
-                            });
+                    f.forEach(e=>{
+                        friends.push({
+                            id: e.ID,
+                            name: e.NOMBRECOMPLETO,
+                            img: e.IMAGEN,
                         });
-                    }
-                    else if(respondido)
-                        res.render("question", {user:user, question: question, answer: resp[0].RESPUESTA, friends: friends});
-                    else
-                        res.render("question", {user:user, question: question, answer: null, friends:friends});
-                });
-            });
-        }else{
+                    });//fin forEach 
+                    res.render("question", {user:user, question: question, answer: answer, friends: friends});
+                });    
+            });          
+        }
+        else{
             res.setFlash("No se ha encontrado la pregunta", 0);
             res.redirect("/questions");
         }
     });
-
 }
 //Al darle a responder a pregunta...
 function answerQuestion(req, res){
@@ -188,6 +175,63 @@ function postAnswerQuestion(req, res) {
 
 function getFriendQuiz(req, res){
     res.status(200);
+    let user = {
+        id:req.session.user,
+        points: req.points,
+        img: req.img,
+    };
+    let idQuestion = req.params.idQuestion;
+    let idFriend = req.params.idFriend;
+    //Reducir consultas
+    req.daoQuestions.getQuestionById(idQuestion,(err, q) => {
+        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
+        if(q.length > 0){
+            let question = utilidades.makeQuestion(q[0].ID, q[0].PREGUNTA, q[0].NUM_RESPUESTAS_INICIAL);
+            req.daoUsers.searchUserById(idFriend, (err, us) => {
+                if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+                if(us){//Por aqui vamos bien
+                    let friend = {
+                        id: us.id,
+                        name: us.nombreCompleto,
+                        img: us.imagen
+                    }
+                    req.daoQuestions.getUserAnswer(idQuestion, idFriend, (err, resCorrecta) => {
+                        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+                        let correcta = resCorrecta[0].RESPUESTA;
+                        req.daoQuestions.getQuizAnswers(idQuestion, friend.id, question.numRes, (err, respuestas) => {
+                            if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
+                            res.send(respuestas);
+                            //res.send(respuestas);
+                            //res.render("answerFriendQuestion", [])
+                        });                     
+                    });
+                    /*req.daoQuestions.getUserAnswer(idQuestion, idFriend, (err, resCorrecta)=>{
+                        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
+                        req.daoQuestions.getQuizAnswers(idQuestion, q, question.numRes, (err, respuestas) => {
+                            if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
+                            res.send(respuestas);
+                            res.render("answerFriendQuestion", [])
+                        });
+                    });*/
+                }
+                else{
+                    res.setFlash("Usuario no encontrado...", 0);
+                    res.redirect("/questions");
+                }
+            });
+        }
+        else{
+            res.setFlash("Pregunta no encontrada...", 0);
+            res.redirect("/questions");
+        }
+
+        /*req.daoQuestions.getUserAnswer(idQuestion, idFriend, (err, ans) => {
+            if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+            req.daoQuestions.getQuizAnswers(ans[0].id)
+            res.send(ans);
+        });*/
+    });
+    
 }
 
 function postFriendQuiz(req, res){

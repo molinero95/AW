@@ -2,7 +2,7 @@
 const utilidades = require("./utilidades");
 
 
-//friends, colocar mas bonito (utilizando funciones para no repetir codigo)
+//Cuando pulsamos sobre "amigos"
 function getFriends(req, res) {
     res.status(200);
     let user = {
@@ -10,64 +10,25 @@ function getFriends(req, res) {
         points: req.points,
         img: req.img,
     };
-    req.daoFriends.getFriendsRequests(req.session.user, (err, datos) =>{
+    req.daoFriends.getFriendsPage(user.id, (err, datos) => {
         if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
-        let requ = [];
-        if(datos.length > 0){   //Si tenemos requests       
-            datos.forEach(element => {
-                req.daoUsers.searchUserById(element.ID1, (err, info) => {
-                    if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error.");}
-                    requ.push({
-                        id: element.ID1,
-                        name: info.nombreCompleto,
-                        img: info.imagen,
-                    });
-                    if(element === datos[datos.length - 1]){ //ultimo elemento de todos
-                        req.daoFriends.getUserFriends(req.session.user, (err, datos) =>{
-                            if(datos.length > 0){
-                                let ag = [];
-                                datos.forEach(elem => {
-                                    req.daoUsers.searchUserById(elem, (err, aggreg) => {
-                                        ag.push({
-                                            id: elem,
-                                            name: aggreg.nombreCompleto,
-                                            img: aggreg.imagen,
-                                        });
-                                        if(elem === datos[datos.length - 1]){
-                                            console.log("AQUI");                                                                                    
-                                            res.render("friends", {user: user, friends: {requests: requ, aggregated: ag}});   
-                                        }                                     
-                                    })
-                                });
-                            }
-                            else
-                                res.render("friends", {user: user, friends: {requests: requ, aggregated: null}});
-                        });
-                    }
-                });        
-            });
+        let friends = {
+            requests: [],
+            aggregated: [],
         }
-        else{   //Si no tenemos requests
-            req.daoFriends.getUserFriends(req.session.user, (err, datos) =>{
-                if(datos.length > 0){
-                    let ag = [];
-                    datos.forEach(elem => {
-                        req.daoUsers.searchUserById(elem, (err, aggreg) => {
-                            ag.push({
-                                id: elem,
-                                name: aggreg.nombreCompleto,
-                                img: aggreg.imagen,
-                            });
-                            if(elem === datos[datos.length - 1])
-                                res.render("friends", {user: user, friends: {requests: null, aggregated: ag}});
-                        })
-                    });                    
-                }
-                else
-                    res.render("friends", {user: user, friends: {requests: null, aggregated: null}});                        
-            });
-        }   
-    });
+        datos.forEach(d => {
+            let f = utilidades.makeUser(d.ID, null, null, d.NOMBRECOMPLETO, null, null, d.IMAGEN, null);
+            if(d.ACCEPTED === 1)  //Son amigos
+                friends.aggregated.push(f);
+            else if(d.ID1 !== user.id) //guardamos solo aquellos que nos han mandado solicitud.
+                friends.requests.push(f);
+        });  
+        if(friends.requests.length === 0)
+            friends.requests = null;
+        if(friends.aggregated.length === 0)
+            friends.aggregated = null;
+        res.render("friends", {user: user, friends: friends}); 
+    }); 
 }
 
 
@@ -100,6 +61,9 @@ function getSearchFriend(req, res) {
 }
 
 //Cuando seleccionas un usuario
+/*
+Necesitamos buscar un usuario por ID y comprobar si es amigo
+ */
 function searchUser(req, res) {
     res.status(200);
     let user = {
@@ -107,6 +71,25 @@ function searchUser(req, res) {
         points: req.points,
         img: req.img,
     };
+    if(Number(user.id) === Number(req.params.user))
+        res.redirect('/profile');
+    else{
+        req.daoFriends.searchUserAndStatusById(user.id, req.params.user, (err, us) => {
+            if(err){console.error(err); res.status(404); res.send("Ha ocurrido un error");}
+            if(us.length > 0){
+                let areFriends = Boolean(us[0].ACCEPTED);
+                let searched = utilidades.makeUser(req.params.user, null,null, us[0].nombreCompleto, us[0].sexo, us[0].nacimiento, us[0].imagen, us[0].puntos);
+                searched.age = utilidades.getAge(searched.age);
+                console.log(areFriends);
+                res.render("profile", {user: user, searched: searched, areFriends: areFriends});
+            }
+            else{
+                res.setFlash("No se ha encontrado el usuario", 0);
+                res.redirect("/friends");
+            }
+        });
+    }
+    /*
     req.daoUsers.searchUserById(req.params.user, (err, us) => {
         if(err){console.error(err);res.status(404); res.send("Ha ocurrido un error");}
         if(us){
@@ -122,6 +105,7 @@ function searchUser(req, res) {
             res.redirect("/friends");
         }
     });
+    */
 };
 
 //Al pulsar sobre añadir amigo
