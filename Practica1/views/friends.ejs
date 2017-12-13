@@ -11,18 +11,20 @@
         <h1 class="titulo">Solicitudes de amistad</h1>
         <% if(friends.requests) { %>
     	<ul class ="listaAmigos">
-            <% for (let i = 0; i < friends.requests.length; i++) { %>                    
+            <% for (let i = 0; i < friends.requests.length; i++) { %> 
+            <a href="/searchUser/<%=friends.requests[i].id%>">                    
             <li class="amigo">
                 <form method="post" action="/actionRequest/<%= friends.requests[i].id%>">
-                    <img id="fotoAmigo" src="/img/<%= friends.requests[i].img %>" alt="foto de perfil"> 
-                    <span><%= friends.requests[i].name %></span>
-                    <span id="botonesAmigos">
-                        <input type="hidden" value="<%= friends.requests[i].id %>">
-                        <input type="submit" name="aceptar" class="boton" value="Aceptar">
-                        <input type="submit" name="rechazar" class="boton" value="Rechazar">
-                    </span>
-                </form>
-            </li>
+                        <img id="fotoAmigo" src="/img/<%= friends.requests[i].img %>" alt="foto de perfil"> 
+                        <span><%= friends.requests[i].name %></span>
+                        <span id="botonesAmigos">
+                            <input type="hidden" value="<%= friends.requests[i].id %>">
+                            <input type="submit" name="aceptar" class="boton" value="Aceptar">
+                            <input type="submit" name="rechazar" class="boton" value="Rechazar">
+                        </span>
+                    </form>
+                </li>
+            </a>
             <% } %>
         </ul>
         <% } else{ %>
