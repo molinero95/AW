@@ -1,37 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
-    <!-- Contenido de la página web -->
+    <!-- Se puede hacer en answerQuestion -->
     <head>
         <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="/style.css">
         <title>Preguntas</title>
     </head>
     <body>
-        <%- include("header", {user: user}) %>        
+        <%- include("header", {user: user}) %>      
         <h1 class="titulo"><%= question.question %></h1>
-        <p class="info">¿Qué crees que ha respondido <strong>Casper Marta Rodriguez</strong>?</p>
-        <div class="eleccion">
-            <span>
-                <input type="radio" name="resp1" value="NintendoSwitch">Nintendo Switch
-            </span>
-        </div>
-        <div class="eleccion">
-            <span>
-                <input type="radio" name="resp2" value="PS4"> PS4       
-            </span>     
-        </div>
-        <div class="eleccion">
-            <span>                        
-                <input type="radio" name="resp3" value="XBOXOne">Xbox One
-            </span>            
-        </div>
-        <div class="eleccion">
-                <span>
-                    <input type="radio" name="resp4" value="noInteresa"> No me interesan los videojuegos   
-                </span>           
-        </div>
-        <div class="botonCentro">
-            <input type="submit" name="crearpr" class="boton" value="Responder" id="preg">
-        </div>
+        <p class="info">¿Qué crees que ha respondido <strong><%= friend.name %></strong>?</p>
+        <form method="post" action="/friendQuiz/">
+            <ul>
+                <% for(let i = 0; i < answers.length; i++) { %>
+                <li class="eleccion">
+                    <span>
+                        <input type="radio" name="answer" value="<%= answers[i] %>"><%= answers[i] %>
+                    </span>
+                </li>
+                <% } %>        
+            </ul>
+            <input type="hidden" name="questionId" value="<%= question.id %>">
+            <input type="hidden" name="friendId" value="<%= friend.id %>">                        
+            <div class="botonCentro">
+                <input type="submit" name="crearpr" class="boton" value="Responder" id="preg">
+            </div>
+        </form>
     </body>
 </html>

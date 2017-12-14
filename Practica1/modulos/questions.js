@@ -39,6 +39,7 @@ function addQuestion(req, res) {
 }
 
 //Al pulsar sobre "Añadir pregunta"
+/*Si añaden alguna repetida, no introducimos la pregunta y listo */
 function postAddQuestion(req, res) {
     res.status(200);
     let user = {
@@ -51,25 +52,51 @@ function postAddQuestion(req, res) {
         question: req.body.pregunta,
         numRes: respuestas.length,
     }
+    //question.responses = checkResponses(question, respuestas);
     question.responses = respuestas;
-    req.daoQuestions.insertQuestion(question, (err, result) => {
+    //console.log(question);
+    //res.end();//CUIDADO
+    req.daoQuestions.insertQuestion(question, (err, result) => {    //Cuidado aqui con numRes
         if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+        console.log(result);
         question.id = result.insertId;
-        question.responses.forEach(element => {
-            req.daoQuestions.insertAnswer(element, question.id, (err, datos) => {
+        question.responses.forEach(element => {//Quitar esto, insercción multiple (N+1 consultas ahora mismo)
+            req.daoQuestions.answerExists(element.toLowerCase().trim(), question.id, (err, exist)=> {
                 if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-                if(element === question.responses[question.numRes - 1]){ //ultimo elemento, 
-                    res.setFlash("Pregunta y respuesta/s añadidas correctamente", 2);                    
-                    res.redirect("/questions");
+                if(!exist){
+                    req.daoQuestions.insertAnswer(element.toLowerCase().trim(), question.id, (err, datos) => {
+                        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+                        if(element === question.responses[question.numRes - 1]){ //ultimo elemento, 
+                            res.setFlash("Pregunta y respuesta/s añadidas correctamente", 2);                    
+                            res.redirect("/questions");
+                        }
+                    });
                 }
             });
         }); 
     });
 }
 
+function checkResponses(question, responses){
+    let comprueba = new Object();
+    responses.forEach(e=>{
+        if(!comprueba[e.trim()])
+            comprueba[e] = e;
+        console.log(comprueba)
+    });
+    console.log(comprueba);
+    question.numRes = comprueba.length;
+    let res = [];
+    /*comprueba.forEach(e=>{
+        res.push(e.toLowerCase().trim());
+    });*/
+    return res;
+}
+
+
+
 
 //Al seleccionar una pregunta se llama a esta función.
-//PREGUNTAR A PROFESOR: FOR EACH y BD van en orden?
 function getQuestionById(req, res){
     res.status(200);
     let user = {
@@ -95,6 +122,7 @@ function getQuestionById(req, res){
                             id: e.ID,
                             name: e.NOMBRECOMPLETO,
                             img: e.IMAGEN,
+                            correct : e.CORRECT
                         });
                     });//fin forEach 
                     res.render("question", {user:user, question: question, answer: answer, friends: friends});
@@ -140,23 +168,34 @@ function answerQuestion(req, res){
 //Al responder la pregunta...
 function postAnswerQuestion(req, res) {
     res.status(200);
-    //res.send(req.body);
     if(req.body.answer){
         let respuesta = req.body.answer;
-        if(respuesta == "otra"){
+        if(respuesta == "otra") {    //Respuesta OTRA
             if(req.body.otraInput.length == 0){
                 res.setFlash("No se ha introducido una respuesta", 0);        
                 res.redirect("/questions");
             }
             else{//tenemos que guardar la respuesta y además la respuesta del usuario
-                respuesta = req.body.otraInput;
-                req.daoQuestions.insertAnswer(respuesta, req.params.idQuestion, (err, data) => {
+                respuesta = req.body.otraInput.toLowerCase().trim();
+                req.daoQuestions.answerExists(respuesta, req.params.idQuestion, (err, exists) =>{
                     if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-                    req.daoQuestions.insertUserAnswer(req.params.idQuestion, req.session.user, respuesta, (err, result) => {
-                        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-                        res.setFlash("Respuesta introducida correctamente", 2);        
-                        res.redirect("/questions");
-                    });
+                    if(exists){//Si ya existe la respuesta en la BD
+                        req.daoQuestions.insertUserAnswer(req.params.idQuestion, req.session.user, respuesta, (err, result) => {
+                            if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+                            res.setFlash("Respuesta introducida correctamente", 2);        
+                            res.redirect("/questions");
+                        });
+                    }
+                    else{//Si no existe la respuesta en la BD
+                        req.daoQuestions.insertAnswer(respuesta, req.params.idQuestion, (err, data) => {
+                            if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+                            req.daoQuestions.insertUserAnswer(req.params.idQuestion, req.session.user, respuesta, (err, result) => {
+                                if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+                                res.setFlash("Respuesta introducida correctamente", 2);        
+                                res.redirect("/questions");
+                            });
+                        });
+                    }
                 });
             }
         }
@@ -181,62 +220,94 @@ function getFriendQuiz(req, res){
         points: req.points,
         img: req.img,
     };
-    let idQuestion = req.params.idQuestion;
-    let idFriend = req.params.idFriend;
-    //Reducir consultas
-    req.daoQuestions.getQuestionById(idQuestion,(err, q) => {
-        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
-        if(q.length > 0){
-            let question = utilidades.makeQuestion(q[0].ID, q[0].PREGUNTA, q[0].NUM_RESPUESTAS_INICIAL);
-            req.daoUsers.searchUserById(idFriend, (err, us) => {
+    let friend = {
+        name: req.query.friendName,
+        id: req.query.friendId
+    }
+    let idQuestion = req.query.questionId;
+    req.daoUsers.userExistsCorrectName(friend.id, friend.name, (err, exist) =>{
+        if(exist){
+            req.daoQuestions.getQuiz(idQuestion, friend.id, (err, qa) => {
                 if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-                if(us){//Por aqui vamos bien
-                    let friend = {
-                        id: us.id,
-                        name: us.nombreCompleto,
-                        img: us.imagen
+                if(qa.length > 0){
+                    let question = {    //Para crear question nos vale con cualquiera devuelta
+                        id: idQuestion,
+                        question: qa[0].PREGUNTA,
+                        numRes: qa[0].NUM_RESPUESTAS_INICIAL,
                     }
-                    req.daoQuestions.getUserAnswer(idQuestion, idFriend, (err, resCorrecta) => {
-                        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-                        let correcta = resCorrecta[0].RESPUESTA;
-                        req.daoQuestions.getQuizAnswers(idQuestion, friend.id, question.numRes, (err, respuestas) => {
-                            if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
-                            res.send(respuestas);
-                            //res.send(respuestas);
-                            //res.render("answerFriendQuestion", [])
-                        });                     
-                    });
-                    /*req.daoQuestions.getUserAnswer(idQuestion, idFriend, (err, resCorrecta)=>{
-                        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
-                        req.daoQuestions.getQuizAnswers(idQuestion, q, question.numRes, (err, respuestas) => {
-                            if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");} 
-                            res.send(respuestas);
-                            res.render("answerFriendQuestion", [])
+                    if(question.numRes > 1){
+                        console.log(question);
+                        req.daoQuestions.getUserAnswer(question.id, friend.id, (err, resp) => {
+                            if(resp.length > 0){
+                                let resCorrect = resp[0].RESPUESTA;
+                                let answers = answersInsert(question, resCorrect, qa);
+                                res.render("answerFriendQuestion", {user: user, question: question, answers: answers, friend: friend})
+                            }else{//Por si acaso de modifica la URL
+                                res.setFlash("La pregunta introducida no existe ó usuario no válido", 0);
+                                res.redirect("/questions");
+                            }
                         });
-                    });*/
+                    }else{
+                        res.setFlash("La pregunta seleccionada no es válida, sólo una respuesta", 0);   //Esto ocurre cuando sólo se puede seleccionar una opción
+                        res.redirect("/questions");
+                    }
                 }
-                else{
-                    res.setFlash("Usuario no encontrado...", 0);
+                else{//Por si acaso de modifica la URL
+                    res.setFlash("La pregunta introducida no existe ó usuario no válido", 0);
                     res.redirect("/questions");
                 }
-            });
+            })
         }
-        else{
-            res.setFlash("Pregunta no encontrada...", 0);
+        else{//Por si acaso se modifica la URL
+            res.setFlash("Usuario no encontrado", 0);
             res.redirect("/questions");
         }
-
-        /*req.daoQuestions.getUserAnswer(idQuestion, idFriend, (err, ans) => {
-            if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-            req.daoQuestions.getQuizAnswers(ans[0].id)
-            res.send(ans);
-        });*/
-    });
+    })
+    
     
 }
 
+
+function answersInsert(question, correct, rest) {
+    let answers = [];
+    let random = Math.round(Math.random() * (question.numRes - 1));
+    let added = false;
+    for(let i = 0; i < question.numRes; i++){
+        if(i === random){
+            added = true;
+            answers.push(correct);
+        }
+        else{
+            if(!added)
+                answers.push(rest[i].RESPUESTA);
+            else
+                answers.push(rest[i - 1].RESPUESTA);
+        }
+    }
+    return answers;
+}
+
+
 function postFriendQuiz(req, res){
+    let user = {
+        id:req.session.user,
+        points: req.points,
+        img: req.img,
+    };
     res.status(200);
+    console.log(req.body);
+    req.daoQuestions.getUserAnswer(req.body.questionId, req.body.friendId, (err, resp) => {
+        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+        let acierto = resp[0].RESPUESTA === req.body.answer;
+        req.daoQuestions.userQuizResponse(user.id, req.body.friendId, req.body.questionId, acierto, (err, acc)=>{
+            if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+            if(acierto)
+                res.setFlash("Has acertado!", 2);
+            else
+                res.setFlash("Vaya... has fallado.", 0);
+            res.redirect("/questions");            
+        });      
+    });
 }
 
 

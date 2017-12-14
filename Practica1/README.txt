@@ -8,4 +8,11 @@ COSAS POR HACER IMPORTANTES:
   - Los con.release() de los DAOS como en daoQuestions
   - Cuidado con las mayusculas en el registrar
   - Cuidado con las respuestas repetidas
-  - searchUserAndStatusById hay que arreglar en daoFriends
+  - answerFriendQuestion y answerQuestion pueden ir en el mismo modulo
+  - Arreglar postAddQuestion
+  - Comprobar bugs adivina
+
+PREGUNTAR A PROFESOR:
+  - Uso de <a href="">? permitido? o todo en forms
+  - Usar el hidden en un get?
+  - Inserción multiple en postAddQuestion, ¿Y si hay alguna repetida?

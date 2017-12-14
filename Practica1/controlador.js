@@ -99,7 +99,7 @@ app.route('/question/:idQuestion').get(middlewares.isLogged, middlewares.userLog
 app.route('/answerQuestion/:idQuestion')
     .get(middlewares.isLogged, middlewares.userLoggedData, questions.answerQuestion)
     .post(middlewares.isLogged, middlewares.userLoggedData, questions.postAnswerQuestion);
-app.route('/friendQuiz/:idQuestion/:idFriend')
+app.route('/friendQuiz/')
     .get(middlewares.isLogged, middlewares.userLoggedData, questions.getFriendQuiz)
     .post(middlewares.isLogged, middlewares.userLoggedData, questions.postFriendQuiz);
 

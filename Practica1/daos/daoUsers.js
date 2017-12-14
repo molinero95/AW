@@ -38,6 +38,17 @@ class DAO {
       });
     }
 
+    userExistsCorrectName(id, name, callback){
+      this.pool.getConnection((err, connect) => {
+        if(err){console.error(err); return;}
+        connect.query("SELECT COUNT (ID) AS RESULTADO FROM USERS WHERE ID = ? AND NOMBRECOMPLETO= ?",[id, name],(err, filas) =>{
+          connect.release();            
+          if(err){callback(err); return;}
+          filas[0].RESULTADO == 1 ? callback(null, true):callback(null, false);
+        });
+      });
+    }
+
     insertUser(user, callback) {
       this.pool.getConnection((err, con) =>{
         if(err)
