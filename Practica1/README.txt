@@ -10,8 +10,4 @@ COSAS POR HACER IMPORTANTES:
   - Arreglar postAddQuestion Cuidado con las respuestas repetidas
   - Comprobar bugs adivina
   - AÑADIR PUNTUACION A LOS ACIERTOS
-
-PREGUNTAR A PROFESOR:
-  - Uso de <a href="">? permitido? o todo en forms
-  - Usar el hidden en un get?
-  - Inserción multiple en postAddQuestion, ¿Y si hay alguna repetida?
+  - Problema query buscar amigos que han respondido
