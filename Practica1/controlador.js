@@ -107,6 +107,11 @@ app.route('/friendQuiz/')
     .get(middlewares.isLogged, middlewares.userLoggedData, questions.getFriendQuiz)
     .post(middlewares.isLogged, middlewares.userLoggedData, questions.postFriendQuiz);
 
+//GALERIA
+const galeria = require("./modulos/gallery");
+app.route('/gallery').get(middlewares.isLogged, galeria.getGaleria)
+.post(post(middlewares.isLogged, middlewares.userLoggedData, galeria.postGaleria));
+
 //Peticiones generales aqui: ejemplo '/','/logout','img/:nombre' 
 app.get('/', middlewares.isLogged, (req, res) => {
     res.status(200);

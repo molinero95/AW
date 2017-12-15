@@ -64,6 +64,26 @@ class DAO {
       });
     }
 
+    getImagenes(user,callback){
+      this.pool.getConnection((err,con) =>{
+        if(err){
+          callback(err);
+        }
+        else{
+          con.query("SELECT IMAGEN FROM USER_PHOTOS WHERE USER_ID = ?", [user.id], (err,fila) => {
+            if(err){
+              callback(err); 
+              return;
+            }
+            else{
+              callback(null,true);
+            }
+          });
+        }
+        con.release();
+      });
+    }
+
     modifyUser(user,callback){
       this.pool.getConnection((err,con) =>{
         if(err)
@@ -78,6 +98,7 @@ class DAO {
         con.release();
       });
     }
+    
     modifyUserNewPass(user, callback){
       this.pool.getConnection((err,con) => {
         if(err)
