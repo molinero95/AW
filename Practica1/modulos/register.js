@@ -16,6 +16,7 @@ function postRegister (req, res) {
     else
         user = utilidades.makeUser(null, req.body.user, req.body.password, req.body.name, req.body.gender,
     req.body.age, "default.png", 0);   
+    
     req.checkBody("user","Dirección de correo no válida").isEmail(),
     req.checkBody("age","Fecha de nacimiento no válida").isBefore(),
     req.checkBody("password","La contraseña no es válida").isLength({min: 6}),
@@ -25,14 +26,11 @@ function postRegister (req, res) {
     let error = req.validationErrors();
     
     if(!error){
-    req.daoUsers.userExists(user.email,(err, exists) =>{
-        if(err){
-            console.error(err);
-            res.status(404); 
-            res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
-            res.render("register");            
-        }
-        console.log(user);      
+        req.daoUsers.userExists(user.email,(err, exists) =>{
+            if(err){
+                res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
+                res.redirect("/register");            
+            }
             if(exists){
                 res.setFlash("Usuario no valido", 0);
                 res.render("register");
@@ -40,9 +38,8 @@ function postRegister (req, res) {
             else{
                 req.daoUsers.insertUser(user, (err, insert) =>{
                     if(err){
-                        console.error(err);
                         res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
-                        res.render("register");
+                        res.redirect("/register");
                     }
                     else{
                         res.setFlash("Usuario creado correctamente", 2)
@@ -50,7 +47,6 @@ function postRegister (req, res) {
                     }
                 });
             }
-            
         });
     }
     else{
@@ -63,8 +59,6 @@ function postRegister (req, res) {
  
     }
 }
-
-
 
 module.exports = {
     getRegister: getRegister,
