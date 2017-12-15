@@ -127,6 +127,21 @@ class DAO {
       });
     }
 
+    modifyPoints(id, points, callback) {
+      this.pool.getConnection((err, con) => {
+        if(err){callback(err);}
+        else{
+          con.query("UPDATE USERS SET PUNTOS = ? WHERE ID = ?", [points,id], (err, fila) =>{
+            if(err)
+              callback(err);
+            else
+              callback(null, true);
+          });
+        }
+        con.release();
+      });
+    }
+
     close() {
       this.pool.end();
     }

@@ -291,11 +291,17 @@ function postFriendQuiz(req, res){
         let acierto = resp[0].RESPUESTA === req.body.answer;
         req.daoQuestions.userQuizResponse(user.id, req.body.friendId, req.body.questionId, acierto, (err, acc)=>{
             if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-            if(acierto)
-                res.setFlash("Has acertado!", 2);
-            else
+            if(acierto){
+                req.daoUsers.modifyPoints(user.id, Number(user.points) + 50, (err, result) => {
+                    if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
+                    res.setFlash("Has acertado!", 2);           
+                    res.redirect("/questions");                                
+                });
+            }
+            else {
                 res.setFlash("Vaya... has fallado.", 0);
-            res.redirect("/questions");            
+                res.redirect("/questions");            
+            }                
         });      
     });
 }

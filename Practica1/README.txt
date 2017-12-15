@@ -10,4 +10,4 @@ COSAS POR HACER IMPORTANTES:
   - Arreglar postAddQuestion Cuidado con las respuestas repetidas
   - Comprobar bugs adivina
   - AÑADIR PUNTUACION A LOS ACIERTOS
-  - Problema query buscar amigos que han respondido
+  - Problema obteniendo respuestas aleatorias. A veces aparece la buena 2 veces.
