@@ -1,7 +1,7 @@
 COSAS POR HACER IMPORTANTES:
 
   - Validacion de formularios para register y modificar.
-  - Comrpobar bugs añadiendo amigos etc etc
+  - Comprobar bugs añadiendo amigos etc etc
   - Comprobar bugs questions
   - Arreglar (y mucho) el diseño
   - Los con.release() de los DAOS como en daoQuestions

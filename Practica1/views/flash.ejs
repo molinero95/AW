@@ -1,7 +1,7 @@
 <% let flash = getAndClearFlash();
 switch (flash.type) { 
     case 0: {%>
-<div class="flashError"><%= flash.msg %></div>
+<div class="flashError"><%- flash.msg %></div>
 <% break; }
     case 1: {%>
     <div class="flashAttention"><%= flash.msg %></div>
