@@ -9,6 +9,7 @@ COSAS POR HACER IMPORTANTES:
   - answerFriendQuestion y answerQuestion pueden ir en el mismo modulo
   - Arreglar postAddQuestion Cuidado con las respuestas repetidas
   - Comprobar bugs adivina
+  - AÑADIR PUNTUACION A LOS ACIERTOS
 
 PREGUNTAR A PROFESOR:
   - Uso de <a href="">? permitido? o todo en forms

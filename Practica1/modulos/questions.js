@@ -52,23 +52,17 @@ function postAddQuestion(req, res) {
         question: req.body.pregunta,
         numRes: respuestas.length,
     }
-    //question.responses = checkResponses(question, respuestas);
-    question.responses = respuestas;
-    //console.log(question);
-    //res.end();//CUIDADO
-    req.daoQuestions.insertQuestion(question, (err, result) => {    //Cuidado aqui con numRes
-        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-        question.id = result.insertId;
-        question.responses.forEach(element => {
-            req.daoQuestions.insertAnswers(element.toLowerCase().trim(), question.id, (err, datos) => {
-                if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-                if(element === question.responses[question.numRes - 1]){ //ultimo elemento, 
-                    res.setFlash("Pregunta y respuesta/s añadidas correctamente", 2);                    
-                    res.redirect("/questions");
-                }
-            });
-        }); 
-    });
+    req.daoQuestions.insertQuestion(question, respuestas, (err, data)=>{
+        if(err){
+            res.setFlash("No se ha podido insertar la pregunta", 0);
+            res.redirect('/questions');
+        }
+        else{
+            res.setFlash("Pregunta insertada correctamente", 2);
+            res.redirect('/questions');
+        }
+    })
+    //req.daoQuestions.insertQuestion()
 }
 
 function checkResponses(question, responses){
@@ -110,16 +104,17 @@ function getQuestionById(req, res){
                 req.daoQuestions.getFriendsWhoAnswered(question.id, user.id,(err, f) =>{
                     if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                     let friends = [];
-                    console.log(f);
-                    f.forEach(e=>{
-                        friends.push({
-                            id: e.ID,
-                            name: e.NOMBRECOMPLETO,
-                            img: e.IMAGEN,
-                            correct : e.CORRECT
-                        });
-                    });//fin forEach 
-                    res.render("question", {user:user, question: question, answer: answer, friends: friends});
+                    if(f) {
+                        f.forEach(e=>{
+                            friends.push({
+                                id: e.ID,
+                                name: e.NOMBRECOMPLETO,
+                                img: e.IMAGEN,
+                                correct : e.CORRECT
+                            });
+                        });//fin forEach 
+                    }
+                    res.render("question", {user:user, question: question, answer: answer, friends: friends})
                 });    
             });          
         }

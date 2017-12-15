@@ -5,6 +5,7 @@ class DAO {
       this.pool = pool;
     }
 
+
     getRandomQuestions(callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
@@ -39,14 +40,54 @@ class DAO {
         });
     }
 
-    insertQuestion(question, callback) {
+    //Implementado con transacciones
+    insertQuestion(question, answers, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
-            con.query("INSERT INTO QUESTIONS (PREGUNTA, NUM_RESPUESTAS_INICIAL) VALUES (?,?)", [question.question, question.numRes],(err, resp) => {
-                if(err) {callback(err); return;}
-                callback(null, resp);
-                con.release();                            
+            con.beginTransaction(error =>{
+                if(error) {con.rollback(err =>{
+                    if(err) {callback(err);return;}
+                    callback(error);
+                })};
+                con.query("INSERT INTO QUESTIONS (PREGUNTA, NUM_RESPUESTAS_INICIAL) VALUES (?,?)", [question.question, question.numRes],(error, resp) => {
+                    if(error) {
+                        con.rollback(err =>{
+                        if(err) {callback(err);return;}
+                        callback(error);
+                        });
+                    }
+                    else{
+                        let questionId = resp.insertId;
+                        let respuestas=[]
+                        answers.forEach(e=>{
+                            respuestas.push([questionId, e]);
+                        })
+                        con.query("INSERT INTO ANSWERS (ID_PREGUNTA, RESPUESTA) VALUES ?", [respuestas],(error, resp) => {
+                            if(error) {
+                                con.rollback(err =>{
+                                if(err) {callback(err);return;}
+                                callback(error);
+                                });
+                            }
+                            else{
+                                con.commit(error=>{
+                                    if(error) {
+                                        con.rollback(err =>{
+                                        if(err) {callback(err);return;}
+                                        callback(error);
+                                        });
+                                    }
+                                    else{
+                                        console.log("AQUI!");                                
+                                        callback(null, true);  
+                                    }                          
+                                });
+                            }
+                        });
+                    }
+                });
             });
+            con.release();                                        
         });
     }
     //Comprueba si la respuesta ya existía(para el caso OTRA)
