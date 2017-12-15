@@ -63,6 +63,22 @@
 	opacity: 90%;
 }
 
+#quiz{
+	display: flex;
+	justify-content: space-between;
+	margin-right:20% 
+}
+
+#acierto{
+	font-size: 18px;
+	color:rgb(115, 235, 115);
+}
+
+#error{
+	font-size: 18px;
+	color:rgb(228, 56, 96);
+}
+
 @font-face{
 	font-family: GloriaHallelujah;
 	src: url(../fonts/GloriaHallelujah.ttf);

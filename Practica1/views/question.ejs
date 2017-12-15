@@ -23,11 +23,22 @@
             <p class="info">Los siguientes amigos han contestado a esta pregunta: </p>
             <ul class ="listaAmigos">
                 <% for(let i = 0; i < friends.length; i++) { %>                        
-                <li>
-                    <img id="fotoAmigo" src="/img/<%= friends[i].img %>" alt="foto de amigo"> <%= friends[i].name %>
-                    <form id="botonesAmigos" method="get" action="/friendQuiz/<%= question.id %>/<%= friends[i].id %>">
-                       <input type="submit" class="boton" value="Adivinar">
+                <li id="quiz">
+                    <span>
+                        <img id="fotoAmigo" src="/img/<%= friends[i].img %>" alt="foto de amigo"> <%= friends[i].name %>
+                    </span>
+                    <% if(friends[i].correct === null) { %>
+                    <form id="botonesAmigos" method="get" action="/friendQuiz/">
+                        <input type="hidden" name="questionId" value="<%= question.id %>">
+                        <input type="hidden" name="friendName" value="<%= friends[i].name %>">
+                        <input type="hidden" name="friendId" value="<%= friends[i].id %>">
+                        <input type="submit" class="boton" value="Adivinar">
                     </form>
+                    <% } else if(friends[i].correct) { %>
+                        <p id="acierto">Has acertado!</p>
+                    <% } else { %>
+                        <p id="error">Has fallado!</p>
+                    <% } %>
                 </li>
                 <% } %>
             </ul>
