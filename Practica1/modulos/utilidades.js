@@ -1,36 +1,25 @@
 /*UTILIZAR EXPRESS-VALIDATOR*/
 //Comprobaciones registro correcto
-function checkName(name){
-    if(!name) return false;
-    return true;
-}
+const { check, validationResult } = require('express-validator/check');
+const { matchedData, sanitize } = require('express-validator/filter');
 
-function checkDate(date){
-    if(!date) return false;
-    return true;
-    //Comprobar fecha
-}
 
-function checkPass(pass){
-    if(!pass) return false;
-    return true;
-}
-
-function parseGender(user){
-    switch(user.gender) {
+function parseGender(gender){
+    switch(gender) {
         case "hombre": user.gender='H'; break;
         case "mujer": user.gender='M'; break;
         case "otro": user.gender='O'; break;
     }
 }
 
-function checkGender(user){
-    if(user.gender){
-        parseGender(user);
+function checkGender(gender){
+    if(gender){
+        parseGender(gender);
         return true;
     }
     return false;
 }
+
 
 function decodifyGender(gender) {
     let gen = "";
@@ -73,9 +62,6 @@ function makeQuestion(id, question, numRes) {
 }
 
 
-function checkRegister(user) {
-    return checkGender(user) && checkPass(user.password) && checkName(user.name) && checkDate(user.age);
-}
 
 function getDate(date){
     let year = date.getFullYear();
@@ -119,7 +105,6 @@ function getAge(date){
 
 module.exports = {
     makeUser: makeUser,
-    checkRegister: checkRegister,
     getAge: getAge,
     parseGender: parseGender, 
     makeQuestion: makeQuestion,

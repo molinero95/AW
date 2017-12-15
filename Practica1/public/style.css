@@ -1,15 +1,11 @@
 /*GENERAL*/
 
 .flashError {
-	font-size: 20px; 
+	font-size: 18px; 
 	color: black;
 	margin-bottom: 1%;
 	margin-top: 1%;
 	text-align: center;
-	padding-right: 5%;
-	padding-left: 5%;
-	padding-top: 2%;
-	padding-bottom: 2%;
 	border-style: solid;
 	border-color:rgb(0, 0, 0);
 	border-width:5px;
@@ -21,15 +17,11 @@
 
 
 .flashAttention {
-	font-size: 20px; 	
+	font-size: 18px; 	
 	color: black;
 	margin-bottom: 1%;
 	margin-top: 1%;
 	text-align: center;
-	padding-right: 5%;
-	padding-left: 5%;
-	padding-top: 2%;
-	padding-bottom: 2%;
 	border-style: solid;
 	border-color:rgb(0, 0, 0);
 	border-width:5px;
@@ -45,22 +37,17 @@
 }
 
 .flashCorrect {
-	font-size: 20px; 	
+	font-size: 18px; 	
 	color: black;
 	margin-bottom: 1%;
 	margin-top: 1%;
 	text-align: center;
-	padding-right: 5%;
-	padding-left: 5%;
-	padding-top: 2%;
-	padding-bottom: 2%;
 	border-style: solid;
 	border-color:rgb(0, 0, 0);
 	border-width:5px;
 	background:rgb(115, 235, 115);
 	margin-right: 30%;
 	margin-left: 30%;
-	opacity: 90%;
 }
 
 #quiz{

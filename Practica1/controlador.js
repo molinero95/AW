@@ -14,6 +14,10 @@ const multer = require('multer');
 const middlewares = require("./middlewares");
 let upload = multer({ dest: path.join(__dirname, "uploads") });
 
+const expressValidator = require("express-validator");
+
+app.use(expressValidator());
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
