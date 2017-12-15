@@ -58,19 +58,13 @@ function postAddQuestion(req, res) {
     //res.end();//CUIDADO
     req.daoQuestions.insertQuestion(question, (err, result) => {    //Cuidado aqui con numRes
         if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-        console.log(result);
         question.id = result.insertId;
-        question.responses.forEach(element => {//Quitar esto, insercción multiple (N+1 consultas ahora mismo)
-            req.daoQuestions.answerExists(element.toLowerCase().trim(), question.id, (err, exist)=> {
+        question.responses.forEach(element => {
+            req.daoQuestions.insertAnswers(element.toLowerCase().trim(), question.id, (err, datos) => {
                 if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-                if(!exist){
-                    req.daoQuestions.insertAnswer(element.toLowerCase().trim(), question.id, (err, datos) => {
-                        if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
-                        if(element === question.responses[question.numRes - 1]){ //ultimo elemento, 
-                            res.setFlash("Pregunta y respuesta/s añadidas correctamente", 2);                    
-                            res.redirect("/questions");
-                        }
-                    });
+                if(element === question.responses[question.numRes - 1]){ //ultimo elemento, 
+                    res.setFlash("Pregunta y respuesta/s añadidas correctamente", 2);                    
+                    res.redirect("/questions");
                 }
             });
         }); 

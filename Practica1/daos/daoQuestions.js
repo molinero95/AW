@@ -72,7 +72,7 @@ class DAO {
         });
     }
 
-    insertAnswers(answers){
+    insertAnswers(answers, callback){
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
             con.query("INSERT INTO ANSWERS (ID_PREGUNTA, RESPUESTA) VALUES ?", [answers],(err, resp) => {
