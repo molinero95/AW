@@ -151,12 +151,12 @@ class DAO {
     getFriendsWhoAnswered(idQuestion, idUser, callback){
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
-            con.query("SELECT DISTINCT U.ID, U.NOMBRECOMPLETO, U.IMAGEN, UAU.CORRECT, T1.ID_PREGUNTA FROM (SELECT A.ID_USER, A.ID_PREGUNTA FROM "
-            + "ANSWER_USER AS A WHERE A.ID_PREGUNTA = ? AND (A.ID_USER = SOME"
-            + "(SELECT ID1 FROM FRIENDS WHERE ID2 = ? ) OR A.ID_USER = SOME"
-            + "(SELECT ID2 FROM FRIENDS WHERE ID1 = ?))) AS T1 JOIN USERS AS U "
-            + "ON T1.ID_USER = U.ID LEFT JOIN USER_ANSWER_USER AS UAU ON UAU.ID_OTHER = U.ID WHERE T1.ID_PREGUNTA = UAU.ID_PREGUNTA ", 
+            con.query("SELECT * FROM(SELECT * FROM (SELECT A.ID_USER, A.ID_PREGUNTA FROM ANSWER_USER AS A WHERE A.ID_PREGUNTA = ? AND "
+            + "((A.ID_USER = SOME(SELECT ID1 FROM FRIENDS WHERE ID2 = ? ) OR (A.ID_USER = SOME (SELECT ID2 FROM FRIENDS WHERE ID1 = ?))))) "
+            + "AS T1 JOIN USERS AS U ON T1.ID_USER = U.ID) AS T LEFT JOIN USER_ANSWER_USER AS UAU ON UAU.ID_OTHER = T.ID AND "
+            + "T.ID_PREGUNTA = UAU.ID_PREGUNTA ", 
             [idQuestion, idUser, idUser],(err, resp) => {
+                console.log(resp);
                 if(err) {callback(err); return;}
                 callback(null, resp);
                 con.release();                            
