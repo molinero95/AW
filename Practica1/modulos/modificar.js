@@ -7,8 +7,11 @@ function getModificar(req,res){
         id:req.session.user,
     };
     req.daoUsers.searchUserById(user.id, (err, datos) =>{
-        if(err){ console.error(err); return;}
-        console.log(datos);
+        if(err){ 
+            res.setFlash("Ha ocurrido un error",0);
+            res.redirect("/modificar");
+        }
+        
         let us = utilidades.makeUser(user.id, datos.EMAIL, "",datos.NOMBRECOMPLETO, datos.SEXO, datos.NACIMIENTO, datos.IMAGEN, datos.PUNTOS);
         let date = new Date(datos.NACIMIENTO);
         us.age = utilidades.getDate(us.age);
@@ -17,8 +20,6 @@ function getModificar(req,res){
    
 }
 
-//NECESITA VALIDACION DE FORMULARIOS
-//Hay que ver como poner lo de la edad
 function postModificar(req,res){
     res.status(200);
     let user = {
@@ -31,43 +32,72 @@ function postModificar(req,res){
         age: req.body.age,
         points: req.points,
     };
-    utilidades.parseGender(user);
+   
 
+    req.checkBody("email","Dirección de correo no válida").isEmail(),
+    req.checkBody("age","Fecha de nacimiento no válida").isBefore(),
+    req.checkBody("name", "El nombre no es válido").isLength({min:2}),
+    req.checkBody("gender", "El género no es válido").isLength({min:1});
+
+    utilidades.parseGender(user);
+    
     if(req.file) {//Si cambia la imagen.
         user.img = req.file.filename;
-    }//No necesita else, ya esta en user.
+    }
 
     if(user.password.length !== 0){
         //modificar user con contraseña
-        req.daoUsers.modifyUserNewPass(user, (err, insert) =>{
-            if(err){
-                console.error(err);
-                res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
-                res.render("modificar");
-            }
-            user.age = utilidades.getAge(user.age);     //Importante esta modificación aquí       
-            res.setFlash("Datos modificados correctamente", 2);
-            res.render("profile", {user: user, searched: user});
-        
-        }); 
+        req.checkBody("password","La contraseña no es válida").isLength({min: 6});
+        let error = req.validationErrors();
+        if(!error){
+            req.daoUsers.modifyUserNewPass(user, (err, insert) =>{
+                if(err){
+                    res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
+                    res.redirect("/modificar");
+                }
+                user.age = utilidades.getAge(user.age);       
+                res.setFlash("Datos modificados correctamente", 2);
+                res.redirect("/profile");
+            }); 
+        }
+        else{
+            let mensaje = "";
+             for(let i = 0; i < error.length; i++){
+                mensaje += "<p>" + error[i].msg + "</p>";
+             }
+             res.setFlash(mensaje,0);
+             res.redirect("/modificar");
+      
+         }
     }
     else{
         //modificar user sin contraseña
-        console.log("Inserto sin pass");        
-        user.password = req.password;
-        req.daoUsers.modifyUser(user, (err, insert) =>{
-            if(err){
-                console.error(err);
-                res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
+        let error = req.validationErrors();
+        if(!error){        
+            user.password = req.password;
+            req.daoUsers.modifyUser(user, (err, insert) =>{
+                if(err){
+                    res.setFlash("Ha ocurrido un error, intentelo mas tarde", 0);
+                    user.gender = utilidades.decodifyGender(user.gender);
+                    res.render("modificar", {user:user});
+                }
+                user.age = utilidades.getAge(user.age);  
+                console.log(user);         
+                res.setFlash("Datos modificados correctamente", 2);
                 user.gender = utilidades.decodifyGender(user.gender);
-                res.render("modificar", {user:user});
-            }
-            user.age = utilidades.getAge(user.age);        //Importante esta modificación aquí     
-            res.setFlash("Datos modificados correctamente", 2);
-            user.gender = utilidades.decodifyGender(user.gender);
-            res.render("profile", {user: user, searched: user});    
-        }); 
-    } 
+                res.redirect("profile");    
+            }); 
+        } 
+        else{
+            let mensaje = "";
+             for(let i = 0; i < error.length; i++){
+                mensaje += "<p>" + error[i].msg + "</p>";
+             }
+             res.setFlash(mensaje,0);
+             res.redirect("/modificar");
+      
+        }
+    }
     
 }
 

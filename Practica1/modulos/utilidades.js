@@ -6,9 +6,9 @@ const { matchedData, sanitize } = require('express-validator/filter');
 
 function parseGender(gender){
     switch(gender) {
-        case "hombre": user.gender='H'; break;
-        case "mujer": user.gender='M'; break;
-        case "otro": user.gender='O'; break;
+        case "hombre": user.gender='h'; break;
+        case "mujer": user.gender='m'; break;
+        case "otro": user.gender='o'; break;
     }
 }
 
@@ -24,10 +24,9 @@ function checkGender(gender){
 function decodifyGender(gender) {
     let gen = "";
     switch(gender) {
-        case "H": gen='Hombre'; break;
-        case "M": gen='Mujer'; break;
-        case "O": gen='Otro'; break;
-        case "1": 'Hombre'; break;
+        case "h": gen='Hombre'; break;
+        case "m": gen='Mujer'; break;
+        case "o": gen='Otro'; break;
     }
     return gen;
 }
