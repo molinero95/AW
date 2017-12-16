@@ -91,7 +91,21 @@ function searchUser(req, res) {
                 searched.age = utilidades.getAge(searched.age);
                 if(!areFriends) { //Para dar información sobre qué ocurre con la solicitud de amistad
                     res.setFlash("Hay una petición pendiente por aprobar con este usuario", 1);
-                    res.render("profile", {user: user, searched: searched, areFriends: true});  //Es true ya que no debe aparecer el boton añadir amigo
+                    req.daoFriends.getFriendPictures(searched.id,(err,fotos)=>{
+                        if(err){
+                            res.setFlash("Ha ocurrido un error");
+                            res.redirect("/friends");
+                        }
+                        if(fotos.length > 0){
+                            pictures = [];
+                            fotos.forEach(e=> {
+                                pictures.push(e.IMAGEN);
+                            });
+                            pictures = utilidades.arrayNullClear(pictures);
+                            res.render("profile", {user: user, searched: searched, areFriends: true, pictures: pictures});  //Es true ya que no debe aparecer el boton añadir amigo
+                        }else
+                            res.render("profile", {user: user, searched: searched, areFriends: true, pictures: []});  //Es true ya que no debe aparecer el boton añadir amigo
+                    })
                 }
                 else{//Son amigos, busco fotos
                     req.daoFriends.getFriendPictures(searched.id,(err,fotos)=>{
@@ -104,10 +118,10 @@ function searchUser(req, res) {
                             fotos.forEach(e=> {
                                 pictures.push(e.IMAGEN);
                             });
+                            pictures = utilidades.arrayNullClear(pictures);
                             res.render("profile", {user: user, searched: searched, areFriends: true, pictures: pictures});  //Es true ya que no debe aparecer el boton añadir amigo
-                        }else{
+                        }else
                             res.render("profile", {user: user, searched: searched, areFriends: true, pictures: []});  //Es true ya que no debe aparecer el boton añadir amigo
-                        }
                     })
                 }
             }
@@ -120,7 +134,22 @@ function searchUser(req, res) {
                     if(d){
                         let searched = utilidades.makeUser(req.params.user, null,null, d.NOMBRECOMPLETO, d.SEXO, d.NACIMIENTO, d.IMAGEN, d.PUNTOS);
                         searched.age = utilidades.getAge(searched.age);
-                        res.render("profile", {user: user, searched: searched, areFriends: false});  //No son amigos ni ha habido solicitud de amistad                   
+                        req.daoFriends.getFriendPictures(searched.id,(err,fotos)=>{
+                            if(err){
+                                res.setFlash("Ha ocurrido un error");
+                                res.redirect("/friends");
+                            }
+                            if(fotos.length > 0){
+                                pictures = [];
+                                fotos.forEach(e=> {
+                                    pictures.push(e.IMAGEN);
+                                });
+                                pictures = utilidades.arrayNullClear(pictures);
+                                 //No son amigos ni ha habido solicitud de amistad  
+                                res.render("profile", {user: user, searched: searched, areFriends: false, pictures: pictures});  
+                            }else
+                                res.render("profile", {user: user, searched: searched, areFriends: false, pictures: []});  
+                        });
                     }
                     else{//El usuario no existe
                         res.setFlash("No se ha encontrado el usuario", 0);

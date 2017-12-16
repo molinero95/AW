@@ -72,6 +72,16 @@ function getDate(date){
     return year + "-" + month + "-" + day;
 }
 
+function arrayNullClear(array){
+    let res = [];
+    array.forEach(element => {
+        if(element)
+            res.push(element);
+    });
+    return res;
+}
+
+
 function getAge(date){
 
     if(typeof(date) === "string"){
@@ -109,4 +119,5 @@ module.exports = {
     makeQuestion: makeQuestion,
     decodifyGender: decodifyGender,
     getDate: getDate,
+    arrayNullClear: arrayNullClear,
 }

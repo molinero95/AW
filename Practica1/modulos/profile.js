@@ -1,3 +1,4 @@
+
 const utilidades = require('./utilidades');
 
 function getProfile(req,res){
@@ -16,7 +17,7 @@ function getProfile(req,res){
                 datos.forEach(element => {
                     imagenes.push(element.IMG);
                 });
-                console.log(imagenes);
+                imagenes = utilidades.arrayNullClear(imagenes);
                 res.render("profile", {user: us, searched: us, pictures: imagenes});
             }
             else

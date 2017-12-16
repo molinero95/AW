@@ -23,7 +23,11 @@
 						<p><%= searched.points %> puntos</p>
 					</div>
 				</div>
+				<div class="botonesPerfil">
+					<input type="submit" class="boton" id="modificaPerfil"value="Modificar Perfil">
+				</div>
 			</form>	
+			
 			<form method="POST" class="botonesPerfil" action="/uploadPicture" enctype="multipart/form-data">
 				<div class = "subirImg">
 					<span class="botonesPerfil">Subir imagen a la galería:
@@ -31,17 +35,14 @@
 					<input type="submit" class = "boton" value="Subir imagen">				
 				</div>
 			</form>
-
-			<div class="botonesPerfil">
-				<input type="submit" class="boton" id="modificaPerfil"value="Modificar Perfil">
-			</div>
-			
+			<% if(pictures.length > 0){ %>
 			<div>
 				<h2 class="titulo">Galería de <%= searched.name %></h2>
 				<% for(let i = 0; i < pictures.length; i++) { %>
 					<img id="fotoPerfil" src="/img/<%= pictures[i] %>">
 				<% } %>
 			</div>
+			<% } %>
 		</div>	
 
 		<% } else if (!areFriends) { %>
@@ -60,12 +61,14 @@
 			</div>
 			<input type="hidden" value="<%= searched.id %>"name=friendId>
 			<input id="modificaPerfil" type="submit" id="addFriend" value="Añadir amigo">
-			<div>
+			<% if(pictures.length > 0){ %>
+				<div>
 					<h2 class="titulo">Galería de <%= searched.name %></h2>
 					<% for(let i = 0; i < pictures.length; i++) { %>
 						<img id="fotoPerfil" src="/img/<%= pictures[i] %>">
 					<% } %>
 				</div>
+				<% } %>
 		</form>
 		<% } else if(areFriends) { %>
 			<h1 class="titulo">Perfil</h1>
@@ -80,12 +83,14 @@
 						<p><%= searched.points %> puntos</p>
 					</div>
 				</div>
+				<% if(pictures.length > 0){ %>
 				<div>
 					<h2 class="titulo">Galería de <%= searched.name %></h2>
 					<% for(let i = 0; i < pictures.length; i++) { %>
 						<img id="fotoPerfil" src="/img/<%= pictures[i] %>">
 					<% } %>
 				</div>
+				<% } %>
 			</div>
 		<% } else { %>
 			<p class="flashAttention">Usuario no encontrado.</p>
