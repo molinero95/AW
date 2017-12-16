@@ -383,13 +383,16 @@ nav{
 	
 }
 
-.imgGal{
+.subirImg{
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
-.imgGal span{
-	margin-left: 31%;
+.subirImg span{
+	display: flex;
+	flex-direction: column;
 }
 
 /*contestaPregunta*/
