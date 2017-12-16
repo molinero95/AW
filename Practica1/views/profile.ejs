@@ -22,8 +22,16 @@
 	    			<p><%= searched.points %> puntos</p>
 	    		</div>
 			</div>
-			<input type="submit" id="modificaPerfil"value="Modificar Perfil">
-			<input type="submit" id="verGaleria"value="Ver Galería">
+			
+			<div class = "botonesPerfil">
+					<input type="submit" class = "boton" value="Modificar perfil">
+					<div class = "imgGal">
+							<span>Subir imagen a la galería: </span>
+							<span><input type="file" name="img"/></span>
+						</div>
+				
+			</div>
+			
 		</form>		
 		<% } else if (!areFriends) { %>
 		<h1 class="titulo">Perfil</h1>
