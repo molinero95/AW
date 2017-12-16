@@ -1,6 +1,5 @@
 COSAS POR HACER IMPORTANTES:
 
-  - Comprobar bugs adivina
-  - return en los err, para que no continuen
+  - Comprobar bugs en general
   - Con los err comprobar que todos hacen cosas coherentes
   - Arreglar css. fotoPerfil es un class por ejemplo
