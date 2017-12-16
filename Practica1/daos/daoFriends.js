@@ -85,6 +85,16 @@ class DAO {
         });
     }
 
+    getFriendPictures(userId, callback){
+        this.pool.getConnection((err, con) => {
+            if(err) {callback(err); return;}
+            con.query("SELECT IMAGEN FROM USER_PHOTOS WHERE USER_ID = ?",[userId], (err, resul) => {
+                if(err) {callback(err); return;}
+                callback(null, resul);
+            })
+            con.release();
+        });
+    }
     close() {
       this.pool.end();
     }
