@@ -29,20 +29,37 @@ function getProfile(req,res){
 function uploadPicture(req, res){
     res.status(200);
     let user = req.session.user;
+    let puntos = req.points;
     if(req.file){
         let photo = {
             photo: req.file.filename,
             user: user,
         };
-        req.daoUsers.insertUserPhoto(photo, (err, result) => {
-            if(err){
-                res.setFlash("Ha ocurrido un error", 0);
-                res.redirect('/profile');
-                return;
-            }
-            res.setFlash("Imagen insertada correctamente",2);
-            res.redirect('/profile');
-        });
+        
+        if(puntos < 100){
+          res.setFlash("No tienes puntos suficientes",0);
+          res.redirect("/profile");  
+        }
+        else{
+            req.daoUsers.modifyPoints(user, puntos-100, (err, result) => {
+                if(err){
+                    res.status(500); 
+                    console.error(err); 
+                    res.send("Ha ocurrido un error...");
+                }
+            
+            });
+
+            req.daoUsers.insertUserPhoto(photo, (err, result) => {
+                if(err){
+                    res.setFlash("Ha ocurrido un error", 0);
+                    res.redirect('/profile');
+                    return;
+                }
+                 res.setFlash("Imagen insertada correctamente",2);                                        
+            });
+             res.redirect('/profile');  
+         }
     }
     else{
         res.setFlash("No se ha seleccionado ninguna foto", 0);

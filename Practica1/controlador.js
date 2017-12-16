@@ -76,7 +76,7 @@ app.route('/register')
 //no necesitamos el middleware userLoggedData ya que vamos a recoger si o si todos los datos de usuario
 const profile = require("./modulos/profile");
 app.route('/profile').get(middlewares.isLogged, profile.getProfile);
-app.route('/uploadPicture').post(middlewares.isLogged, upload.single("img"),profile.uploadPicture);
+app.route('/uploadPicture').post(middlewares.isLogged,middlewares.userLoggedData, upload.single("img"),profile.uploadPicture);
 
 
 //MODIFICAR
