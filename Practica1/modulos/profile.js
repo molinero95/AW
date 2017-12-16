@@ -16,6 +16,7 @@ function getProfile(req,res){
                 datos.forEach(element => {
                     imagenes.push(element.IMG);
                 });
+                console.log(imagenes);
                 res.render("profile", {user: us, searched: us, pictures: imagenes});
             }
             else
@@ -24,13 +25,31 @@ function getProfile(req,res){
     });
 }
 
-function uploadPhoto(req, res){
+function uploadPicture(req, res){
     res.status(200);
     let user = req.session.user;
-    res.end();
+    if(req.file){
+        let photo = {
+            photo: req.file.filename,
+            user: user,
+        };
+        req.daoUsers.insertUserPhoto(photo, (err, result) => {
+            if(err){
+                res.setFlash("Ha ocurrido un error", 0);
+                res.redirect('/profile');
+                return;
+            }
+            res.setFlash("Imagen insertada correctamente",2);
+            res.redirect('/profile');
+        });
+    }
+    else{
+        res.setFlash("No se ha seleccionado ninguna foto", 0);
+        res.redirect('/profile');
+    }
 }
 
 module.exports = {
     getProfile: getProfile,
-    uploadPhoto: uploadPhoto,
+    uploadPicture: uploadPicture,
 }

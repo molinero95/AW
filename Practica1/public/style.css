@@ -272,10 +272,6 @@ FIN MENUS
 .botonesPerfil{
 	display: flex;
 	justify-content: center;
-<<<<<<< HEAD
-=======
-	
->>>>>>> 899fcd275ae4214f9a9b93d61cd1f1c067a32eac
 }
 
 .boton:hover {

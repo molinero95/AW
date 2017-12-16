@@ -27,13 +27,19 @@
 					<input type="submit" class="boton" id="modificaPerfil"value="Modificar Perfil">
 				</div>
 			</form>	
-			<form method="POST" class="botonesPerfil" action="/uploadPicture">
+			<form method="POST" class="botonesPerfil" action="/uploadPicture" enctype="multipart/form-data">
 				<div >
 					<span class="botonesPerfil">Subir imagen a la galería:
-					<input type="file"  name="photo"/></span>
+					<input type="file"  name="img"/></span>
 					<input type="submit" class = "boton" value="Subir imagen">				
 				</div>
 			</form>
+			<!--FOTOS AQUI, poner bonito-->
+			<div>
+				<% for(let i = 0; i < pictures.length; i++) { %>
+					<img id="fotoPerfil" src="/img/<%= pictures[i] %>">
+				<% } %>
+			</div>
 		</div>	
 
 		<% } else if (!areFriends) { %>
