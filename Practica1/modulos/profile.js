@@ -3,23 +3,25 @@ const utilidades = require('./utilidades');
 function getProfile(req,res){
     res.status(200);
     let user = req.session.user;
-    req.daoUsers.searchUserById(user, (err, datos) =>{
+    req.daoUsers.getUserProfile(user, (err, datos) =>{
         if(err){
-            req.session.destroy((err) => {
-                if(err){console.error(err); return;}
-                res.redirect("/login");
-            });
+            res.redirect('/logout');
             return;
         }
-        if(datos){
-            let us = utilidades.makeUser(user , datos.EMAIL, "", datos.NOMBRECOMPLETO, datos.SEXO, datos.NACIMIENTO, datos.IMAGEN, datos.PUNTOS);
-            us.age = utilidades.getAge(datos.NACIMIENTO);
-            res.render("profile", {user: us, searched: us});
+        else{
+            if(datos.length > 0){
+                let us = utilidades.makeUser(user , datos[0].EMAIL, "", datos[0].NOMBRECOMPLETO, datos[0].SEXO, datos[0].NACIMIENTO, datos[0].IMAGEN, datos[0].PUNTOS);
+                us.age = utilidades.getAge(datos[0].NACIMIENTO);
+                let imagenes = [];
+                datos.forEach(element => {
+                    imagenes.push(element.IMG);
+                });
+                res.render("profile", {user: us, searched: us, pictures: imagenes});
+            }
+            else
+                res.redirect('/logout');
         }
-        else{//Ojo aqui, si no se encuentra el perfil, del usuario logeado... 
-            res.redirect("/logout");
-        }
-    }); 
+    });
 }
 
 module.exports = {

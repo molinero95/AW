@@ -109,7 +109,7 @@ app.route('/friendQuiz/')
 
 //GALERIA
 const galeria = require("./modulos/gallery");
-//app.route('/gallery').get(middlewares.isLogged, galeria.getGaleria)
+//app.route('/gallery').get(middlewares.isLogged, middelwares.userLoggedData, galeria.getGaleria)
 //.post(post(middlewares.isLogged, middlewares.userLoggedData, galeria.postGaleria));
 
 //Peticiones generales aqui: ejemplo '/','/logout','img/:nombre' 
