@@ -5,42 +5,44 @@ class DAO {
       this.pool = pool;
     }
 
-
+    //Obtenemos 5 preguntas aleatorias
     getRandomQuestions(callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
             con.query("SELECT * FROM QUESTIONS ORDER BY RAND() LIMIT 5 ", (err, resp) => {
                 if(err) {callback(err); return;}
                 callback(null,resp);
-                con.release();                
             });
+            con.release();
         });
     }
 
-
+    //Utilizada para obtener una pregunta por su ID
     getQuestionById(id, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
             con.query("SELECT * FROM QUESTIONS WHERE ID = ?", [id] , (err, resp) => {
                 if(err) {callback(err); return;}
                 callback(null,resp);
-                con.release();                            
             });
+            con.release();
         });
     }
-
+    //Utilizada al obtener respuestas
     getRandomAnswersById(id, numRes, callback){
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
             con.query("SELECT * FROM ANSWERS WHERE ID_PREGUNTA = ? ORDER BY RAND() LIMIT ? ", [id, numRes] , (err, resp) => {
                 if(err) {callback(err); return;}
                 callback(null,resp);
-                con.release(); 
             });
+            con.release();                        
         });
     }
 
     //Implementado con transacciones
+    //Insertar una pregunta y sus respuestas
+    //En caso de que alguno de los 2 falle, rollback
     insertQuestion(question, answers, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
@@ -89,6 +91,7 @@ class DAO {
             con.release();                                        
         });
     }
+
     //Comprueba si la respuesta ya existía(para el caso OTRA)
     answerExists(response, idQuestion, callback) {
         this.pool.getConnection((err, con) => {
@@ -96,8 +99,8 @@ class DAO {
             con.query("SELECT COUNT(RESPUESTA) AS RESULTADO FROM ANSWERS WHERE ID_PREGUNTA = ? AND RESPUESTA = ?", [idQuestion, response],(err, filas) => {
                 if(err) {callback(err); return;}
                 filas[0].RESULTADO == 1 ? callback(null, true):callback(null, false);
-                con.release();                            
             });
+            con.release();                        
         });
     }
     //Utilidaza al crear la pregunta o al meter una respuesta nueva
@@ -107,19 +110,8 @@ class DAO {
             con.query("INSERT INTO ANSWERS (ID_PREGUNTA, RESPUESTA) VALUES (?,?)", [idQuestion, response],(err, resp) => {
                 if(err) {callback(err); return;}
                 callback(null, true);
-                con.release();                            
             });
-        });
-    }
-
-    insertAnswers(answers, callback){
-        this.pool.getConnection((err, con) => {
-            if(err) {callback(err); return;}
-            con.query("INSERT INTO ANSWERS (ID_PREGUNTA, RESPUESTA) VALUES ?", [answers],(err, resp) => {
-                if(err) {callback(err); return;}
-                callback(null, true);
-                con.release();                            
-            });
+            con.release();                        
         });
     }
     
@@ -130,23 +122,24 @@ class DAO {
             con.query("INSERT INTO ANSWER_USER (ID_PREGUNTA, ID_USER, RESPUESTA) VALUES (?,?,?)", [idQuestion, idUser, response],(err, resp) => {
                 if(err) {callback(err); return;}
                 callback(null, true);
-                con.release();                            
             });
+            con.release();                        
         });
     }
 
+    //Obtener las respuestas de un usuario para una respuesta 
     getUserAnswer(idQuestion, idUser, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
             con.query("SELECT RESPUESTA FROM ANSWER_USER WHERE ID_PREGUNTA = ? AND ID_USER = ?", [idQuestion, idUser],(err, resp) => {
                 if(err) {callback(err); return;}
                 callback(null, resp);
-                con.release();                            
             });
+            con.release();                        
         });
     }
 
-
+    //Obtiene amigos que han respondido y sus respuestas
     getFriendsWhoAnswered(idQuestion, idUser, callback){
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
@@ -158,8 +151,8 @@ class DAO {
                 console.log(resp);
                 if(err) {callback(err); return;}
                 callback(null, resp);
-                con.release();                            
             });
+            con.release();                        
         });
     }
    
@@ -173,23 +166,25 @@ class DAO {
             + "ORDER BY RAND()", [questionId, questionId, friendId],(err, resp) => {
                 if(err) {callback(err); return;}
                 callback(null, resp);
-                con.release();                            
             });
+            con.release();
         });
     }
 
+    //Sin usar
     close() {
         this.pool.end();
     }
 
+    //Inserta una respuesta en el adivina
     userQuizResponse(userId, friendId, questionId, correct, callback){
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
             con.query("INSERT INTO USER_ANSWER_USER (iD_PREGUNTA, ID_PLAYER, ID_OTHER, CORRECT) VALUES (?,?,?,?)", [questionId, userId, friendId, correct],(err, resp) => {
                 if(err) {callback(err); return;}
                 callback(null, true);
-                con.release();                            
             });
+            con.release(); 
         });
     }
 

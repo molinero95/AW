@@ -17,12 +17,12 @@ class DAO {
                 + "ID <> ? AND (ID1 = ? OR ID2 = ?);", [userId, userId, userId], (err, resul) => {
                 if(err) {callback(err); return;}
                 callback(null, resul);
-                con.release();
             })
+            con.release();
         });
     }
 
-
+    
     checkIfAreFriends(userId, searchId, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
@@ -30,8 +30,8 @@ class DAO {
             [searchId, userId, userId, searchId], (err, resul) => {
                 if(err) {callback(err); return;}
                 resul[0].RES === 0 ?  callback(null, false):callback(null, true);
-                con.release();
             })
+            con.release();
         });
     }
 
@@ -44,8 +44,8 @@ class DAO {
             [searchId, searchId, userId, userId, searchId], (err, resul) => {
                 if(err) {callback(err); return;}
                 callback(null, resul);
-                con.release();
             })
+            con.release();
         });
     }
 
@@ -62,6 +62,7 @@ class DAO {
         });
     }
 
+    //Acepar solicitud de amigo
     acceptFriendRequest(userId, friendId, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
@@ -73,7 +74,7 @@ class DAO {
             con.release();
         });
     }
-
+    //Rechazar solicitud de amigo
     rejectFriendRequest(userId, friendId, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
