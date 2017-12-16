@@ -66,7 +66,6 @@ class DAO {
     acceptFriendRequest(userId, friendId, callback) {
         this.pool.getConnection((err, con) => {
             if(err) {callback(err); return;}
-            console.log(userId, friendId);
             con.query("UPDATE FRIENDS SET ACCEPTED = 1 WHERE ID1 = ? AND ID2 = ?", [friendId, userId], (err, fila) =>{
                 if(err){ callback(err); return;}
                 callback(null, fila);

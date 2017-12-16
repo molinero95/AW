@@ -54,7 +54,6 @@ function postAddQuestion(req, res) {
             respuestas.push(e);
     });
 
-    console.log(resp);
     if(respuestas.length > 0 && req.body.pregunta.length > 0){   
         let question = {
             question: req.body.pregunta,
@@ -82,9 +81,7 @@ function checkResponses(question, responses){
     responses.forEach(e=>{
         if(!comprueba[e.trim()])
             comprueba[e] = e;
-        console.log(comprueba)
     });
-    console.log(comprueba);
     question.numRes = comprueba.length;
     let res = [];
     /*comprueba.forEach(e=>{
@@ -113,11 +110,9 @@ function getQuestionById(req, res){
                 if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                 let answer = null;
                 if(resp.length > 0) answer = resp[0].RESPUESTA;
-                console.log(user.id);
                 req.daoQuestions.getFriendsWhoAnswered(question.id, user.id,(err, f) =>{
                     if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                     let friends = [];
-                    console.log(f);
                     if(f) {
                         f.forEach(e=>{
                             friends.push({
@@ -239,7 +234,6 @@ function getFriendQuiz(req, res){
                         numRes: qa[0].NUM_RESPUESTAS_INICIAL,
                     }
                     if(question.numRes > 1){
-                        console.log(question);
                         req.daoQuestions.getUserAnswer(question.id, friend.id, (err, resp) => {
                             if(resp.length > 0){
                                 let resCorrect = resp[0].RESPUESTA;
@@ -298,7 +292,6 @@ function postFriendQuiz(req, res){
         img: req.img,
     };
     res.status(200);
-    console.log(req.body);
     req.daoQuestions.getUserAnswer(req.body.questionId, req.body.friendId, (err, resp) => {
         if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
         let acierto = resp[0].RESPUESTA === req.body.answer;

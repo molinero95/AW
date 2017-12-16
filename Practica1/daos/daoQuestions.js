@@ -148,7 +148,6 @@ class DAO {
             + "AS T1 JOIN USERS AS U ON T1.ID_USER = U.ID) AS T LEFT JOIN USER_ANSWER_USER AS UAU ON UAU.ID_OTHER = T.ID AND UAU.ID_PLAYER = ? AND "
             + "T.ID_PREGUNTA = UAU.ID_PREGUNTA ", 
             [idQuestion, idUser, idUser, idUser],(err, resp) => {
-                console.log(resp);
                 if(err) {callback(err); return;}
                 callback(null, resp);
             });

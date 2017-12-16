@@ -54,10 +54,8 @@ function getSearchFriend(req, res) {
                 res.redirect("/friends");
             }
             if(filas.length > 0){
-                console.log(filas);
                 let result = [];
                 filas.forEach(us => {
-                    console.log(us);
                     result.push(utilidades.makeUser(us.ID, null, null, us.NOMBRECOMPLETO, us.SEXO, us.NACIMIENTO, us.IMAGEN, us.PUNTOS));
                 });
                 res.render("searchUsers", {user: user, searched: result});

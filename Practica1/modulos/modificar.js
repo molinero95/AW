@@ -82,7 +82,6 @@ function postModificar(req,res){
                     res.render("modificar", {user:user});
                 }
                 user.age = utilidades.getAge(user.age);  
-                console.log(user);         
                 res.setFlash("Datos modificados correctamente", 2);
                 user.gender = utilidades.decodifyGender(user.gender);
                 res.redirect("profile");    
