@@ -47,9 +47,15 @@ function postAddQuestion(req, res) {
         points: req.points,
         img: req.img,
     };
-    let respuestas = req.body.respuestas.split('\n');
-    if(respuestas.length > 0 && respuestas[0] !== '' && req.body.pregunta.length > 0){   
-        console.log(respuestas); 
+    let resp = req.body.respuestas.split('\n');
+    let respuestas = [];
+    resp.forEach(e=> {
+        if(e !== "\n" && e !=="\r" && e != "")
+            respuestas.push(e);
+    });
+
+    console.log(resp);
+    if(respuestas.length > 0 && req.body.pregunta.length > 0){   
         let question = {
             question: req.body.pregunta,
             numRes: respuestas.length,
