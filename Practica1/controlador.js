@@ -76,6 +76,7 @@ app.route('/register')
 //no necesitamos el middleware userLoggedData ya que vamos a recoger si o si todos los datos de usuario
 const profile = require("./modulos/profile");
 app.route('/profile').get(middlewares.isLogged, profile.getProfile);
+app.route('/uploadPhoto').post(middlewares.isLogged, profile.uploadPhoto);
 
 
 //MODIFICAR
@@ -106,7 +107,6 @@ app.route('/answerQuestion/:idQuestion')
 app.route('/friendQuiz/')
     .get(middlewares.isLogged, middlewares.userLoggedData, questions.getFriendQuiz)
     .post(middlewares.isLogged, middlewares.userLoggedData, questions.postFriendQuiz);
-
 
 
 //Peticiones generales aqui: ejemplo '/','/logout','img/:nombre' 

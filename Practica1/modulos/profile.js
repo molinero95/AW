@@ -32,4 +32,5 @@ function uploadPhoto(req, res){
 
 module.exports = {
     getProfile: getProfile,
+    uploadPhoto: uploadPhoto,
 }
