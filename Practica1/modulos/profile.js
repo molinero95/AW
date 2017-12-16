@@ -55,10 +55,10 @@ function uploadPicture(req, res){
                     res.setFlash("Ha ocurrido un error", 0);
                     res.redirect('/profile');
                     return;
-                }
-                 res.setFlash("Imagen insertada correctamente",2);                                        
+                }                                     
             });
-             res.redirect('/profile');  
+            res.setFlash("Imagen insertada correctamente",2);      
+            res.redirect('/profile');  
          }
     }
     else{
