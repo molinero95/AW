@@ -156,11 +156,6 @@ function actionRequest(req, res) {
 
 
 
-function postRejectFriend(req, res) {
-    res.status(200);
-    
-}
-
 module.exports = {
     getFriends: getFriends,
     getSearchFriend: getSearchFriend,
