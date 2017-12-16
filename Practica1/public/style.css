@@ -15,7 +15,6 @@
 }
 
 
-
 .flashAttention {
 	font-size: 18px; 	
 	color: black;
@@ -173,6 +172,8 @@ FIN MENUS
     
 }
 
+
+
 .busqueda > form > div {
 	display: flex;
 	flex-direction: row;
@@ -253,7 +254,10 @@ FIN MENUS
 }
 
 /*Botones*/
+
+
 .botonCentro {
+	margin-top: 10px;
 	display: flex;
 	justify-content: center;
 }
@@ -279,9 +283,6 @@ FIN MENUS
 	color: white;
 	background-color: #503554;
 }
-
-
-
 
 #botonesAmigos{
 	display: flex;
