@@ -35,18 +35,20 @@
 					<input type="submit" class = "boton" value="Subir imagen">				
 				</div>
 			</form>
-			<% if(pictures.length > 0){ %>
-			<div>
-				<h2 class="titulo">Galería de <%= searched.name %></h2>
-				<% for(let i = 0; i < pictures.length; i++) { %>
-					<img id="fotoPerfil" src="/img/<%= pictures[i] %>">
+			<div class="galeria">
+				<% if(pictures.length > 0){ %>
+				<div>
+					<h2 class="titulo">Galería de <%= searched.name %></h2>
+					<% for(let i = 0; i < pictures.length; i++) { %>
+						<img id="fotoPerfil" src="/img/<%= pictures[i] %>">
+					<% } %>
+				</div>
 				<% } %>
 			</div>
-			<% } %>
 		</div>	
 
 		<% } else if (!areFriends) { %>
-		<h1 class="titulo">Perfil</h1>
+		<h1 class="titulo">Perfil de <%= searched.name%></h1>
 		<%- include("flash") %>
     	<form id="perfilCompleto" method="post" action="/addFriend">
 	    	<div id="perfil">
@@ -63,6 +65,7 @@
 			<div class = "botonCentro">
 				<input class = "boton" type="submit" id="addFriend" value="Añadir amigo">
 			</div>
+			<div class="galeria">
 			<% if(pictures.length > 0){ %>
 				<div>
 					<h2 class="titulo">Galería de <%= searched.name %></h2>
@@ -71,9 +74,10 @@
 					<% } %>
 				</div>
 				<% } %>
+			</div>
 		</form>
 		<% } else if(areFriends) { %>
-			<h1 class="titulo">Perfil</h1>
+			<h1 class="titulo">Perfil de <%= searched.name%></h1>
 			<%- include("flash") %>
 			<div id="perfilCompleto">
 				<div id="perfil">
@@ -85,14 +89,16 @@
 						<p><%= searched.points %> puntos</p>
 					</div>
 				</div>
-				<% if(pictures.length > 0){ %>
-				<div>
-					<h2 class="titulo">Galería de <%= searched.name %></h2>
-					<% for(let i = 0; i < pictures.length; i++) { %>
-						<img id="fotoPerfil" src="/img/<%= pictures[i] %>">
+				<div class="galeria">
+					<% if(pictures.length > 0){ %>
+					<div>
+						<h2 class="titulo">Galería de <%= searched.name %></h2>
+						<% for(let i = 0; i < pictures.length; i++) { %>
+							<img id="fotoPerfil" src="/img/<%= pictures[i] %>">
+						<% } %>
+					</div>
 					<% } %>
 				</div>
-				<% } %>
 			</div>
 		<% } else { %>
 			<p class="flashAttention">Usuario no encontrado.</p>
