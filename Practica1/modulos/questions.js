@@ -48,21 +48,27 @@ function postAddQuestion(req, res) {
         img: req.img,
     };
     let respuestas = req.body.respuestas.split('\n');
-    let question = {
-        question: req.body.pregunta,
-        numRes: respuestas.length,
+    if(respuestas.length > 0 && respuestas[0] !== '' && req.body.pregunta.length > 0){   
+        console.log(respuestas); 
+        let question = {
+            question: req.body.pregunta,
+            numRes: respuestas.length,
+        }
+        req.daoQuestions.insertQuestion(question, respuestas, (err, data)=>{
+            if(err){
+                res.setFlash("No se ha podido insertar la pregunta", 0);
+                res.redirect('/questions');
+            } 
+            else{
+                res.setFlash("Pregunta insertada correctamente", 2);
+                res.redirect('/questions');
+            }
+        })
     }
-    req.daoQuestions.insertQuestion(question, respuestas, (err, data)=>{
-        if(err){
-            res.setFlash("No se ha podido insertar la pregunta", 0);
-            res.redirect('/questions');
-        }
-        else{
-            res.setFlash("Pregunta insertada correctamente", 2);
-            res.redirect('/questions');
-        }
-    })
-    //req.daoQuestions.insertQuestion()
+    else{
+        res.setFlash("No se ha podido insertar la pregunta", 0);
+        res.redirect('/questions');
+    }
 }
 
 function checkResponses(question, responses){
@@ -101,10 +107,11 @@ function getQuestionById(req, res){
                 if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                 let answer = null;
                 if(resp.length > 0) answer = resp[0].RESPUESTA;
-                console.log(question.id);
+                console.log(user.id);
                 req.daoQuestions.getFriendsWhoAnswered(question.id, user.id,(err, f) =>{
                     if(err){res.status(404); console.error(err); res.send("Ha ocurrido un error...");}
                     let friends = [];
+                    console.log(f);
                     if(f) {
                         f.forEach(e=>{
                             friends.push({

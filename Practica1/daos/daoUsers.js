@@ -163,6 +163,23 @@ class DAO {
       });
     }
 
+    getUserProfile(id, callback){
+      this.pool.getConnection((err, con) => {
+        if(err){callback(err);}
+        else{
+          con.query("SELECT U.EMAIL, U.NOMBRECOMPLETO, U.SEXO, U.NACIMIENTO, U.IMAGEN, U.PUNTOS, "
+          + "P.IMAGEN AS IMG FROM USERS AS U LEFT JOIN USER_PHOTOS AS P ON P.USER_ID = U.ID WHERE U.ID = ?", [id], (err, fila) =>{
+            if(err)
+              callback(err);
+            else
+              callback(null, fila);
+          });
+        }
+        con.release();
+      });
+    }
+
+
     close() {
       this.pool.end();
     }
