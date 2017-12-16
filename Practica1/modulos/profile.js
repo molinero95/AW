@@ -24,6 +24,12 @@ function getProfile(req,res){
     });
 }
 
+function uploadPhoto(req, res){
+    res.status(200);
+    let user = req.session.user;
+    res.end();
+}
+
 module.exports = {
     getProfile: getProfile,
 }

@@ -247,12 +247,16 @@ FIN MENUS
 	flex-direction: row;
 }
 
+#modificaPerfil {
+	
+}
 
 /*Botones*/
 .botonCentro {
 	display: flex;
 	justify-content: center;
 }
+
 
 .boton {
 	height: 40px;
@@ -265,8 +269,10 @@ FIN MENUS
     font-family: GloriaHallelujah;
 }
 
-
-
+.botonesPerfil{
+	display: flex;
+	justify-content: center;
+}
 
 .boton:hover {
 	color: white;
@@ -377,20 +383,15 @@ nav{
 	
 }
 
-#modificaPerfil {
-	margin-left: 20%;
-	margin-right: 20%;
-	background-color: #DA90E5;
-	border-radius: 10px;
-	height: 30px;
-	border-color: black;
-	border-style: solid;
+.imgGal{
+	display: flex;
+	flex-direction: column;
 }
 
-#modificaPerfil:hover {
-	background-color: #503554;
-	color: white;
+.imgGal span{
+	margin-left: 31%;
 }
+
 /*contestaPregunta*/
 .eleccion {
 	background: #FFDC8F;
