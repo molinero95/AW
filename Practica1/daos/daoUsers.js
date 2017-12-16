@@ -179,6 +179,21 @@ class DAO {
       });
     }
 
+    insertUserPhoto(photo,callback){
+      this.pool.getConnection((err, con) => {
+        if(err){callback(err);}
+        else{
+          con.query("INSERT INTO USER_PHOTOS(USER_ID, IMAGEN) VALUES (?,?)", [photo.user, photo.photo], (err, fila) =>{
+            if(err)
+              callback(err);
+            else
+              callback(null, fila);
+          });
+        }
+        con.release();
+      });
+    }
+
 
     close() {
       this.pool.end();
