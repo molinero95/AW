@@ -106,7 +106,7 @@ function searchUser(req, res) {
                             });
                             res.render("profile", {user: user, searched: searched, areFriends: true, pictures: pictures});  //Es true ya que no debe aparecer el boton añadir amigo
                         }else{
-                            res.render("profile", {user: user, searched: searched, areFriends: true, pictures: null});  //Es true ya que no debe aparecer el boton añadir amigo
+                            res.render("profile", {user: user, searched: searched, areFriends: true, pictures: []});  //Es true ya que no debe aparecer el boton añadir amigo
                         }
                     })
                 }
