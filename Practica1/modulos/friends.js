@@ -30,6 +30,7 @@ function getFriends(req, res) {
             friends.requests = null;
         if(friends.aggregated.length === 0)
             friends.aggregated = null;
+        
         res.render("friends", {user: user, friends: friends}); 
     }); 
 }
@@ -88,9 +89,27 @@ function searchUser(req, res) {
                 let areFriends = Boolean(us[0].ACCEPTED);
                 let searched = utilidades.makeUser(req.params.user, null,null, us[0].NOMBRECOMPLETO, us[0].SEXO, us[0].NACIMIENTO, us[0].IMAGEN, us[0].PUNTOS);
                 searched.age = utilidades.getAge(searched.age);
-                if(!areFriends) //Para dar información sobre qué ocurre con la solicitud de amistad
+                if(!areFriends) { //Para dar información sobre qué ocurre con la solicitud de amistad
                     res.setFlash("Hay una petición pendiente por aprobar con este usuario", 1);
-                res.render("profile", {user: user, searched: searched, areFriends: true});  //Es true ya que no debe aparecer el boton añadir amigo
+                    res.render("profile", {user: user, searched: searched, areFriends: true});  //Es true ya que no debe aparecer el boton añadir amigo
+                }
+                else{//Son amigos, busco fotos
+                    req.daoFriends.getFriendPictures(searched.id,(err,fotos)=>{
+                        if(err){
+                            res.setFlash("Ha ocurrido un error");
+                            res.redirect("/friends");
+                        }
+                        if(fotos.length > 0){
+                            pictures = [];
+                            fotos.forEach(e=> {
+                                pictures.push(e.IMAGEN);
+                            });
+                            res.render("profile", {user: user, searched: searched, areFriends: true, pictures: pictures});  //Es true ya que no debe aparecer el boton añadir amigo
+                        }else{
+                            res.render("profile", {user: user, searched: searched, areFriends: true, pictures: null});  //Es true ya que no debe aparecer el boton añadir amigo
+                        }
+                    })
+                }
             }
             else{//Comprobar si existe usuario y buscar por Id, si no error
                 req.daoUsers.searchUserById(req.params.user, (err, d)=>{
