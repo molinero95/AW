@@ -39,7 +39,8 @@ app.get("/", (request, response) => {
 });
 
 app.get("/tasks", (request, response) => {
-    // Implementar
+    response.status(200);
+    response.json(tasks);
 });
 
 app.post("/tasks", (request, response) => {
@@ -54,7 +55,13 @@ app.post("/tasks", (request, response) => {
 });
 
 app.delete("/tasks/:id", (request, response) => {
-    // Implementar
+    if(NaN(request.params.id))
+        response.status(400);
+    else{
+        tasks.pop({id: request.params.id});
+        response.status(200);
+    }
+    response.json({});
 });
 
 app.listen(config.port, function(err) {

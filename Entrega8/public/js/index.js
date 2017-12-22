@@ -31,7 +31,18 @@ function taskToDOMElement(task) {
 }
 
 function loadTasks() {
-    // Implementar
+    $.ajax({
+        type: "GET",
+        url: "/tasks",
+        success: function (data, textStatus, jqXHR) {
+            console.log(textStatus);
+            data.forEach(element => {
+                $(".newTask").before(taskToDOMElement(element));
+            });
+            
+            console.log(data);
+        },
+    })
 }
 
 function onRemoveButtonClick(event) {
