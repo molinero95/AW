@@ -1,0 +1,21 @@
+{
+  "name": "ej-8-aw",
+  "version": "1.0.0",
+  "description": "Ejercicio entregable 8",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "private": true,
+  "keywords": [
+    "aplicaciones",
+    "web",
+    "entregable 8"
+  ],
+  "author": "Manuel Montenegro",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.1",
+    "express": "^4.15.4"
+  }
+}
