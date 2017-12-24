@@ -56,7 +56,7 @@ app.post("/tasks", (request, response) => {
 
 app.delete("/tasks/:id", (request, response) => {
     if(isNaN(request.params.id))
-        response.status(400);
+        response.status(404);
     else{
         let id = Number(request.params.id);
         let newData = [];
@@ -64,8 +64,12 @@ app.delete("/tasks/:id", (request, response) => {
             if(e.id !== id)
                 newData.push(e);
         });
-        tasks = newData;        
-        response.status(200);
+        if(tasks.length === newData.length) //Dato no existe
+            response.status(404);
+        else{
+            tasks = newData;        
+            response.status(200);
+        }
     }
     response.json({});
 });

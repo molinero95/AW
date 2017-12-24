@@ -39,6 +39,9 @@ function loadTasks() {
                 $(".newTask").before(taskToDOMElement(element));
             });            
         },
+        error: function (data, textStatus, jqXHR) {
+            alert("Se ha producido un error: " + errorThrown);
+        }
     })
 }
 
@@ -59,12 +62,27 @@ function onRemoveButtonClick(event) {
         url: "/tasks/"+id,
         success: function(data, textStatus, jqXHR) {
             liPadre.remove();
+        },
+        error: function (data, textStatus, jqXHR) {
+            alert("Se ha producido un error: " + errorThrown);
         }
     });  
 
 }
 
 function onAddButtonClick(event) {
-    // Implementar
+    let texto = $("input[name=taskText").val();
+    $.ajax({
+        type:"POST",
+        url: "/tasks",
+        contentType: "application/json",
+        data: JSON.stringify({ text: texto }),
+        success: function(data, textStatus, jqXHR) {
+            $(".newTask").before(taskToDOMElement(data));
+        },
+        error: function(data,textStatus,jqXHR){
+            alert("Se ha producido un error: " + errorThrown);
+        }
+    })
 }
 
