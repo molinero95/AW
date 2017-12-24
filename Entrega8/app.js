@@ -55,10 +55,16 @@ app.post("/tasks", (request, response) => {
 });
 
 app.delete("/tasks/:id", (request, response) => {
-    if(NaN(request.params.id))
+    if(isNaN(request.params.id))
         response.status(400);
     else{
-        tasks.pop({id: request.params.id});
+        let id = Number(request.params.id);
+        let newData = [];
+        tasks.forEach(e => {
+            if(e.id !== id)
+                newData.push(e);
+        });
+        tasks = newData;        
         response.status(200);
     }
     response.json({});

@@ -35,12 +35,9 @@ function loadTasks() {
         type: "GET",
         url: "/tasks",
         success: function (data, textStatus, jqXHR) {
-            console.log(textStatus);
             data.forEach(element => {
                 $(".newTask").before(taskToDOMElement(element));
-            });
-            
-            console.log(data);
+            });            
         },
     })
 }
@@ -56,6 +53,15 @@ function onRemoveButtonClick(event) {
 
     // Implementar el resto del método aquí.
     // ...
+    let id = liPadre.data("id");
+    $.ajax({
+        type:"DELETE",
+        url: "/tasks/"+id,
+        success: function(data, textStatus, jqXHR) {
+            liPadre.remove();
+        }
+    });  
+
 }
 
 function onAddButtonClick(event) {
