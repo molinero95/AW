@@ -1,0 +1,16 @@
+{
+  "name": "practica2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marta Huertas Smolis y Jaime Molinero Lacave",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "mysql": "^2.15.0",
+    "nodejs": "0.0.0"
+  }
+}
