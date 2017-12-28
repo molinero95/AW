@@ -1,3 +1,4 @@
+"use strict";
 const express = require("express");
 const passport = require("passport");
 const passportHTTP = require("passport-http");
@@ -44,6 +45,18 @@ passport.authenticate('basic', {session: false}),
 
 app.get("/", (request, response) => {
     response.redirect("/mentiroso.html");
+});
+
+app.post("/login", (request, response) => {
+    console.log("LOGIN");
+    console.log(request.query);
+    //dao.userCorrect();
+    response.status(400);
+    response.json({});
+});
+
+app.post("/register", (request, response) => {
+    response.json({});
 });
 
 

@@ -15,6 +15,17 @@ class DAO {
             connect.release();
         });
     }
+    /*Continuar*/
+    insertUser(data, callback) {
+        this.pool.getConnection((err, connect) => {
+            if(err) {console.error(err); return;}
+            connect.query("INSERT INTO USUARIOS() ",[login, password],(err, filas) =>{
+                if(err){callback(err); return;}
+                filas.length == 1 ? callback(null, true):callback(null, false);
+            });
+            connect.release();
+        });
+    }
 
     close() {
         this.pool.end();

@@ -6,6 +6,7 @@
     <title>Mentiroso</title>
     <meta charset="utf8">
     <link rel="stylesheet" href="css/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="css/style.css" media="screen">
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/index.js"></script>
 </head>
@@ -13,33 +14,24 @@
     <div class="jumbotron">
         <div class="container">
             <h1 class="text-center display-3">Mentiroso</h1>
-            <div class="media">
-                <img class="mr-2" src="/img/jocker.png">
-                <img class="mr-2" src="/img/jocker.png">
-                <img class="mr-2" src="/img/jocker.png">
-                <img class="mr-2" src="/img/jocker.png">
-                <img class="mr-2" src="/img/jocker.png">
-                <img class="mr-2" src="/img/jocker.png">
-            </div>
         </div>
     </div>
-    <div class="container">
-        
-        <form class="form-signin">
+    <div class="container" id="signIn">
+        <div class="form-signin">
             <h2 class="form-signin-heading">Inicie Sesion</h2>
-            <label for="inputEmail">Email address</label>
-            <input id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" type="email">
+            <label for="inputLogin">Login</label>
+            <input id="inputLogin" class="form-control" placeholder="Username" required="" autofocus="" type="username">
             <label for="inputPassword" >Password</label>
             <input id="inputPassword" class="form-control" placeholder="Password" required="" type="password">
             <p></p>
-            <div class="text-right">
-                <button class="col-md-4 btn btn-lg btn-secondary" type="submit">Registrarse</button>
-                <button class="col-md-4 btn btn-lg btn-primary pull-right " type="submit">Iniciar sesión</button>
+            <div class="text-right" id="loginBtns">
+                <button class="col-md-4 btn btn-lg btn-secondary" type="submit" id="registerBtn">Registrarse</button>
+                <button class="col-md-4 btn btn-lg btn-primary pull-right " type="submit" id="loginBtn">Iniciar sesión</button>
             </div>
-        </form>
+        </div>
     </div>
     <hr class="container">
     <footer class="container">
-        <p class="text-right">Por Marta Huertas Smolis y Jaime Molinero Lacave</p>
+        <p class="text-center">Por Marta Huertas Smolis y Jaime Molinero Lacave</p>
     </footer>
 </body>
