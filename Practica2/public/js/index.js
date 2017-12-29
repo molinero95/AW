@@ -14,29 +14,36 @@ function hideLogin(){
 
 
 function onRegisterButtonClick(event) {
+    let us = $("#inputLogin").val();
+    let pass = $("#inputPassword").val();
     $.ajax({
         type:"POST",
         url: "/register",
+        contentType: "application/json",
+        data: JSON.stringify({ user: us, password: pass }),
         success: function(data, textStatus, jqXHR) {
-            alert("YUJU");
+            alert("Usuario creado correctamente");
         },
         error: function (data, textStatus, jqXHR) {
-            alert("Se ha producido un error: " + errorThrown);
+            alert("Se ha producido un error");
         }
     });
 }
 //Esto no llega a el servidor
 function onLoginButtonClick(event) {
+    let us = $("#inputLogin").val();
+    let pass = $("#inputPassword").val();
+    console.log(us + pass);
     $.ajax({
         type:"POST",
         url: "/login",
         contentType: "application/json",
-        data: JSON.stringify({ user: inputLogin, pass: inputPassword }),//terminar
+        data: JSON.stringify({ user: us, password: pass }),
         success: function(data, textStatus, jqXHR) {
-            alert("logueado");
+            console.log("SUCCESS")
         },
         error: function (data, textStatus, jqXHR) {
-            alert("Se ha producido un error: " + errorThrown);
+            alert("Usuario y/o contraseña no válido");
         }
     });
     

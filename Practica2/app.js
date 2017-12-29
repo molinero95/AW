@@ -5,11 +5,13 @@ const passportHTTP = require("passport-http");
 const config = require("./config");
 const mysql = require("mysql");//mysql
 const path = require("path");
+const bodyParser = require("body-parser");
 
 
 const app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(bodyParser.json());
 
 let pool = mysql.createPool({
     database: config.mysqlConfig.database,
@@ -23,7 +25,7 @@ let dao = new daoApp(pool);
 
 //PDF 90, falta parte AJAX
 app.use(passport.initialize());
-let strategy = new passportHTTP.BasicStrategy(
+passport.use(new passportHTTP.BasicStrategy(
     {realm: "Pagina protegida"},
     function (user, pass, f){
         dao.userCorrect(user, pass, (err, res) =>{
@@ -31,32 +33,35 @@ let strategy = new passportHTTP.BasicStrategy(
             else f(null, res);
         });
     }
-);
+));
 
 /*
 Para los links protegidos: MIDDLEWARE PARA LAS FUNCIONES
 passport.authenticate('basic', {session: false}),
-    function(request, response) {
-        response.json({
-            permitido: true
-        });
-    });
 */
 
 app.get("/", (request, response) => {
     response.redirect("/mentiroso.html");
 });
 
-app.post("/login", (request, response) => {
-    console.log("LOGIN");
-    console.log(request.query);
-    //dao.userCorrect();
-    response.status(400);
-    response.json({});
+app.post("/login", (request, response) => {    
+    dao.userCorrect(request.body.user, request.body.password, (err, res) => {
+        if(err){ response.status(500); return;}
+        else{
+            if(res) {response.status(200); response.json()}
+            else{ response.status(404); response.json()}
+        }
+    });
 });
 
 app.post("/register", (request, response) => {
-    response.json({});
+    dao.insertUser(request.body.user, request.body.password, (err, res) => {
+        if(err){ response.status(500); return;}
+        else{
+            if(res) {response.status(200); response.json()}
+            else{ response.status(404); response.json()}
+        }
+    })
 });
 
 
