@@ -48,8 +48,8 @@ app.post("/login", (request, response) => {
     dao.userCorrect(request.body.user, request.body.password, (err, res) => {
         if(err){ response.status(500); return;}
         else{
-            if(res) {response.status(200); response.json()}
-            else{ response.status(404); response.json()}
+            if(res) {response.status(200); response.json({})}
+            else{ response.status(404); response.json({})}
         }
     });
 });
@@ -58,8 +58,8 @@ app.post("/register", (request, response) => {
     dao.insertUser(request.body.user, request.body.password, (err, res) => {
         if(err){ response.status(500); return;}
         else{
-            if(res) {response.status(200); response.json()}
-            else{ response.status(404); response.json()}
+            if(res) {response.status(200); response.json({})}
+            else{ response.status(404); response.json({})}
         }
     })
 });

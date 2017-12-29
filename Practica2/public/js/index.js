@@ -26,27 +26,25 @@ function onRegisterButtonClick(event) {
         },
         error: function (data, textStatus, jqXHR) {
             alert("Se ha producido un error");
-        }
+        },
     });
 }
-//Esto no llega a el servidor
+
 function onLoginButtonClick(event) {
     let us = $("#inputLogin").val();
     let pass = $("#inputPassword").val();
-    console.log(us + pass);
     $.ajax({
         type:"POST",
         url: "/login",
         contentType: "application/json",
         data: JSON.stringify({ user: us, password: pass }),
         success: function(data, textStatus, jqXHR) {
-            console.log("SUCCESS")
+            console.log("SUCCESS"); //Continuará
         },
         error: function (data, textStatus, jqXHR) {
             alert("Usuario y/o contraseña no válido");
         }
     });
-    
 }
 
 
