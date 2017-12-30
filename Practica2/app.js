@@ -20,8 +20,11 @@ let pool = mysql.createPool({
     password: config.mysqlConfig.password
 });
 
-const daoApp = require("./dao");
-let dao = new daoApp(pool);
+const daoUsers = require("./daoUsers");
+let daoU = new daoUsers(pool);
+const daoMatchs = require("./daoMatchs");
+let daoM = new daoMatchs(pool);
+
 
 //PDF 90, falta parte AJAX
 app.use(passport.initialize());
@@ -45,7 +48,7 @@ app.get("/", (request, response) => {
 });
 
 app.post("/login", (request, response) => {    
-    dao.userCorrect(request.body.user, request.body.password, (err, res) => {
+    daoU.userCorrect(request.body.user, request.body.password, (err, res) => {
         if(err){ response.status(500); return;}
         else{
             if(res) {response.status(200); response.json({})}
@@ -55,13 +58,29 @@ app.post("/login", (request, response) => {
 });
 
 app.post("/register", (request, response) => {
-    dao.insertUser(request.body.user, request.body.password, (err, res) => {
+    daoU.insertUser(request.body.user, request.body.password, (err, res) => {
         if(err){ response.status(500); return;}
         else{
-            if(res) {response.status(200); response.json({})}
-            else{ response.status(404); response.json({})}
+            if(res) { response.status(200); response.json({}); }
+            else{ response.status(404); response.json({}); }
         }
     })
+});
+
+app.get("/state/:id", (request, response) => {
+    let id = request.params.id;
+    if(isNaN(id)){
+        response.status(400);//Bad request
+        response.json({});
+    }
+    daoM.getMatchState(id, (err, res) => {
+        if(err){ response.status(500); return;}
+        else{
+            if(res) { response.status(200); response.json({status: res.status}); }
+            else{ response.status(404); response.json({}); }
+        }
+    });
+    response.json({id: id});
 });
 
 
