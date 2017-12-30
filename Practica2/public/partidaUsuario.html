@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>Juego del mentiroso</title>
+        <meta charset="utf8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="js/index.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#">Mis partidas</a>                
+            </li>
+            <li role="presentation">
+                <a href="#">Partidas amiguetes</a>
+            </li>
+            <li role="presentation">
+                <a href="#">Familiar</a>
+            </li>           
+        </ul>
+        <div class="container" id="crearPartidas">
+            <label for="nuevaPartida">Crear una nueva partida</label>
+            <div class="form-inline">
+                <input id="nuevaPartida" class="form-control" placeholder="Introduce aquí el nombre" required="" autofocus="" type="">
+                <button type="submit" class="btn btn-primary">Crear</button>
+            </div>
+        </div>
+        <div class="container" id="unirsePartidas">
+                <label for="unirPartida">Crear una nueva partida</label>
+                <div class="form-inline">
+                    <input id="unirPartida" class="form-control" placeholder="Introduce aquí el identificador de la partida" required="" autofocus="" type="">
+                    <button type="submit" class="btn btn-primary">Unirse</button>
+                </div>
+            </div>
+    </body>
+</html>
+    
