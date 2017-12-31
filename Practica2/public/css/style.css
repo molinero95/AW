@@ -1,0 +1,8 @@
+#amiguetes{
+    display:flex;
+    flex-direction: row;
+}
+
+#partida{
+    background-color: #f9f9f9;
+}
