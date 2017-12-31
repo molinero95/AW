@@ -5,7 +5,7 @@ class DAO {
       this.pool = pool;
     }
 
-    getMatchState(id, callback) {
+    getGameState(id, callback) {
         this.pool.getConnection((err, connect) => {
             if(err) {callback(err); return;}
             connect.query("SELECT ESTADO FROM PARTIDAS WHERE ID = ?",[id],(err, res) =>{
@@ -18,7 +18,7 @@ class DAO {
         });
     }
     //TODO
-    insertMatch(name, userId) {
+    insertGame(name, userId) {
         this.pool.getConnection((err, connect) => { //Transacción
             if(err) {callback(err); return;}
             connect.beginTransaction((err) => {
@@ -30,7 +30,7 @@ class DAO {
                     return;
                 }
                 else{
-                    connect.query("INSERT INTO PARTIDAS(NOMBRE, ESTADO) VALUES (?,?)",[name, userId],(err, res) =>{   
+                    connect.query("INSERT INTO PARTIDAS(NOMBRE, ESTADO) VALUES (?,?)",[name, {}],(err, res) =>{   
                         if(err){ 
                             connect.rollback((err)=>{
                                 if(err){callback(err); return;}
@@ -39,8 +39,8 @@ class DAO {
                             return;
                         }
                         else{
-                            let matchId = res.insertId;
-                            connect.query("INSERT INTO JUEGA_EN(IDUSUARIO, IDPARTIDA) VALUES (?,?)",[userId, marthId], (err, res) =>{
+                            let gameId = res.insertId;
+                            connect.query("INSERT INTO JUEGA_EN(IDUSUARIO, IDPARTIDA) VALUES (?,?)",[userId, gameId], (err, res) =>{
                                 if(err){ 
                                     connect.rollback((err)=>{
                                         if(err){callback(err); return;}

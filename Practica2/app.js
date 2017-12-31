@@ -25,8 +25,8 @@ let pool = mysql.createPool({
 
 const daoUsers = require("./daoUsers");
 let daoU = new daoUsers(pool);
-const daoMatchs = require("./daoMatchs");
-let daoM = new daoMatchs(pool);
+const daoGames = require("./daoGames");
+let daoG = new daoGames(pool);
 
 
 //PDF 90, falta parte AJAX
@@ -34,7 +34,7 @@ app.use(passport.initialize());
 passport.use(new passportHTTP.BasicStrategy(
     {realm: "Pagina protegida"},
     function (user, pass, f){
-        dao.userCorrect(user, pass, (err, res) =>{
+        daoU.userCorrect(user, pass, (err, res) =>{
             if(err){ f(err); return;}
             else f(null, res);
         });
@@ -76,13 +76,32 @@ app.get("/state/:id", (request, response) => {
         response.status(400);//Bad request
         response.json({});
     }
-    daoM.getMatchState(id, (err, res) => {
+    daoG.getGameState(id, (err, res) => {
         if(err){ response.status(500); return;}
         else{
             if(res) { response.status(200); response.json({status: res.status}); }
             else{ response.status(404); response.json({}); }
         }
     });
+});
+
+app.post("/createGame", (request, response) => {
+    let userId;//BUSCAR/PREGUNTAR
+    //idUser?
+    let name = request.body.gameName; //data en la peticion
+    daoG.insertGame(name, userId, (err, res) => {
+        if(err) { response.status(500); return;}
+        else {
+            if(res){
+                response.status(201); response.json({}); 
+            }
+            else{
+                response.status(500); 
+                return;
+            }
+        }
+    });
+
 });
 
 
