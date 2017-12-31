@@ -8,21 +8,62 @@ class DAO {
     getMatchState(id, callback) {
         this.pool.getConnection((err, connect) => {
             if(err) {callback(err); return;}
-            connect.query("SELECT ESTADO FROM PARTIDAS WHERE ID = ?",[id],(err, filas) =>{
+            connect.query("SELECT ESTADO FROM PARTIDAS WHERE ID = ?",[id],(err, res) =>{
                 if(err){callback(err); return;}
-                filas.length > 0 ? callback(null, filas[0].STATUS):callback(null, null);
+                else{
+                    res.length > 0 ? callback(null, res[0].STATUS):callback(null, null);
+                }
             });
             connect.release();
         });
     }
     //TODO
-    insertMatch(name, user) {
-        this.pool.getConnection((err, connect) => {
+    insertMatch(name, userId) {
+        this.pool.getConnection((err, connect) => { //Transacción
             if(err) {callback(err); return;}
-            connect.query("INSERT INTO PARTIDAS(NOMBRE, ESTADO) VALUES (?,?)",[],(err, filas) =>{
-                if(err){callback(err); return;}
-                filas.length > 0 ? callback(null, filas[0].STATUS):callback(null, null);
+            connect.beginTransaction((err) => {
+                if(err){ 
+                    connect.rollback((err)=>{
+                        if(err){callback(err); return;}
+                    });
+                    callback(err);
+                    return;
+                }
+                else{
+                    connect.query("INSERT INTO PARTIDAS(NOMBRE, ESTADO) VALUES (?,?)",[name, userId],(err, res) =>{   
+                        if(err){ 
+                            connect.rollback((err)=>{
+                                if(err){callback(err); return;}
+                            });
+                            callback(err); 
+                            return;
+                        }
+                        else{
+                            let matchId = res.insertId;
+                            connect.query("INSERT INTO JUEGA_EN(IDUSUARIO, IDPARTIDA) VALUES (?,?)",[userId, marthId], (err, res) =>{
+                                if(err){ 
+                                    connect.rollback((err)=>{
+                                        if(err){callback(err); return;}
+                                    });
+                                    callback(err);
+                                    return;
+                                }
+                                else{
+                                    connect.commit((err) => {
+                                        if(err) {
+                                            connect.rollback((err)=>{
+                                                if(err){callback(err); return;}
+                                            });
+                                        }
+                                    });
+                                    callback(null, true);
+                                }
+                            });
+                        }
+                    });
+                }
             });
+            
             connect.release();
         });
     }
