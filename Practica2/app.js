@@ -1,5 +1,7 @@
 "use strict";
 const express = require("express");
+const https = require("https");
+const fs = require("fs");
 const passport = require("passport");
 const passportHTTP = require("passport-http");
 const config = require("./config");
@@ -7,9 +9,10 @@ const mysql = require("mysql");//mysql
 const path = require("path");
 const bodyParser = require("body-parser");
 
-
+let privateKey = fs.readFileSync("./clave.pem");
+let cert = fs.readFileSync("./certificado_firmado.crt");
 const app = express();
-
+let server = https.createServer({key: privateKey, cert: cert}, app);
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 
@@ -80,7 +83,6 @@ app.get("/state/:id", (request, response) => {
             else{ response.status(404); response.json({}); }
         }
     });
-    response.json({id: id});
 });
 
 
@@ -91,7 +93,7 @@ app.get("/img/:nombre", (req, res) =>{
 });
 
 
-app.listen(config.port, function(err) {
+server.listen(config.port, function(err) {
     if (err) {
         console.log("No se ha podido iniciar el servidor.")
         console.log(err);
