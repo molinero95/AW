@@ -10,7 +10,7 @@ class DAO {
             if(err) {callback(err); return;}
             connect.query("SELECT ID FROM USUARIOS WHERE LOGIN = ? AND PASSWORD = ? ",[login, password],(err, res) =>{
                 if(err){callback(err); return;}
-                res.length > 0 ? callback(null, true):callback(null, false);
+                res.length > 0 ? callback(null, res[0].ID):callback(null, false);
             });
             connect.release();
         });

@@ -1,7 +1,7 @@
 const mysql = require("mysql");//mysql
 
 class DAO {
-    constructor(pool) {
+    tructor(pool) {
       this.pool = pool;
     }
 
@@ -17,8 +17,7 @@ class DAO {
             connect.release();
         });
     }
-    //TODO
-    insertGame(name, userId) {
+    insertGame(name, userId, callback) {
         this.pool.getConnection((err, connect) => { //Transacción
             if(err) {callback(err); return;}
             connect.beginTransaction((err) => {
@@ -30,7 +29,7 @@ class DAO {
                     return;
                 }
                 else{
-                    connect.query("INSERT INTO PARTIDAS(NOMBRE, ESTADO) VALUES (?,?)",[name, {}],(err, res) =>{   
+                    connect.query("INSERT INTO PARTIDAS(NOMBRE, ESTADO) VALUES (?,?)",[name, ""],(err, res) =>{ 
                         if(err){ 
                             connect.rollback((err)=>{
                                 if(err){callback(err); return;}
@@ -63,8 +62,35 @@ class DAO {
                     });
                 }
             });
-            
             connect.release();
+        });
+    }
+
+    joinGame(gameId, userId, callback){
+        this.pool.getConnection((err, connect) => { //Transacción
+            if(err){callback(err); return;}
+            else{
+                connect.query("INSERT INTO JUEGA_EN(IDUSUARIO, IDPARTIDA) VALUES (?,?)",[userId, gameId], (err, res) =>{
+                    if(err){callback(err); return;}
+                    else
+                        callback(null, true);
+                });
+            }
+            connect.release();
+        });
+    }
+
+    countGameUsers(gameId, callback) {
+        this.pool.getConnection((err, connect) => { //Transacción
+            if(err){callback(err); return;}
+            else{
+                connect.query("SELECT COUNT(IDUSUARIO) AS NUM_PLAYERS FROM JUEGA_EN WHERE IDPARTIDA = ?",[gameId], (err, res) =>{
+                    if(err){callback(err); return;}
+                    else{
+                        console.log(res.NUM_PLAYERS);
+                    }
+                });
+            }
         });
     }
 

@@ -8,6 +8,7 @@ const config = require("./config");
 const mysql = require("mysql");//mysql
 const path = require("path");
 const bodyParser = require("body-parser");
+const expressValidator = require("express-validator");
 
 let privateKey = fs.readFileSync("./clave.pem");
 let cert = fs.readFileSync("./certificado_firmado.crt");
@@ -15,6 +16,7 @@ const app = express();
 let server = https.createServer({key: privateKey, cert: cert}, app);
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
+app.use(expressValidator());
 
 let pool = mysql.createPool({
     database: config.mysqlConfig.database,
@@ -27,6 +29,8 @@ const daoUsers = require("./daoUsers");
 let daoU = new daoUsers(pool);
 const daoGames = require("./daoGames");
 let daoG = new daoGames(pool);
+
+
 
 
 //PDF 90, falta parte AJAX
@@ -54,20 +58,30 @@ app.post("/login", (request, response) => {
     daoU.userCorrect(request.body.user, request.body.password, (err, res) => {
         if(err){ response.status(500); return;}
         else{
-            if(res) {response.status(200); response.json({})}
+            if(res) {response.status(200); response.json({id:res})}//Vamos a guardar el id en un hidden
             else{ response.status(404); response.json({})}
         }
     });
 });
 
 app.post("/register", (request, response) => {
-    daoU.insertUser(request.body.user, request.body.password, (err, res) => {
-        if(err){ response.status(500); return;}
-        else{
-            if(res) { response.status(200); response.json({}); }
-            else{ response.status(404); response.json({}); }
-        }
-    })
+    request.checkBody("user", "Nombre de usuario no vacio").notEmpty();
+    request.checkBody("user", "Nombre de usuario no válido").matches(/^[A-Z0-9]*$/i);
+    request.checkBody("password","La contraseña no es válida").isLength({ min: 6, max: 10});
+    let errors = request.validationErrors();
+    if(errors){
+        response.status(404); 
+        response.json({}); 
+    }
+    else{
+        daoU.insertUser(request.body.user, request.body.password, (err, res) => {
+            if(err){ response.status(500); return;}
+            else{
+                if(res) { response.status(200); response.json({}); }
+                else{ response.status(404); response.json({}); }
+            }
+        });
+    }
 });
 
 app.get("/state/:id", (request, response) => {
@@ -86,16 +100,17 @@ app.get("/state/:id", (request, response) => {
 });
 
 app.post("/createGame", (request, response) => {
-    let userId;//BUSCAR/PREGUNTAR
-    //idUser?
-    let name = request.body.gameName; //data en la peticion
+    let userId = request.body.userId;
+    let name = request.body.gameName; 
     daoG.insertGame(name, userId, (err, res) => {
         if(err) { response.status(500); return;}
         else {
             if(res){
+                console.log("BIEN");
                 response.status(201); response.json({}); 
             }
             else{
+                console.log("MAL");
                 response.status(500); 
                 return;
             }

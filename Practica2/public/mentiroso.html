@@ -7,8 +7,8 @@
     <meta charset="utf8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="js/index.js"></script>
 </head>
 <body>
@@ -20,10 +20,11 @@
     <div class="container" id="signIn">
         <div class="form-signin">
             <h2 class="form-signin-heading">Inicie Sesion</h2>
-            <label for="inputLogin">Login</label>
+            <label for="inputLogin">Usuario</label>
             <input id="inputLogin" class="form-control" placeholder="Username" required="" autofocus="" type="username">
-            <label for="inputPassword" >Password</label>
+            <label for="inputPassword" >Contraseña (6-10 caracteres)</label>
             <input id="inputPassword" class="form-control" placeholder="Password" required="" type="password">
+            <input type="hidden" id="userId">
             <p></p>
             <div class="text-right" id="loginBtns">
                 <button class="col-md-4 btn btn-lg btn-secondary" type="submit" id="registerBtn">Registrarse</button>
@@ -31,7 +32,34 @@
             </div>
         </div>
     </div>
-    <hr class="container">
+    <div id="myGames">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#">Mis partidas</a>                
+            </li>
+            <li role="presentation">
+                <a href="#">Partidas amiguetes</a>
+            </li>
+            <li role="presentation">
+                <a href="#">Familiar</a>
+            </li>           
+        </ul>
+        <div class="container">
+            <label for="newGame">Crear una nueva partida</label>
+            <div class="form-inline"  id="createGame">
+                <input id="inputGameName"class="form-control" placeholder="Introduce aquí el nombre" required="" autofocus="" type="">
+                <button id="newGame" type="submit" class="btn btn-primary">Crear</button>
+            </div>
+        </div>
+        <div class="container" >
+            <label for="joinGame">Unirse a una partida</label>
+            <div class="form-inline" id="joinGames">
+                <input class="form-control" placeholder="Introduce aquí el identificador de la partida" required="" autofocus="" type="">
+                <button id="joinGame" type="submit" class="btn btn-primary">Unirse</button>
+            </div>
+        </div>
+    </div>
+    <hr>
     <footer class="container">
         <p class="text-center">Por Marta Huertas Smolis y Jaime Molinero Lacave</p>
     </footer>
