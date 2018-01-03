@@ -1,7 +1,7 @@
 const mysql = require("mysql");//mysql
 
 class DAO {
-    tructor(pool) {
+    constructor(pool) {
       this.pool = pool;
     }
 
@@ -11,12 +11,13 @@ class DAO {
             connect.query("SELECT ESTADO FROM PARTIDAS WHERE ID = ?",[id],(err, res) =>{
                 if(err){callback(err); return;}
                 else{
-                    res.length > 0 ? callback(null, res[0].STATUS):callback(null, null);
+                    res.length > 0 ? callback(null, res[0].ESTADO):callback(null, null);
                 }
             });
             connect.release();
         });
     }
+
     insertGame(name, userId, callback) {
         this.pool.getConnection((err, connect) => { //Transacción
             if(err) {callback(err); return;}

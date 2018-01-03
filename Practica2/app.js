@@ -33,22 +33,16 @@ let daoG = new daoGames(pool);
 
 
 
-//PDF 90, falta parte AJAX
 app.use(passport.initialize());
 passport.use(new passportHTTP.BasicStrategy(
     {realm: "Pagina protegida"},
     function (user, pass, f){
         daoU.userCorrect(user, pass, (err, res) =>{
             if(err){ f(err); return;}
-            else f(null, res);
+            else f(null, res); //En res tenemos el ID
         });
     }
 ));
-
-/*
-Para los links protegidos: MIDDLEWARE PARA LAS FUNCIONES
-passport.authenticate('basic', {session: false}),
-*/
 
 app.get("/", (request, response) => {
     response.redirect("/mentiroso.html");
@@ -84,13 +78,14 @@ app.post("/register", (request, response) => {
     }
 });
 
-app.get("/state/:id", (request, response) => {
+app.get("/state/:id", passport.authenticate('basic', {session:false}),(request, response) => {
     let id = request.params.id;
     if(isNaN(id)){
         response.status(400);//Bad request
         response.json({});
     }
     daoG.getGameState(id, (err, res) => {
+        console.log(res);
         if(err){ response.status(500); return;}
         else{
             if(res) { response.status(200); response.json({status: res.status}); }
@@ -99,9 +94,10 @@ app.get("/state/:id", (request, response) => {
     });
 });
 
-app.post("/createGame", (request, response) => {
-    let userId = request.body.userId;
+app.post("/createGame", passport.authenticate('basic', {session:false}),(request, response) => {
     let name = request.body.gameName; 
+    let userId = request.user;
+    console.log(userId);
     daoG.insertGame(name, userId, (err, res) => {
         if(err) { response.status(500); return;}
         else {

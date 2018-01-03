@@ -61,13 +61,19 @@ function onLoginButtonClick(event) {
         }
     });
 }
-
+//Funcion que necesita autenticación
 function onNewGameButtonClick(event) {
     let id = $("#userId").val();
     let name = $("#inputGameName").val();
+    let us = $("#inputLogin").val();
+    let pass = $("#inputPassword").val();
+    let cadenaBase64 = btoa(us + ":" + pass);
     $.ajax({    //Peticion con auth pls
         type:"POST",
         url: "/createGame",
+        beforeSend: function(req) {
+            req.setRequestHeader("Authorization", "Basic "+ cadenaBase64);
+        },
         contentType: "application/json",
         data: JSON.stringify({ userId: id, gameName: name }),
         success: function(data, textStatus, jqXHR) {
