@@ -4,5 +4,26 @@
 }
 
 #partida{
-    background-color: #f9f9f9;
+    display: flex;
+    justify-content: space-between;
+    /*background-color: #f9f9f9;*/
+    
+
 }
+
+#pantalla{
+    display:flex;
+    flex-direction: row;
+    margin-top: 2%;
+
+}
+
+.tablaCartas{
+    padding-right:10%;
+}
+
+#jugadores{
+    margin-left: 10%;
+}
+
+

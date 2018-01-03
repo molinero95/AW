@@ -82,16 +82,21 @@ class DAO {
     }
 
     countGameUsers(gameId, callback) {
-        this.pool.getConnection((err, connect) => { //Transacción
-            if(err){callback(err); return;}
+        this.pool.getConnection((err, connect) => {//Transacción
+            if(err){
+                callback(err); 
+                return;
+            }
             else{
                 connect.query("SELECT COUNT(IDUSUARIO) AS NUM_PLAYERS FROM JUEGA_EN WHERE IDPARTIDA = ?",[gameId], (err, res) =>{
-                    if(err){callback(err); return;}
+                    if(err){
+                        callback(err); return;}
                     else{
-                        console.log(res.NUM_PLAYERS);
+                        callback(null, res[0].NUM_PLAYERS);
                     }
                 });
             }
+            connect.release();
         });
     }
 

@@ -86,7 +86,29 @@ function onNewGameButtonClick(event) {
 }
 
 function onJoinGameButtonClick(event) {
-    console.log("llego");
+    let id = $("#userId").val();
+    let gameId = $("#inputGameId").val();
+    let us = $("#inputLogin").val();
+    let pass = $("#inputPassword").val();
+    let cadenaBase64 = btoa(us + ":" + pass);
+    console.log("game id:");
+    console.log(gameId);
+    $.ajax({    //Peticion con auth pls
+        
+        type:"POST",
+        url: "/joinGame",
+        beforeSend: function(req) {
+            req.setRequestHeader("Authorization", "Basic "+ cadenaBase64);
+        },
+        contentType: "application/json",
+        data: JSON.stringify({gameId: gameId, userId: id }),
+        success: function(data, textStatus, jqXHR) {
+            console.log("SUCCESS"); //
+        },
+        error: function (data, textStatus, jqXHR) {
+            alert("No se puede unir al juego...");
+        }
+    });
 
 }
 

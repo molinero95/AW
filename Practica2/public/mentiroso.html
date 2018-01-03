@@ -11,6 +11,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="js/index.js"></script>
 </head>
+
 <body>
     <div class="jumbotron">
         <div class="container">
@@ -22,7 +23,7 @@
             <h2 class="form-signin-heading">Inicie Sesion</h2>
             <label for="inputLogin">Usuario</label>
             <input id="inputLogin" class="form-control" placeholder="Username" required="" autofocus="" type="username">
-            <label for="inputPassword" >Contraseña (6-10 caracteres)</label>
+            <label for="inputPassword">Contraseña (6-10 caracteres)</label>
             <input id="inputPassword" class="form-control" placeholder="Password" required="" type="password">
             <input type="hidden" id="userId">
             <p></p>
@@ -35,26 +36,26 @@
     <div id="myGames">
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">
-                <a href="#">Mis partidas</a>                
+                <a href="#">Mis partidas</a>
             </li>
             <li role="presentation">
                 <a href="#">Partidas amiguetes</a>
             </li>
             <li role="presentation">
                 <a href="#">Familiar</a>
-            </li>           
+            </li>
         </ul>
         <div class="container">
             <label for="newGame">Crear una nueva partida</label>
-            <div class="form-inline"  id="createGame">
-                <input id="inputGameName"class="form-control" placeholder="Introduce aquí el nombre" required="" autofocus="" type="">
+            <div class="form-inline" id="createGame">
+                <input id="inputGameName" class="form-control" placeholder="Introduce aquí el nombre" required="" autofocus="" type="">
                 <button id="newGame" type="submit" class="btn btn-primary">Crear</button>
             </div>
         </div>
-        <div class="container" >
+        <div class="container">
             <label for="joinGame">Unirse a una partida</label>
             <div class="form-inline" id="joinGames">
-                <input class="form-control" placeholder="Introduce aquí el identificador de la partida" required="" autofocus="" type="">
+                <input id="inputGameId" class="form-control" placeholder="Introduce aquí el identificador de la partida" required="" autofocus="" type="">
                 <button id="joinGame" type="submit" class="btn btn-primary">Unirse</button>
             </div>
         </div>
