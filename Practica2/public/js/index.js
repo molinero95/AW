@@ -1,25 +1,60 @@
 "use strict";
 $(()=> {
-    hideMyGames();
+    MyGames();
+    FriendsGames();
+    ActiveGames();
     $("#loginBtns").on("click", "button#registerBtn", onRegisterButtonClick);
     $("#loginBtns").on("click", "button#loginBtn", onLoginButtonClick);
     $("#createGame").on("click", "button#newGame", onNewGameButtonClick);
     $("#joinGames").on("click", "button#joinGame", onJoinGameButtonClick);
+    $("#menuSup").on("click","a#partidasAmiguetes", onFriendsGamesClick);
+    $("#menuSup").on("click","a#familiar", onFamilyGamesClick);
+    $("#menuSup").on("click","a#misPartidas", onMyGamesClick);
 });
 
 function showLogin(){
     $("#signIn").show();
 }
-function hideLogin(){
+function Login(){
     $("#signIn").hide();
 }
 function showMyGames(){
     $("#myGames").show();
 }
-function hideMyGames(){
+function MyGames(){
     $("#myGames").hide();
 }
+function FriendsGames(){
+    $("#friendsGames").hide();
+}
+function showFriendsGames(){
+    $("#friendsGames").show();
+}
+function FamilyGames(){
+    $("#familyGames").hide();
+}
+function showFamilyGames(){
+    $("#friendsGames").show();
+}
 
+function ActiveGames(){
+    $("#activeGames").hide();
+}
+
+function showActiveGames(){
+    $("activeGames").show();
+}
+
+function onFriendsGamesClick(){
+    showFriendsGames();
+    MyGames();
+    ActiveGames();
+}
+function onMyGamesClick(){
+    showMyGames();
+    ActiveGames();
+    FriendsGames();
+}
 
 function onRegisterButtonClick(event) {
     let us = $("#inputLogin").val();
@@ -53,7 +88,7 @@ function onLoginButtonClick(event) {
         success: function(data, textStatus, jqXHR) {
             console.log(data);
             $("#userId").prop("value", data.id);
-            hideLogin();
+            Login();
             showMyGames();
         },
         error: function (data, textStatus, jqXHR) {
@@ -109,8 +144,9 @@ function onJoinGameButtonClick(event) {
             alert("No se puede unir al juego...");
         }
     });
-
 }
+
+
 
 
 
