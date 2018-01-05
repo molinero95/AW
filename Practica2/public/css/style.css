@@ -3,6 +3,7 @@
     flex-direction: row;
 }
 
+
 #partida{
     display: flex;
     justify-content: space-between;
