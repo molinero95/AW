@@ -85,11 +85,11 @@ app.get("/status", passport.authenticate('basic', { session: false }), (request,
         response.status(400);//Bad request
         response.json({});
     }
-    daoG.getGameState(id, (err, res) => {
+    daoG.getGameStatus(id, (err, res) => {
         console.log(res);
         if (err) { response.status(500); return; }
         else {
-            if (res) { response.status(200); response.json({ status: res.status }); }
+            if (res) { response.status(200); response.json({ nombres: res }); }
             else { response.status(404); response.json({}); }
         }
     });
