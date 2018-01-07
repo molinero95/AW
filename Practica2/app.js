@@ -126,11 +126,15 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                 response.status(404);
             }
             if (res < 4) {
+                let numPlayers = res;
                 daoG.joinGame(gameId, userId, (err, res) => {
                     if (err) { response.status(500); return; }
                     else {
                         if (res) {
-                            console.log("BIEN");
+                            numPlayers++;
+                            if(numPlayers === 4){
+                                //Comenzar partida
+                            }
                             response.status(201); 
                             response.json({});
                         }
