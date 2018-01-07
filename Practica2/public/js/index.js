@@ -23,21 +23,27 @@ function hideLogin(){
 }
 function showMyGames(){
     $("#myGames").show();
+    $("#myGamesTab").addClass("active");
 }
 function hideMyGames(){
     $("#myGames").hide();
+    $("#myGamesTab").removeClass("active");
 }
 function showFriendsGames(){
     $("#friendsGames").show();
+    $("#friendsGamesTab").addClass("active");
 }
 function hideFriendsGames(){
     $("#friendsGames").hide();
+    $("#friendsGamesTab").removeClass("active");
 }
 function showFamilyGames(){
     $("#familyGames").show();
+    $("#familyGamesTab").addClass("active");
 }
 function hideFamilyGames(){
     $("#familyGames").hide();
+    $("#familyGamesTab").removeClass("active");
 }
 function showActiveGames(){
     $("#activeGames").show();
@@ -51,6 +57,7 @@ function showNav(){
 function hideNav(){
     $("#menuSup").hide();
 }
+
 
 function onFriendsGamesClick(){
     showFriendsGames();
