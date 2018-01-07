@@ -78,8 +78,9 @@ app.post("/register", (request, response) => {
     }
 });
 
-app.get("/state/:id", passport.authenticate('basic', { session: false }), (request, response) => {
-    let id = request.params.id;
+//Debe devolver los nombres de los jugadores
+app.get("/status", passport.authenticate('basic', { session: false }), (request, response) => {
+    let id = request.body.id; //Obtenemos el id
     if (isNaN(id)) {
         response.status(400);//Bad request
         response.json({});
@@ -102,13 +103,10 @@ app.post("/createGame", passport.authenticate('basic', { session: false }), (req
         if (err) { response.status(500); return; }
         else {
             if (res) {
-                console.log("BIEN");
                 response.status(201); response.json({});
             }
-            else {
-                console.log("MAL");
-                response.status(500);
-                return;
+            else{
+                response.status(500); response.json({});
             }
         }
     });
@@ -124,6 +122,9 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
             return;
         }
         else {
+            if (res === 0){ //La partida no existe
+                response.status(404);
+            }
             if (res < 4) {
                 daoG.joinGame(gameId, userId, (err, res) => {
                     if (err) { response.status(500); return; }
@@ -142,7 +143,7 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                 });
             }
             else{
-                response.status(500);
+                response.status(400);
                 return;
             }
         }       

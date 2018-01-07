@@ -5,6 +5,22 @@ class DAO {
       this.pool = pool;
     }
 
+    getGameStatus(id, callback) {
+        this.pool.getConnection((err, connect) => {
+            connect.query("SELECT T2.LOGIN AS NOMBRE FROM JUEGA_EN AS T1 JOIN USUARIOS AS T2 ON T1.IDUSUARIO = T2.ID WHERE T1.IDPARTIDA = ?",[id],(err, res) =>{
+                if(err){callback(err); return;}
+                else{
+                    let result = [];
+                    res.forEach(element => {
+                        result.push(element);
+                    });
+                    res.length > 0 ? callback(null, result):callback(null, null);
+                }
+            });
+            connect.release();
+        });
+    }
+
     getGameState(id, callback) {
         this.pool.getConnection((err, connect) => {
             if(err) {callback(err); return;}
