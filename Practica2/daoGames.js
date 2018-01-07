@@ -5,7 +5,7 @@ class DAO {
       this.pool = pool;
     }
 
-    getGameStatus(id, callback) {
+    getGamePlayerNames(id, callback) {
         this.pool.getConnection((err, connect) => {
             connect.query("SELECT T2.LOGIN AS NOMBRE FROM JUEGA_EN AS T1 JOIN USUARIOS AS T2 ON T1.IDUSUARIO = T2.ID WHERE T1.IDPARTIDA = ?",[id],(err, res) =>{
                 if(err){callback(err); return;}
@@ -21,7 +21,7 @@ class DAO {
         });
     }
 
-    getGameState(id, callback) {
+    getGameStatus(id, callback) {
         this.pool.getConnection((err, connect) => {
             if(err) {callback(err); return;}
             connect.query("SELECT ESTADO FROM PARTIDAS WHERE ID = ?",[id],(err, res) =>{
@@ -33,6 +33,19 @@ class DAO {
             connect.release();
         });
     }
+
+    alterGameStatus(gameId, status, callback) {
+        this.pool.getConnection((err, connect) => {
+            if(err) {callback(err); return;}
+            connect.query("UPDATE PARTIDAS SET ESTADO = ? WHERE ID = ?",[status, gameId],(err, res) =>{
+                if(err){callback(err); return;}
+                else
+                    callback(null, true);
+            });
+            connect.release();
+        });
+    }
+
 
     insertGame(name, userId, callback) {
         this.pool.getConnection((err, connect) => { //Transacción

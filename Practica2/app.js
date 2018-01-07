@@ -9,6 +9,7 @@ const mysql = require("mysql");//mysql
 const path = require("path");
 const bodyParser = require("body-parser");
 const expressValidator = require("express-validator");
+const deck = require("./cards");
 
 let privateKey = fs.readFileSync("./clave.pem");
 let cert = fs.readFileSync("./certificado_firmado.crt");
@@ -85,10 +86,10 @@ app.get("/status", passport.authenticate('basic', { session: false }), (request,
         response.status(400);//Bad request
         response.json({});
     }
-    daoG.getGameStatus(id, (err, res) => {
+    daoG.getGamePlayerNames(id, (err, res) => {
         console.log(res);
         if (err) { response.status(500); return; }
-        else {
+        else {//Aqui devolver tambien el status de la partida en el if: getGameStatus()
             if (res) { response.status(200); response.json({ nombres: res }); }
             else { response.status(404); response.json({}); }
         }
@@ -133,26 +134,67 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                         if (res) {
                             numPlayers++;
                             if(numPlayers === 4){
-                                //Comenzar partida
+                                startGame();
                             }
                             response.status(201); 
                             response.json({});
                         }
                         else {
-                            console.log("MAL");
                             response.status(500);
-                            return;
+                            response.json({});
                         }
                     }
                 });
             }
-            else{
+            else{   //Partida llena
                 response.status(400);
                 return;
             }
         }       
     });    
 });
+
+function startGame(gameId){
+    //Comenzar partida
+    let newGameDeck = new deck();
+    newGameDeck.shuffleDeck();
+    let gameDeck = newGameDeck.getDeck();
+    console.log(gameDeck);
+    let p1 =[], p2 = [], p3 = [], p4 = [];
+    for (let i = 0; i < 52; i++) {
+        if(i % 4 === 0)
+            p1.push(gameDeck.pop());
+        else if(i % 4 === 1)
+            p2.push(gameDeck.pop());
+        else if(i % 4 === 2)
+            p3.push(gameDeck.pop());
+        else
+            p4.push(gameDeck.pop());
+    }
+    console.log(p1);
+    console.log(p2);
+    console.log(p3);
+    console.log(p4);
+
+    /*
+    Status
+    Orden jugadores
+    Asignacion de cartas
+    Cartas sobre la mesa
+    Turno
+    Cartas ultimo jugador sobre la mesa
+    Separación por ;
+    */
+    let turno = Math.floor(Math.random() * 4); //numero [0,3] Turno del primer jugador sacados en orden de la BD
+    let status = "Mesa: []" + ";" + p1.toString() + "; " + p2.toString() + "; " + p3.toString() + "; " + p4.toString() + "; Turno: " + turno + "; ";
+    /*alterGameStatus(gameId, status, (err, res) => {
+        if (err) { response.status(500); return; }
+        else{
+            //mandar datos necesarios al útlimo usr en entrar
+        }
+    });*/
+    console.log(status);
+}
 
 
 //IMAGENES
