@@ -111,7 +111,24 @@ app.post("/createGame", passport.authenticate('basic', { session: false }), (req
             }
         }
     });
-
+    /*
+    daoG.getUserGames(userId, (err, res) => {
+        if (err) { response.status(500); return; }
+        else {
+            if (res) {
+                response.status(201);
+                //poner aqui los nombres en los menus res.name?
+                response.json({});
+            }
+            else{
+                response.status(500); 
+                response.json({});
+            }
+        }
+    });
+    console.log("app");
+    */
+    
 });
 
 app.post("/joinGame", passport.authenticate('basic', { session: false }), (request, response) => {
