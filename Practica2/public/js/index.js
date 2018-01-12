@@ -101,6 +101,7 @@ function onLoginButtonClick(event) {
     let us = $("#inputLogin").val();
     let pass = $("#inputPassword").val();
     cadenaBase64 = btoa(us + ":" + pass);
+    console.log(cadenaBase64);
     $.ajax({
         type: "POST",
         url: "/login",
@@ -112,6 +113,23 @@ function onLoginButtonClick(event) {
             hideLogin();
             showNav();
             showMyGames();
+            $.ajax({
+                type: "GET",
+                url: "/userGameInfo",
+                contentType: "application/json",
+                beforeSend: function (req) {
+                    req.setRequestHeader("Authorization", "Basic " + cadenaBase64);
+                },
+                data: JSON.stringify({ id: data.id }),
+                success: function (data, textStatus, jqXHR) {
+                    for(let i = 0; i < data.ids.length; i++){
+                        addToNav(data.names[i], data.ids[i]);
+                    }
+                },
+                error: function (data, textStatus, jqXHR) {
+                    
+                }
+            });  
         },
         error: function (data, textStatus, jqXHR) {
             alert("Usuario y/o contraseña no válido");
@@ -131,8 +149,8 @@ function onNewGameButtonClick(event) {
         contentType: "application/json",
         data: JSON.stringify({ userId: id, gameName: name }),
         success: function (data, textStatus, jqXHR) {
-            
             console.log("SUCCESS"); //
+            addToNav(name);
         },
         error: function (data, textStatus, jqXHR) {
             alert("No se pudo crear el juego...");
@@ -155,7 +173,7 @@ function onJoinGameButtonClick(event) {
         contentType: "application/json",
         data: JSON.stringify({ gameId: gameId, userId: id }),
         success: function (data, textStatus, jqXHR) {
-            console.log("SUCCESS"); //
+            console.log(data); 
         },
         error: function (data, textStatus, jqXHR) {
             alert("No se puede unir al juego...");
@@ -164,6 +182,7 @@ function onJoinGameButtonClick(event) {
 }
 
 
-
-
-
+function addToNav(name, id){
+    let _id = name+String(id);
+    $("#menuSup").append("<li id="+ _id + "> <a>"+ name + "</a></li>");
+}

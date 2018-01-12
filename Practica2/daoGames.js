@@ -14,7 +14,11 @@ class DAO {
                     res.forEach(element => {
                         result.push(element);
                     });
-                    res.length > 0 ? callback(null, result) : callback(null, null);
+                    console.log(result);
+                    if (result.length > 0) 
+                        callback(null, result);
+                    else
+                        callback(null, null);
                 }
             });
             connect.release();
@@ -24,12 +28,14 @@ class DAO {
     getUserGames(id, callback) {
         this.pool.getConnection((err, connect) => {
             if (err) { callback(err); return; }
-            connect.query("SELECT NOMBRE FROM JUEGA_EN J INNER JOIN PARTIDAS WHERE J.IDUSUARIO = ? GROUP BY NOMBRE", [id], (err, res) => {
+            connect.query("SELECT P.NOMBRE as name, P.ID as id FROM JUEGA_EN J INNER JOIN PARTIDAS P WHERE J.IDUSUARIO = ? GROUP BY P.NOMBRE", [id], (err, res) => {
                 if (err) { callback(err); return; }
                 else {
                     if (res.length > 0) {
                         callback(null, res);
                     }
+                    else
+                        callback(null, null);
                 }
             });
         });
