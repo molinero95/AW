@@ -1,0 +1,11 @@
+COSAS POR HACER:
+    Importante: siempre vamos a tener un juego en el html. El id es #game
+    Al seleccionar una pestaña lo único que haremos será modificar los elementos del div game, no vamos a crear otra.
+    Es decir: click en la pestaña prueba, pues se establecen todos los atributos del div game para esa partida. Ahora click en
+    la partida pepito, pues se estableceran los elementos para la partida pepito.
+
+
+    - Probar bien joinGame
+
+    - HTML para cada partida, modificando atributos como he puesto en "Importante"
+    - Status comprobar si funciona. Recomendación: hacer despues del punto anterior.

@@ -1,16 +1,12 @@
 "use strict";
 $(() => {
     hideMyGames();
-    hideFriendsGames();
-    hideActiveGames();
-    hideFamilyGames();
     hideNav();
+    hideGame();
     $("#loginBtns").on("click", "button#registerBtn", onRegisterButtonClick);
     $("#loginBtns").on("click", "button#loginBtn", onLoginButtonClick);
     $("#createGame").on("click", "button#newGame", onNewGameButtonClick);
     $("#joinGames").on("click", "button#joinGame", onJoinGameButtonClick);
-    $("#menuSup").on("click", "a#partidasAmiguetes", onFriendsGamesClick);
-    $("#menuSup").on("click", "a#familiar", onFamilyGamesClick);
     $("#menuSup").on("click", "a#misPartidas", onMyGamesClick);
 
 });
@@ -30,27 +26,14 @@ function hideMyGames() {
     $("#myGames").hide();
     $("#myGamesTab").removeClass("active");
 }
-function showFriendsGames() {
-    $("#friendsGames").show();
-    $("#friendsGamesTab").addClass("active");
+function showGameTabId(id) {
+    hideMyGames();
+    $("#"+id).addClass("active");
+    $("#game").show();
+    //Añadir codigo del juego en sí
 }
-function hideFriendsGames() {
-    $("#friendsGames").hide();
-    $("#friendsGamesTab").removeClass("active");
-}
-function showFamilyGames() {
-    $("#familyGames").show();
-    $("#familyGamesTab").addClass("active");
-}
-function hideFamilyGames() {
-    $("#familyGames").hide();
-    $("#familyGamesTab").removeClass("active");
-}
-function showActiveGames() {
-    $("#activeGames").show();
-}
-function hideActiveGames() {
-    $("#activeGames").hide();
+function hideGame(){
+    $("#game").hide();
 }
 function showNav() {
     $("#menuSup").show();
@@ -58,20 +41,18 @@ function showNav() {
 function hideNav() {
     $("#menuSup").hide();
 }
-
-
-function onFriendsGamesClick() {
-    showFriendsGames();
+function onGameClick(id) {
+    showGameTabId(id);
     hideMyGames();
-    hideActiveGames();
 }
 function onMyGamesClick() {
+    setInactiveActualTab();
     showMyGames();
-    hideActiveGames();
-    hideFriendsGames();
+    hideGame();
 }
-function onFamilyGamesClick() {
-    hideFriendsGames();
+
+function setInactiveActualTab() {
+    $("#menuSup > .active").removeClass("active");
 }
 
 function onRegisterButtonClick(event) {
@@ -86,7 +67,6 @@ function onRegisterButtonClick(event) {
             alert("Usuario creado correctamente");
         },
         error: function (data, textStatus, jqXHR) {
-            console.log(data);
             if (data.status === 404)
                 alert("Usuario y/o contraseña no válidos.");
             else
@@ -101,14 +81,12 @@ function onLoginButtonClick(event) {
     let us = $("#inputLogin").val();
     let pass = $("#inputPassword").val();
     cadenaBase64 = btoa(us + ":" + pass);
-    console.log(cadenaBase64);
     $.ajax({
         type: "POST",
         url: "/login",
         contentType: "application/json",
         data: JSON.stringify({ user: us, password: pass }),
         success: function (data, textStatus, jqXHR) {
-            console.log(data);
             $("#userId").prop("value", data.id);
             hideLogin();
             showNav();
@@ -136,11 +114,11 @@ function onLoginButtonClick(event) {
         }
     });
 }
-//Funcion que necesita autenticación
+
 function onNewGameButtonClick(event) {
     let id = $("#userId").val();
     let name = $("#inputGameName").val();
-    $.ajax({    //Peticion con auth pls
+    $.ajax({
         type: "POST",
         url: "/createGame",
         beforeSend: function (req) {
@@ -149,7 +127,6 @@ function onNewGameButtonClick(event) {
         contentType: "application/json",
         data: JSON.stringify({ userId: id, gameName: name }),
         success: function (data, textStatus, jqXHR) {
-            console.log("SUCCESS"); //
             addToNav(name);
         },
         error: function (data, textStatus, jqXHR) {
@@ -161,10 +138,7 @@ function onNewGameButtonClick(event) {
 function onJoinGameButtonClick(event) {
     let id = $("#userId").val();
     let gameId = $("#inputGameId").val();
-    console.log("game id:");
-    console.log(gameId);
-    $.ajax({    //Peticion con auth pls
-
+    $.ajax({
         type: "POST",
         url: "/joinGame",
         beforeSend: function (req) {
@@ -173,7 +147,8 @@ function onJoinGameButtonClick(event) {
         contentType: "application/json",
         data: JSON.stringify({ gameId: gameId, userId: id }),
         success: function (data, textStatus, jqXHR) {
-            console.log(data); 
+            addToNav(data.name, id);
+            alert("Partida: '" + data.name + "' agregada correctamente")
         },
         error: function (data, textStatus, jqXHR) {
             alert("No se puede unir al juego...");
@@ -183,6 +158,9 @@ function onJoinGameButtonClick(event) {
 
 
 function addToNav(name, id){
-    let _id = name+String(id);
-    $("#menuSup").append("<li id="+ _id + "> <a>"+ name + "</a></li>");
+    $("#menuSup").append("<li id="+ String(id) + "> <a>"+ name + "</a></li>");
+    $("#"+String(id)).on("click", (event) => {
+        setInactiveActualTab();
+        showGameTabId(id);
+    });
 }

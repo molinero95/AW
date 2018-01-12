@@ -87,12 +87,16 @@ app.get("/status", passport.authenticate('basic', { session: false }), (request,
         response.status(400);//Bad request
         response.json({});
     }
-    daoG.getGamePlayerNames(id, (err, res) => {
+    daoG.getGamePlayers(id, (err, res) => {
         console.log(res);
         if (err) { response.status(500); return; }
         else {//Aqui devolver tambien el status de la partida en el if: getGameStatus()
-            console.log(res);
-            if (res) { response.status(200); response.json({ nombres: res }); }
+            console.log(res.players);
+            let names = [];
+            res.players.forEach(e => {
+                names.push(e.name);
+            });
+            if (res) { response.status(200); response.json({ names: names }); }
             else { response.status(404); response.json({}); }
         }
     });
@@ -117,41 +121,50 @@ app.post("/createGame", passport.authenticate('basic', { session: false }), (req
 
 });
 
+
 app.post("/joinGame", passport.authenticate('basic', { session: false }), (request, response) => {
     let gameId = request.body.gameId;
     let userId = request.user;
-    daoG.countGameUsers(gameId, (err, res) => {
-        if (err) {
-            res.status(500);
-            return;
-        }
+    daoG.getGamePlayers(gameId, (err, res) => {
+        if (err) { res.status(500); return; }
         else {
-            if (res === 0) { //La partida no existe
+            if(!res){ //La partida no existe
                 response.status(404);
+                response.json({});
             }
-            if (res < 4) {
-                let numPlayers = res;
-                daoG.joinGame(gameId, userId, (err, res) => {
-                    if (err) { response.status(500); return; }
-                    else {
-                        if (res) {
-                            numPlayers++;
-                            if (numPlayers === 4) {
-                                startGame();
-                            }
-                            response.status(200);
-                            response.json({});
-                        }
-                        else {
-                            response.status(500);
-                            response.json({});
-                        }
+            else{
+                let players = res.players;
+                if (players.length < 4) { //Comprobar si el usuario está ya incluido
+                    let included = false;
+                    players.forEach(element => {
+                        if(element.id === userId) //Usuario ya incluido
+                            included = true;
+                    });
+                    if(included){   //Usuario ya incluido
+                        response.status(400);
+                        response.json({});
                     }
-                });
-            }
-            else {   //Partida llena
-                response.status(400);
-                return;
+                    else{
+                        daoG.joinGame(gameId, userId, (err, res) => {
+                            if (err) { response.status(500); return; }
+                            else {
+                                if (res) { //Se devuelve true si se une, si no ocurrira un err
+                                    daoG.getGameName(gameId, (err, res) => {    //Necesario para añadir la pestaña
+                                        if(err){ res.status(500); return;}
+                                        else{
+                                            response.status(200);
+                                            response.json({name: res});
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+                else {   //Partida llena
+                    response.status(400);
+                    response.json({});
+                }
             }
         }
     });
