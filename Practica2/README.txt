@@ -10,3 +10,4 @@ COSAS POR HACER:
     - HTML para cada partida, modificando atributos como he puesto en "Importante"
     - get /status comprobar si funciona. Recomendación: hacer despues del punto anterior.
     - Boton logout
+    - El id del usuario esta en el request, no hace falta devolverlo en la consulta que se hace en el login
