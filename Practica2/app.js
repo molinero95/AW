@@ -110,7 +110,7 @@ app.post("/createGame", passport.authenticate('basic', { session: false }), (req
         if (err) { response.status(500); return; }
         else {
             if (res) {
-                response.status(201); response.json({});
+                response.status(201); response.json({id: res});
             }
             else {  //No debería llegar aqui
                 response.status(400); response.json({});
@@ -130,7 +130,7 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
         else {
             if(!res){ //La partida no existe
                 response.status(404);
-                response.json({});
+                response.json({error : "ERROR: Partida no existente"});
             }
             else{
                 let players = res.players;
@@ -142,7 +142,7 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                     });
                     if(included){   //Usuario ya incluido
                         response.status(400);
-                        response.json({});
+                        response.json({error : "ERROR: Usuario ya en partida"});
                     }
                     else{
                         daoG.joinGame(gameId, userId, (err, res) => {
@@ -163,7 +163,7 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                 }
                 else {   //Partida llena
                     response.status(400);
-                    response.json({});
+                    response.json({error: "ERROR: Partida completa"});
                 }
             }
         }

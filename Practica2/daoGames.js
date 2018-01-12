@@ -118,7 +118,7 @@ class DAO {
                                             });
                                         }
                                     });
-                                    callback(null, true);
+                                    callback(null, gameId);
                                 }
                             });
                         }

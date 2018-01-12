@@ -100,12 +100,14 @@ function onLoginButtonClick(event) {
                 },
                 data: JSON.stringify({ id: data.id }),
                 success: function (data, textStatus, jqXHR) {
-                    for(let i = 0; i < data.ids.length; i++){
-                        addToNav(data.names[i], data.ids[i]);
+                    if(data.ids){
+                        for(let i = 0; i < data.ids.length; i++){
+                            addToNav(data.names[i], data.ids[i]);
+                        }
                     }
                 },
                 error: function (data, textStatus, jqXHR) {
-                    
+                    //
                 }
             });  
         },
@@ -127,7 +129,7 @@ function onNewGameButtonClick(event) {
         contentType: "application/json",
         data: JSON.stringify({ userId: id, gameName: name }),
         success: function (data, textStatus, jqXHR) {
-            addToNav(name);
+            addToNav(name,data.id);
         },
         error: function (data, textStatus, jqXHR) {
             alert("No se pudo crear el juego...");
@@ -151,7 +153,7 @@ function onJoinGameButtonClick(event) {
             alert("Partida: '" + data.name + "' agregada correctamente")
         },
         error: function (data, textStatus, jqXHR) {
-            alert("No se puede unir al juego...");
+            alert(data.responseJSON.error);
         }
     });
 }

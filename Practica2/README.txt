@@ -8,4 +8,5 @@ COSAS POR HACER:
     - Probar bien joinGame
 
     - HTML para cada partida, modificando atributos como he puesto en "Importante"
-    - Status comprobar si funciona. Recomendación: hacer despues del punto anterior.
+    - get /status comprobar si funciona. Recomendación: hacer despues del punto anterior.
+    - Boton logout
