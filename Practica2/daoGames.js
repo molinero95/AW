@@ -5,16 +5,19 @@ class DAO {
         this.pool = pool;
     }
 
-    getGamePlayerNames(id, callback) {
+    getGamePlayers(id, callback) {
         this.pool.getConnection((err, connect) => {
-            connect.query("SELECT T2.LOGIN AS NOMBRE FROM JUEGA_EN AS T1 JOIN USUARIOS AS T2 ON T1.IDUSUARIO = T2.ID WHERE T1.IDPARTIDA = ?", [id], (err, res) => {
+            connect.query("SELECT T1.IDUSUARIO as id, T2.LOGIN AS name FROM JUEGA_EN AS T1 JOIN USUARIOS AS T2 ON T1.IDUSUARIO = T2.ID WHERE T1.IDPARTIDA = ?", [id], (err, res) => {
                 if (err) { callback(err); return; }
                 else {
                     let result = [];
                     res.forEach(element => {
-                        result.push(element);
+                        result.push({id: element.id, name: element.name});
                     });
-                    res.length > 0 ? callback(null, result) : callback(null, null);
+                    if (result.length > 0) 
+                        callback(null, {players: result});
+                    else
+                        callback(null, null);
                 }
             });
             connect.release();
@@ -24,12 +27,14 @@ class DAO {
     getUserGames(id, callback) {
         this.pool.getConnection((err, connect) => {
             if (err) { callback(err); return; }
-            connect.query("SELECT NOMBRE FROM JUEGA_EN J INNER JOIN PARTIDAS WHERE J.IDUSUARIO = ? GROUP BY NOMBRE", [id], (err, res) => {
+            connect.query("SELECT P.NOMBRE as name, P.ID as id FROM JUEGA_EN J JOIN PARTIDAS P ON P.ID = J.IDPARTIDA WHERE J.IDUSUARIO = ?", [id], (err, res) => {
                 if (err) { callback(err); return; }
                 else {
                     if (res.length > 0) {
                         callback(null, res);
                     }
+                    else
+                        callback(null, null);
                 }
             });
         });
@@ -43,6 +48,21 @@ class DAO {
                     res.length > 0 ? callback(null, res[0].ESTADO) : callback(null, null);
                 }
             });
+            connect.release();
+        });
+    }
+
+    getGameName(id, callback){
+        this.pool.getConnection((err, connect) => {
+            if(err) {callback(err); return;}
+            else{
+                connect.query("SELECT NOMBRE FROM PARTIDAS WHERE ID = ?", [id], (err, res) => {
+                    if(err) { callback(err); return;}
+                    else{
+                        res.length > 0 ? callback(null, res[0].NOMBRE) : callback(null, null);
+                    }
+                });
+            }
             connect.release();
         });
     }
@@ -98,7 +118,7 @@ class DAO {
                                             });
                                         }
                                     });
-                                    callback(null, true);
+                                    callback(null, gameId);
                                 }
                             });
                         }
@@ -117,26 +137,6 @@ class DAO {
                     if (err) { callback(err); return; }
                     else
                         callback(null, true);
-                });
-            }
-            connect.release();
-        });
-    }
-
-    countGameUsers(gameId, callback) {
-        this.pool.getConnection((err, connect) => {//Transacción
-            if (err) {
-                callback(err);
-                return;
-            }
-            else {
-                connect.query("SELECT COUNT(IDUSUARIO) AS NUM_PLAYERS FROM JUEGA_EN WHERE IDPARTIDA = ?", [gameId], (err, res) => {
-                    if (err) {
-                        callback(err); return;
-                    }
-                    else {
-                        callback(null, res[0].NUM_PLAYERS);
-                    }
                 });
             }
             connect.release();
