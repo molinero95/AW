@@ -81,44 +81,45 @@ app.post("/register", (request, response) => {
 });
 
 //Debe devolver los nombres de los jugadores
-app.get("/status", passport.authenticate('basic', { session: false }), (request, response) => {
-    let id = request.body.id; //Obtenemos el id
-    if (isNaN(id)) {
-        response.status(400);//Bad request
+app.get("/status/:id", passport.authenticate('basic', { session: false }), (request, response) => {
+    if (isNaN(request.params.id)) {
+        response.status(404);   //COMPROBAR
         response.json({});
     }
-    daoG.getGamePlayers(id, (err, res) => {
-        console.log(res);
-        if (err) { response.status(500); return; }
-        else {//Aqui devolver tambien el status de la partida en el if: getGameStatus()
-            console.log(res.players);
-            let names = [];
-            res.players.forEach(e => {
-                names.push(e.name);
-            });
-            if (res) { response.status(200); response.json({ names: names }); }
-            else { response.status(404); response.json({}); }
-        }
-    });
+    else {
+        let id = Number(request.params.id); //Obtenemos el id
+        daoG.getGamePlayers(id, (err, res) => {
+            if (err) { response.status(500); return; }
+            else {//Aqui devolver tambien el status de la partida en el if: getGameStatus()
+                if (res) {
+                    console.log(res.players);
+                    let names = [];
+                    res.players.forEach(e => {
+                        names.push(e.name);
+                    });
+                    response.status(200);
+                    response.json({ names: names });
+                }
+                else { response.status(404); response.json({}); }
+            }
+        });
+    }
 });
 
 app.post("/createGame", passport.authenticate('basic', { session: false }), (request, response) => {
     let name = request.body.gameName;
     let userId = request.user;
-    console.log(userId);
     daoG.insertGame(name, userId, (err, res) => {
         if (err) { response.status(500); return; }
         else {
             if (res) {
-                response.status(201); response.json({id: res});
+                response.status(201); response.json({ id: res });
             }
             else {  //No debería llegar aqui
                 response.status(400); response.json({});
             }
         }
     });
-
-
 });
 
 
@@ -128,32 +129,32 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
     daoG.getGamePlayers(gameId, (err, res) => {
         if (err) { res.status(500); return; }
         else {
-            if(!res){ //La partida no existe
+            if (!res) { //La partida no existe
                 response.status(404);
-                response.json({error : "ERROR: Partida no existente"});
+                response.json({ error: "ERROR: Partida no existente" });
             }
-            else{
+            else {
                 let players = res.players;
                 if (players.length < 4) { //Comprobar si el usuario está ya incluido
                     let included = false;
                     players.forEach(element => {
-                        if(element.id === userId) //Usuario ya incluido
+                        if (element.id === userId) //Usuario ya incluido
                             included = true;
                     });
-                    if(included){   //Usuario ya incluido
+                    if (included) {   //Usuario ya incluido
                         response.status(400);
-                        response.json({error : "ERROR: Usuario ya en partida"});
+                        response.json({ error: "ERROR: Usuario ya en partida" });
                     }
-                    else{
+                    else {
                         daoG.joinGame(gameId, userId, (err, res) => {
                             if (err) { response.status(500); return; }
                             else {
                                 if (res) { //Se devuelve true si se une, si no ocurrira un err
                                     daoG.getGameName(gameId, (err, res) => {    //Necesario para añadir la pestaña
-                                        if(err){ res.status(500); return;}
-                                        else{
+                                        if (err) { res.status(500); return; }
+                                        else {
                                             response.status(200);
-                                            response.json({name: res});
+                                            response.json({ name: res });
                                         }
                                     });
                                 }
@@ -163,7 +164,7 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                 }
                 else {   //Partida llena
                     response.status(400);
-                    response.json({error: "ERROR: Partida completa"});
+                    response.json({ error: "ERROR: Partida completa" });
                 }
             }
         }

@@ -33,12 +33,12 @@
             </div>
         </div>
     </div>
-    <ul class="nav nav-tabs" role="tablist" id = "menuSup">
+    <ul class="nav nav-tabs" role="tablist" id="menuSup">
         <li role="presentation" id="myGamesTab" class="active">
             <a id="misPartidas">Mis partidas</a>
         </li>
     </ul>
-    <div id="myGames" class = "container">
+    <div id="myGames" class="container">
         <div class="container">
             <label for="newGame">Crear una nueva partida</label>
             <div class="form-inline" id="createGame">
@@ -65,11 +65,11 @@
                             <th colspan="2">
                                 <div id="partida">
                                     <h4>Partida</h4>
-                                    <button type="submit" class="btn btn-primary">Actualizar partida</button>
+                                    <button type="submit" id="update" class="btn btn-primary">Actualizar partida</button>
                                 </div>
                                 <div>
                                     <p>La partida aun no tiene 4 jugadores.</p>
-                                    <p>El id de la partida es </p>
+                                    <p id="needId">El id de la partida es </p>
                                 </div>
                             </th>
                         </thead>
@@ -83,10 +83,30 @@
                                 <th colspan="2">Jugadores</th>
                             </thead>
                             <tbody>
-                                <!-- un for para mter los jugadores-->
                                 <tr>
-                                    <td> Jugador </td>
-                                    <td> Nº Cartas</td>
+                                    <td>
+                                        <strong> Jugador </strong>
+                                    </td>
+                                    <td>
+                                        <strong>Nº Cartas </strong>
+                                    </td>
+                                </tr>
+                                <!--Datos por aqui-->
+                                <tr>
+                                    <td id="player1"></td>
+                                    <td id="numCards1"></td>
+                                </tr>
+                                <tr>
+                                    <td id="player2"></td>
+                                    <td id="numCards2"></td>
+                                </tr>
+                                <tr>
+                                    <td id="player3"></td>
+                                    <td id="numCards3"></td>
+                                </tr>
+                                <tr>
+                                    <td id="player4"></td>
+                                    <td id="numCards4"></td>
                                 </tr>
                             </tbody>
                         </table>

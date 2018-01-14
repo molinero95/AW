@@ -7,15 +7,15 @@ class DAO {
 
     getGamePlayers(id, callback) {
         this.pool.getConnection((err, connect) => {
-            connect.query("SELECT T1.IDUSUARIO as id, T2.LOGIN AS name FROM JUEGA_EN AS T1 JOIN USUARIOS AS T2 ON T1.IDUSUARIO = T2.ID WHERE T1.IDPARTIDA = ?", [id], (err, res) => {
+            connect.query("SELECT T1.IDUSUARIO as id, T2.LOGIN AS name FROM JUEGA_EN T1 JOIN USUARIOS T2 ON T1.IDUSUARIO = T2.ID WHERE T1.IDPARTIDA = ?", [id], (err, res) => {
                 if (err) { callback(err); return; }
                 else {
                     let result = [];
                     res.forEach(element => {
-                        result.push({id: element.id, name: element.name});
+                        result.push({ id: element.id, name: element.name });
                     });
-                    if (result.length > 0) 
-                        callback(null, {players: result});
+                    if (result.length > 0)
+                        callback(null, { players: result });
                     else
                         callback(null, null);
                 }
@@ -52,13 +52,13 @@ class DAO {
         });
     }
 
-    getGameName(id, callback){
+    getGameName(id, callback) {
         this.pool.getConnection((err, connect) => {
-            if(err) {callback(err); return;}
-            else{
+            if (err) { callback(err); return; }
+            else {
                 connect.query("SELECT NOMBRE FROM PARTIDAS WHERE ID = ?", [id], (err, res) => {
-                    if(err) { callback(err); return;}
-                    else{
+                    if (err) { callback(err); return; }
+                    else {
                         res.length > 0 ? callback(null, res[0].NOMBRE) : callback(null, null);
                     }
                 });
@@ -130,7 +130,7 @@ class DAO {
     }
 
     joinGame(gameId, userId, callback) {
-        this.pool.getConnection((err, connect) => { //Transacción
+        this.pool.getConnection((err, connect) => {
             if (err) { callback(err); return; }
             else {
                 connect.query("INSERT INTO JUEGA_EN(IDUSUARIO, IDPARTIDA) VALUES (?,?)", [userId, gameId], (err, res) => {

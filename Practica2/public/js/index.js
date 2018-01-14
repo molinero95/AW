@@ -8,6 +8,7 @@ $(() => {
     $("#createGame").on("click", "button#newGame", onNewGameButtonClick);
     $("#joinGames").on("click", "button#joinGame", onJoinGameButtonClick);
     $("#menuSup").on("click", "a#misPartidas", onMyGamesClick);
+    $("#partida").on("click", "button#update", updateGameClick);
 
 });
 
@@ -28,11 +29,11 @@ function hideMyGames() {
 }
 function showGameTabId(id) {
     hideMyGames();
-    $("#"+id).addClass("active");
+    $("#" + id).addClass("active");
     $("#game").show();
     //Añadir codigo del juego en sí
 }
-function hideGame(){
+function hideGame() {
     $("#game").hide();
 }
 function showNav() {
@@ -100,8 +101,8 @@ function onLoginButtonClick(event) {
                 },
                 data: JSON.stringify({ id: data.id }),
                 success: function (data, textStatus, jqXHR) {
-                    if(data.ids){
-                        for(let i = 0; i < data.ids.length; i++){
+                    if (data.ids) {
+                        for (let i = 0; i < data.ids.length; i++) {
                             addToNav(data.names[i], data.ids[i]);
                         }
                     }
@@ -109,7 +110,7 @@ function onLoginButtonClick(event) {
                 error: function (data, textStatus, jqXHR) {
                     //
                 }
-            });  
+            });
         },
         error: function (data, textStatus, jqXHR) {
             alert("Usuario y/o contraseña no válido");
@@ -129,7 +130,7 @@ function onNewGameButtonClick(event) {
         contentType: "application/json",
         data: JSON.stringify({ userId: id, gameName: name }),
         success: function (data, textStatus, jqXHR) {
-            addToNav(name,data.id);
+            addToNav(name, data.id);
         },
         error: function (data, textStatus, jqXHR) {
             alert("No se pudo crear el juego...");
@@ -149,7 +150,7 @@ function onJoinGameButtonClick(event) {
         contentType: "application/json",
         data: JSON.stringify({ gameId: gameId, userId: id }),
         success: function (data, textStatus, jqXHR) {
-            addToNav(data.name, id);
+            addToNav(data.name, gameId);
             alert("Partida: '" + data.name + "' agregada correctamente")
         },
         error: function (data, textStatus, jqXHR) {
@@ -158,11 +159,48 @@ function onJoinGameButtonClick(event) {
     });
 }
 
+let actualMatch = -1;
 
-function addToNav(name, id){
-    $("#menuSup").append("<li id="+ String(id) + "> <a>"+ name + "</a></li>");
-    $("#"+String(id)).on("click", (event) => {
-        setInactiveActualTab();
-        showGameTabId(id);
+
+function updateGameClick(event) {
+    getGameStatus();
+}
+
+function getGameStatus() {
+    $.ajax({
+        type: "GET",
+        url: "/status/" + actualMatch,
+        beforeSend: function (req) {
+            req.setRequestHeader("Authorization", "Basic " + cadenaBase64);
+        },
+        contentType: "application/json",
+        success: function (data, textStatus, jqXHR) {
+            //Actualizar datos
+            setGamePlayersDOM(data, null);
+        },
+        error: function (data, textStatus, jqXHR) {
+            //Error
+        }
     });
+}
+
+function addToNav(name, id) {
+    $("#menuSup").append("<li id=" + String(id) + "> <a>" + name + "</a></li>");
+    $("#" + String(id)).on("click", (event) => {
+        actualMatch = id;
+        playGame();
+    });
+}
+
+function playGame() {
+    setInactiveActualTab();
+    showGameTabId(actualMatch);
+    getGameStatus();
+}
+
+function setGamePlayersDOM(players, cards) {
+    for (let i = 0; i < players.names.length; i++) {
+        let str = "#player" + String(i + 1);
+        $(str).text(players.names[i]);
+    }
 }
