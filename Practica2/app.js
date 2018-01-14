@@ -60,6 +60,18 @@ app.post("/login", (request, response) => {
     });
 });
 
+app.post("/logout", (request, response) => {
+    console.log("estoy");
+    if (err) {
+        response.status(500);
+        return;
+    }
+    else {
+        response.status(200);
+        response.json({})
+    }
+});
+
 app.post("/register", (request, response) => {
     request.checkBody("user", "Nombre de usuario no vacio").notEmpty();
     request.checkBody("user", "Nombre de usuario no válido").matches(/^[A-Z0-9]*$/i);

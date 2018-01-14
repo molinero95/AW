@@ -3,13 +3,14 @@ $(() => {
     hideMyGames();
     hideNav();
     hideGame();
+    hideNavBar();
     $("#loginBtns").on("click", "button#registerBtn", onRegisterButtonClick);
     $("#loginBtns").on("click", "button#loginBtn", onLoginButtonClick);
     $("#createGame").on("click", "button#newGame", onNewGameButtonClick);
     $("#joinGames").on("click", "button#joinGame", onJoinGameButtonClick);
     $("#menuSup").on("click", "a#misPartidas", onMyGamesClick);
     $("#partida").on("click", "button#update", updateGameClick);
-
+    $("#logoutBtn").on("click", "button#logoutBtn", onLogoutButtonClick);
 });
 
 
@@ -42,6 +43,19 @@ function showNav() {
 function hideNav() {
     $("#menuSup").hide();
 }
+function hideNavBar(){
+    $("#barraSup").hide();
+}
+function showNavBar(){
+    $("#barraSup").show();
+}
+
+function hideImage(){
+    $("#imagen").hide();
+}
+function showImage(){
+    $("#imagen").show();
+}
 function onGameClick(id) {
     showGameTabId(id);
     hideMyGames();
@@ -51,6 +65,7 @@ function onMyGamesClick() {
     showMyGames();
     hideGame();
 }
+
 
 function setInactiveActualTab() {
     $("#menuSup > .active").removeClass("active");
@@ -90,6 +105,8 @@ function onLoginButtonClick(event) {
         success: function (data, textStatus, jqXHR) {
             $("#userId").prop("value", data.id);
             hideLogin();
+            hideImage();
+            showNavBar();
             showNav();
             showMyGames();
             $.ajax({
@@ -106,6 +123,7 @@ function onLoginButtonClick(event) {
                             addToNav(data.names[i], data.ids[i]);
                         }
                     }
+                    $("#name").append("<a>"+us+"</a>");
                 },
                 error: function (data, textStatus, jqXHR) {
                     //
@@ -114,6 +132,28 @@ function onLoginButtonClick(event) {
         },
         error: function (data, textStatus, jqXHR) {
             alert("Usuario y/o contraseña no válido");
+        }
+    });
+}
+
+function onLogoutButtonClick(event){
+    cadenaBase64 = "";
+    console.log("estoy");
+    $.ajax({
+        type: "POST",
+        url: "/logout",
+        contentType: "application/json",
+        data: "",
+        success: function (data, textStatus, jqXHR) { 
+            hideMyGames();
+            hideNav();
+            hideGame();
+            hideNavBar();
+            showImage();
+            showLogin();  
+        },
+        error: function (data, textStatus, jqXHR) {
+            alert("No se ha podido cerrar sesión");
         }
     });
 }
