@@ -10,7 +10,7 @@ $(() => {
     $("#joinGames").on("click", "button#joinGame", onJoinGameButtonClick);
     $("#menuSup").on("click", "a#misPartidas", onMyGamesClick);
     $("#partida").on("click", "button#update", updateGameClick);
-    $("#logoutBtn").on("click", "button#logoutBtn", onLogoutButtonClick);
+    $("#logoutBar").on("click", "button#logoutBtn", onLogoutButtonClick);
 });
 
 
@@ -123,7 +123,7 @@ function onLoginButtonClick(event) {
                             addToNav(data.names[i], data.ids[i]);
                         }
                     }
-                    $("#name").append("<a>"+us+"</a>");
+                    $("#name").text(us);
                 },
                 error: function (data, textStatus, jqXHR) {
                     //
@@ -138,24 +138,12 @@ function onLoginButtonClick(event) {
 
 function onLogoutButtonClick(event){
     cadenaBase64 = "";
-    console.log("estoy");
-    $.ajax({
-        type: "POST",
-        url: "/logout",
-        contentType: "application/json",
-        data: "",
-        success: function (data, textStatus, jqXHR) { 
-            hideMyGames();
-            hideNav();
-            hideGame();
-            hideNavBar();
-            showImage();
-            showLogin();  
-        },
-        error: function (data, textStatus, jqXHR) {
-            alert("No se ha podido cerrar sesión");
-        }
-    });
+    hideMyGames();
+    hideNav();
+    hideGame();
+    hideNavBar();
+    showImage();
+    showLogin(); 
 }
 
 function onNewGameButtonClick(event) {
