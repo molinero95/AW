@@ -12,65 +12,73 @@ $(() => {
     $("#partida").on("click", "button#update", updateGameClick);
     $("#logoutBar").on("click", "button#logoutBtn", onLogoutButtonClick);
 });
-
-
+let cadenaBase64 = "";
+let userGames = []; //Esperando respuesta del profesor
+//Muestra el formulario de login
 function showLogin() {
     $("#signIn").show();
 }
+//Oculta el formulario de login
 function hideLogin() {
     $("#signIn").hide();
 }
+//Muestra la pestaña MyGames
 function showMyGames() {
     $("#myGames").show();
+    setInactiveActualTab();
     $("#myGamesTab").addClass("active");
 }
+//Oculta la pestaña MyGames
 function hideMyGames() {
     $("#myGames").hide();
     $("#myGamesTab").removeClass("active");
 }
+//Oculta la pestaña anterior y muestra la seleccionada
 function showGameTabId(id) {
+    setInactiveActualTab();
     hideMyGames();
     $("#" + id).addClass("active");
     $("#game").show();
-    //Añadir codigo del juego en sí
+    //Mostrar el juego aqui
 }
+//Oculta el juego
 function hideGame() {
     $("#game").hide();
 }
+//Muestra el menu de partidas
 function showNav() {
     $("#menuSup").show();
 }
+//Oculta el menú de partidas
 function hideNav() {
     $("#menuSup").hide();
 }
-function hideNavBar(){
-    $("#barraSup").hide();
-}
+//Muestra el menú negro
 function showNavBar(){
     $("#barraSup").show();
 }
-
+//Oculta el menú negro
+function hideNavBar(){
+    $("#barraSup").hide();
+}
+//Oculta la imagen del login
 function hideImage(){
     $("#imagen").hide();
 }
+//Muestra la imagen del login
 function showImage(){
     $("#imagen").show();
 }
+
+//Todos los eventos Click aqui
 function onGameClick(id) {
     showGameTabId(id);
-    hideMyGames();
 }
 function onMyGamesClick() {
     setInactiveActualTab();
     showMyGames();
     hideGame();
 }
-
-
-function setInactiveActualTab() {
-    $("#menuSup > .active").removeClass("active");
-}
-
 function onRegisterButtonClick(event) {
     let us = $("#inputLogin").val();
     let pass = $("#inputPassword").val();
@@ -90,9 +98,6 @@ function onRegisterButtonClick(event) {
         },
     });
 }
-
-let cadenaBase64 = "";
-
 function onLoginButtonClick(event) {
     let us = $("#inputLogin").val();
     let pass = $("#inputPassword").val();
@@ -120,6 +125,7 @@ function onLoginButtonClick(event) {
                 success: function (data, textStatus, jqXHR) {
                     if (data.ids) {
                         for (let i = 0; i < data.ids.length; i++) {
+                            userGames.push(data.ids[i]);
                             addToNav(data.names[i], data.ids[i]);
                         }
                     }
@@ -135,17 +141,16 @@ function onLoginButtonClick(event) {
         }
     });
 }
-
 function onLogoutButtonClick(event){
     cadenaBase64 = "";
     hideMyGames();
     hideNav();
     hideGame();
+    removeGamesFromNav();
     hideNavBar();
     showImage();
     showLogin(); 
 }
-
 function onNewGameButtonClick(event) {
     let id = $("#userId").val();
     let name = $("#inputGameName").val();
@@ -165,7 +170,6 @@ function onNewGameButtonClick(event) {
         }
     });
 }
-
 function onJoinGameButtonClick(event) {
     let id = $("#userId").val();
     let gameId = $("#inputGameId").val();
@@ -186,15 +190,14 @@ function onJoinGameButtonClick(event) {
         }
     });
 }
-
-let actualMatch = -1;
-
-
 function updateGameClick(event) {
-    getGameStatus();
+    let id = Number($("#menuSup > .active").attr("id"));
+    console.log(id);
+    getGameStatus(id);
 }
+//Fin clicks
 
-function getGameStatus() {
+function getGameStatus(actualMatch) {
     $.ajax({
         type: "GET",
         url: "/status/" + actualMatch,
@@ -215,15 +218,14 @@ function getGameStatus() {
 function addToNav(name, id) {
     $("#menuSup").append("<li id=" + String(id) + "> <a>" + name + "</a></li>");
     $("#" + String(id)).on("click", (event) => {
-        actualMatch = id;
-        playGame();
+        playGame(id);
     });
 }
 
-function playGame() {
+function playGame(id) {
     setInactiveActualTab();
-    showGameTabId(actualMatch);
-    getGameStatus();
+    showGameTabId(id);
+    getGameStatus(id);
 }
 
 function setGamePlayersDOM(players, cards) {
@@ -231,4 +233,17 @@ function setGamePlayersDOM(players, cards) {
         let str = "#player" + String(i + 1);
         $(str).text(players.names[i]);
     }
+}
+
+/*Quita la clase active a la partida actual en el menú */
+function setInactiveActualTab() {
+    $("#menuSup > .active").removeClass("active");
+}
+
+//Elimina los juegos del menu nav para el logout
+function removeGamesFromNav() {
+    userGames.forEach(e => {
+        let id = "#"+e;
+        $(id).remove();
+    });
 }
