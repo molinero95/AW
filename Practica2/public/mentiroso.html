@@ -57,19 +57,26 @@
         </li>
     </ul>
     <div id="myGames" class="container">
-        <div class="container">
-            <label for="newGame">Crear una nueva partida</label>
-            <div class="form-inline" id="createGame">
-                <input id="inputGameName" class="form-control" placeholder="Introduce aquí el nombre" required="" autofocus="" type="">
-                <button id="newGame" type="submit" class="btn btn-primary">Crear</button>
+        <div class="panel panel-default">
+            <div class="panel-heading">Crear una nueva partida</div>
+            <div class="panel-body">
+                <div class="input-group" id="createGame">
+                    <input id="inputGameName" class="form-control" placeholder="Introduce aquí el nombre" required="" autofocus="" type="">
+                    <span class="input-group-btn">
+                    <button id="newGame" type="submit" class="btn btn-primary">Crear</button>
+                </div>
             </div>
         </div>
-        <div class="container">
-            <label for="joinGame">Unirse a una partida</label>
-            <div class="form-inline" id="joinGames">
-                <input id="inputGameId" class="form-control" placeholder="Introduce aquí el identificador de la partida" required="" autofocus=""
-                    type="">
-                <button id="joinGame" type="submit" class="btn btn-primary">Unirse</button>
+        <div class="panel panel-default">
+            <div class="panel-heading">Unirse a una partida</div>
+            <div class="panel-body">
+                <div class="input-group" id="joinGames">
+                    <input id="inputGameId" class="form-control" placeholder="Introduce aquí el identificador de la partida" required="" autofocus=""
+                        type="">
+                <span class="input-group-btn">
+                    <button id="joinGame" type="submit" class="btn btn-primary">Unirse</button>
+                </span>
+                </div>
             </div>
         </div>
     </div>

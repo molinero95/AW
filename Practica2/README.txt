@@ -11,3 +11,6 @@ COSAS POR HACER:
     - get /status comprobar si funciona. Recomendación: hacer despues del punto anterior.
     - Boton logout
     - El id del usuario esta en el request, no hace falta devolverlo en la consulta que se hace en el login
+
+PREGUNTAS
+    - ¿podemos tener variables globales para guardar los ids, etc o mejor hacer consulta a la bd?

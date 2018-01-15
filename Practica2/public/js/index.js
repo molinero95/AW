@@ -13,7 +13,6 @@ $(() => {
     $("#logoutBar").on("click", "button#logoutBtn", onLogoutButtonClick);
 });
 
-
 function showLogin() {
     $("#signIn").show();
 }
@@ -143,7 +142,29 @@ function onLogoutButtonClick(event){
     hideGame();
     hideNavBar();
     showImage();
-    showLogin(); 
+    showLogin();
+    /*
+    $.ajax({
+        type: "GET",
+        url: "/userGameInfo",
+        contentType: "application/json",
+        beforeSend: function (req) {
+            req.setRequestHeader("Authorization", "Basic " + cadenaBase64);
+        },
+        data: JSON.stringify({ id: data.id }),
+        success: function (data, textStatus, jqXHR) {
+            if (data.ids) {
+                for (let i = 0; i < data.ids.length; i++) {
+                    removeNav(data.names[i], data.ids[i]);
+                }
+            }
+            $("#name").text(us);
+        },
+        error: function (data, textStatus, jqXHR) {
+            //
+        }
+    });
+    */
 }
 
 function onNewGameButtonClick(event) {
@@ -218,6 +239,10 @@ function addToNav(name, id) {
         actualMatch = id;
         playGame();
     });
+}
+
+function removeNav(name,id){
+    $("#menuSup").remove("#"+String(id));
 }
 
 function playGame() {
