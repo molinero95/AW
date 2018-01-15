@@ -13,7 +13,11 @@ $(() => {
     $("#logoutBar").on("click", "button#logoutBtn", onLogoutButtonClick);
 });
 let cadenaBase64 = "";
-let userGames = []; //Esperando respuesta del profesor
+
+//Elimina los juegos del menu nav para el logout
+function removeGameTabs() {
+    $(".tab").remove();
+}
 //Muestra el formulario de login
 function showLogin() {
     $("#signIn").show();
@@ -125,10 +129,10 @@ function onLoginButtonClick(event) {
                 success: function (data, textStatus, jqXHR) {
                     if (data.ids) {
                         for (let i = 0; i < data.ids.length; i++) {
-                            userGames.push(data.ids[i]);
                             addToNav(data.names[i], data.ids[i]);
                         }
                     }
+                    console.log(us);
                     $("#name").text(us);
                 },
                 error: function (data, textStatus, jqXHR) {
@@ -146,7 +150,7 @@ function onLogoutButtonClick(event){
     hideMyGames();
     hideNav();
     hideGame();
-    removeGamesFromNav();
+    removeGameTabs();
     hideNavBar();
     showImage();
     showLogin(); 
@@ -216,7 +220,9 @@ function getGameStatus(actualMatch) {
 }
 
 function addToNav(name, id) {
-    $("#menuSup").append("<li id=" + String(id) + "> <a>" + name + "</a></li>");
+    let elemento = "<li id=" + String(id) + "> <a>" + name + "</a></li>"; 
+    $("#menuSup").append(elemento);
+    $("#"+id).addClass("tab");
     $("#" + String(id)).on("click", (event) => {
         playGame(id);
     });
@@ -240,10 +246,3 @@ function setInactiveActualTab() {
     $("#menuSup > .active").removeClass("active");
 }
 
-//Elimina los juegos del menu nav para el logout
-function removeGamesFromNav() {
-    userGames.forEach(e => {
-        let id = "#"+e;
-        $(id).remove();
-    });
-}

@@ -93,7 +93,6 @@ app.get("/status/:id", passport.authenticate('basic', { session: false }), (requ
             if (err) { response.status(500); return; }
             else {//Aqui devolver tambien el status de la partida en el if: getGameStatus()
                 if (res) {
-                    console.log(res.players);
                     let names = [];
                     res.players.forEach(e => {
                         names.push(e.name);
