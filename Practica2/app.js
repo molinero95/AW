@@ -154,6 +154,7 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                                         if (err) { res.status(500); return; }
                                         else {
                                             response.status(200);
+                                            startGame(gameId);
                                             response.json({ name: res });
                                         }
                                     });
@@ -172,7 +173,7 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
 });
 
 
-app.get("/userGameInfo", passport.authenticate('basic', { session: false }), (request, response) => {
+app.get("/userGamesInfo", passport.authenticate('basic', { session: false }), (request, response) => {
     let id = request.user;
     daoG.getUserGames(id, (err, res) => {
         if (err) { response.status(500); return; }

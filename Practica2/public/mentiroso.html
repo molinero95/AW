@@ -25,7 +25,6 @@
             <input id="inputLogin" class="form-control" placeholder="Username" required="" autofocus="" type="username">
             <label for="inputPassword">Contraseña (6-10 caracteres)</label>
             <input id="inputPassword" class="form-control" placeholder="Password" required="" type="password">
-            <input type="hidden" id="userId">
             <p></p>
             <div class="text-right" id="loginBtns">
                 <button class="col-md-4 btn btn-lg btn-secondary" type="submit" id="registerBtn">Registrarse</button>
@@ -86,8 +85,8 @@
                                     <button type="submit" id="update" class="btn btn-primary">Actualizar partida</button>
                                 </div>
                                 <div>
-                                    <p>La partida aun no tiene 4 jugadores.</p>
-                                    <p id="needId">El id de la partida es </p>
+                                    <p id="notComplete">La partida aun no tiene 4 jugadores.</p>
+                                    <p id="needId"></p>
                                 </div>
                             </th>
                         </thead>
