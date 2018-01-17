@@ -14,6 +14,8 @@ $(() => {
 });
 let cadenaBase64 = "";
 
+////////// INICIO SHOW/HIDE //////////
+
 //Elimina los juegos del menu nav para el logout
 function removeGameTabs() {
     $(".tab").remove();
@@ -74,7 +76,10 @@ function showImage() {
     $("#imagen").show();
 }
 
-//Todos los eventos Click aqui
+////////// FIN SHOW/HIDE //////////
+
+////////// INICIO CLICKS //////////
+
 //Al seleccionar la pestaña "Mis partidas"
 function onMyGamesClick() {
     setInactiveActualTab();
@@ -160,7 +165,7 @@ function updateGameClick(event) {
         setGamePlayersDOM(data, null);
     }); 
 }
-//Fin clicks
+////////// FIN CLICKS //////////
 
 
 //Añade los juegos a las pestañas
@@ -217,7 +222,7 @@ function setInactiveActualTab() {
     $("#menuSup > .active").removeClass("active");
 }
 
-//Funciones con peticiones ajax
+////////// INICIO AJAX //////////
 
 //Registro: devuelve el mensaje a mostrar en un alert
 function register(user, password, callback) {
@@ -328,3 +333,5 @@ function getGameStatus(actualMatch, callback) {
         }
     });
 }
+
+////////// FIN AJAX //////////
