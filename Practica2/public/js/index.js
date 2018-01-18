@@ -14,8 +14,6 @@ $(() => {
 });
 let cadenaBase64 = "";
 
-<<<<<<< HEAD
-=======
 ////////// INICIO SHOW/HIDE //////////
 
 //Elimina los juegos del menu nav para el logout
@@ -23,7 +21,6 @@ function removeGameTabs() {
     $(".tab").remove();
 }
 //Muestra el formulario de login
->>>>>>> acbbc7625762bd532c65e2edaece0f6d63ca7de5
 function showLogin() {
     $("#signIn").show();
 }
@@ -133,31 +130,6 @@ function onLogoutButtonClick(event) {
     hideNavBar();
     showImage();
     showLogin();
-<<<<<<< HEAD
-    /*
-    $.ajax({
-        type: "GET",
-        url: "/userGameInfo",
-        contentType: "application/json",
-        beforeSend: function (req) {
-            req.setRequestHeader("Authorization", "Basic " + cadenaBase64);
-        },
-        data: JSON.stringify({ id: data.id }),
-        success: function (data, textStatus, jqXHR) {
-            if (data.ids) {
-                for (let i = 0; i < data.ids.length; i++) {
-                    removeNav(data.names[i], data.ids[i]);
-                }
-            }
-            $("#name").text(us);
-        },
-        error: function (data, textStatus, jqXHR) {
-            //
-        }
-    });
-    */
-=======
->>>>>>> acbbc7625762bd532c65e2edaece0f6d63ca7de5
 }
 
 //Al pulsar sobre "Crear"
@@ -362,31 +334,4 @@ function getGameStatus(actualMatch, callback) {
     });
 }
 
-<<<<<<< HEAD
-function addToNav(name, id) {
-    $("#menuSup").append("<li id=" + String(id) + "> <a>" + name + "</a></li>");
-    $("#" + String(id)).on("click", (event) => {
-        actualMatch = id;
-        playGame();
-    });
-}
-
-function removeNav(name,id){
-    $("#menuSup").remove("#"+String(id));
-}
-
-function playGame() {
-    setInactiveActualTab();
-    showGameTabId(actualMatch);
-    getGameStatus();
-}
-
-function setGamePlayersDOM(players, cards) {
-    for (let i = 0; i < players.names.length; i++) {
-        let str = "#player" + String(i + 1);
-        $(str).text(players.names[i]);
-    }
-}
-=======
 ////////// FIN AJAX //////////
->>>>>>> acbbc7625762bd532c65e2edaece0f6d63ca7de5
