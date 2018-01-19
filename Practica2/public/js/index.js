@@ -51,6 +51,23 @@ function showGameTabId(id) {
 function hideGame() {
     $("#game").hide();
 }
+
+//Muestra la imagen del login
+function showImage() {
+    $("#imagen").show();
+}
+ //oculta las cartas de la mesa
+function hideCards(){
+    $("#userCards").hide();
+    $("#tableCards").hide();
+}
+
+function showCards(){
+    $("#userCards").show();
+    $("#tableCards").show();
+}
+
+
 //Muestra el menu de partidas
 function showNav() {
     $("#menuSup").show();
@@ -71,10 +88,8 @@ function hideNavBar() {
 function hideImage() {
     $("#imagen").hide();
 }
-//Muestra la imagen del login
-function showImage() {
-    $("#imagen").show();
-}
+
+
 
 ////////// FIN SHOW/HIDE //////////
 
@@ -185,6 +200,12 @@ function playGame(id) {
     showGameTabId(id);
     getGameStatus(id, (data) => {
         setGamePlayersDOM(data, null);
+        if(data.names.length != 4){
+            hideCards();
+        }
+        else{
+            showCards();
+        }
     }); 
 }
 
@@ -213,6 +234,9 @@ function checkIfComplete(players) {
     if (players.names.length !== 4) {
         $("#notComplete").show();
         return false;
+    }
+    else{
+
     }
     return true;
 }

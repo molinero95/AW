@@ -62,7 +62,7 @@
                 <div class="input-group" id="createGame">
                     <input id="inputGameName" class="form-control" placeholder="Introduce aquí el nombre" required="" autofocus="" type="">
                     <span class="input-group-btn">
-                    <button id="newGame" type="submit" class="btn btn-primary">Crear</button>
+                        <button id="newGame" type="submit" class="btn btn-primary">Crear</button>
                 </div>
             </div>
         </div>
@@ -72,71 +72,99 @@
                 <div class="input-group" id="joinGames">
                     <input id="inputGameId" class="form-control" placeholder="Introduce aquí el identificador de la partida" required="" autofocus=""
                         type="">
-                <span class="input-group-btn">
-                    <button id="joinGame" type="submit" class="btn btn-primary">Unirse</button>
-                </span>
+                    <span class="input-group-btn">
+                        <button id="joinGame" type="submit" class="btn btn-primary">Unirse</button>
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="game">
-        <div class="container" id="pantalla">
+        <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <table class="table table-striped table-bordered table-condensed">
-                        <thead>
-                            <th colspan="2">
-                                <div id="partida">
-                                    <h4>Partida</h4>
-                                    <button type="submit" id="update" class="btn btn-primary">Actualizar partida</button>
-                                </div>
-                                <div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Partida
+                            <span id="nombrePartida"></span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-9">
                                     <p id="notComplete">La partida aun no tiene 4 jugadores.</p>
                                     <p id="needId"></p>
                                 </div>
-                            </th>
-                        </thead>
-                    </table>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-primary" id="botonActualizar">Actualizar Partida</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
-                    <div class="table-responsive" id="jugadores">
-                        <table class="table table-striped table-bordered table-condensed">
-                            <thead>
-                                <th colspan="2">Jugadores</th>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <strong> Jugador </strong>
-                                    </td>
-                                    <td>
-                                        <strong>Nº Cartas </strong>
-                                    </td>
-                                </tr>
-                                <!--Datos por aqui-->
-                                <tr>
-                                    <td id="player1"></td>
-                                    <td id="numCards1"></td>
-                                </tr>
-                                <tr>
-                                    <td id="player2"></td>
-                                    <td id="numCards2"></td>
-                                </tr>
-                                <tr>
-                                    <td id="player3"></td>
-                                    <td id="numCards3"></td>
-                                </tr>
-                                <tr>
-                                    <td id="player4"></td>
-                                    <td id="numCards4"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Jugadores</h3>
+                        </div>
+
+
+                        <div class="table-responsive" id="jugadores">
+                            <table class="table table-striped table-bordered table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong> Jugador </strong>
+                                        </td>
+                                        <td>
+                                            <strong>Nº Cartas </strong>
+                                        </td>
+                                    </tr>
+                                    <!--Datos por aqui-->
+                                    <tr>
+                                        <td id="player1"></td>
+                                        <td id="numCards1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="player2"></td>
+                                        <td id="numCards2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="player3"></td>
+                                        <td id="numCards3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="player4"></td>
+                                        <td id="numCards4"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-md-8">
+                <div class="panel panel-default" id="tableCards">
+                    <div class="panel-heading">Cartas en la mesa</div>
+                    <div class="panel-body">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="panel panel-default" id="userCards">
+                    <div class="panel-heading">Tus cartas</div>
+                    <div class="panel-body" id="cartas">
+
+                    </div>
+                    <div id="gameButtons">
+                        <button type="submit" class="btn btn-primary" id="seleccionadas" onclick="seleccionar()">Jugar cartas seleccionadas</button>
+                        <button type="submit" class="btn btn-danger" id="mentiroso">¡Mentiroso!</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <hr>
