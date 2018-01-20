@@ -33,8 +33,6 @@ const daoGames = require("./daoGames");
 let daoG = new daoGames(pool);
 
 
-
-
 app.use(passport.initialize());
 passport.use(new passportHTTP.BasicStrategy(
     { realm: "Pagina protegida" },
@@ -154,6 +152,7 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                                         if (err) { res.status(500); return; }
                                         else {
                                             response.status(200);
+                                            console.log("Para iniciar el juego");
                                             startGame(gameId);
                                             response.json({ name: res });
                                         }
@@ -253,12 +252,16 @@ function startGame(gameId) {
     */
     let turno = Math.floor(Math.random() * 4); //numero [0,3] Turno del primer jugador sacados en orden de la BD
     let status = "Mesa: []" + ";" + p1.toString() + "; " + p2.toString() + "; " + p3.toString() + "; " + p4.toString() + "; Turno: " + turno + "; ";
-    /*alterGameStatus(gameId, status, (err, res) => {
+    
+    //console.log(status);
+    /*
+    alterGameStatus(gameId, status, (err, res) => {
         if (err) { response.status(500); return; }
         else{
             //mandar datos necesarios al útlimo usr en entrar
         }
-    });*/
-    console.log(status);
+    });
+    */
+   
 }
 

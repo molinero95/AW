@@ -206,6 +206,7 @@ function playGame(id) {
         else{
             showCards();
         }
+        console.log(data);
     }); 
 }
 
