@@ -89,6 +89,14 @@ function hideImage() {
     $("#imagen").hide();
 }
 
+function showCardsTab(){
+    $("#cardsTab").show();
+}
+
+function hideCardsTab(){
+    $("#cardsTab").hide();
+}
+
 
 
 ////////// FIN SHOW/HIDE //////////
@@ -205,8 +213,18 @@ function playGame(id) {
         }
         else{
             showCards();
+            console.log(data);
+            $("#cartasUsr").empty();
+            let split = data.status.split(";");
+            split[0] === "NULL"? showCardsTab(): hideCardsTab();
+            let i = 6;
+            while(split[i] !== $("#name").text() && i < 10)   //Buscamos el turno del player
+                i++;
+            let myCards = split[i - 5].split(",");
+            showMyCards(myCards);
+            //  console.log(myCards);
+
         }
-        console.log(data);
     }); 
 }
 
@@ -236,7 +254,7 @@ function checkIfComplete(players) {
         $("#notComplete").show();
         return false;
     }
-    else{
+    else{ //
 
     }
     return true;
@@ -351,7 +369,6 @@ function getGameStatus(actualMatch, callback) {
         contentType: "application/json",
         success: function (data, textStatus, jqXHR) {
             callback(data);
-            //Actualizar datos
         },
         error: function (data, textStatus, jqXHR) {
             callback(null);
@@ -360,3 +377,70 @@ function getGameStatus(actualMatch, callback) {
 }
 
 ////////// FIN AJAX //////////
+
+
+
+
+//UTILIDADES JUEGO
+
+function showMyCards(cards){
+    let padre = $("#cartasUsr");
+    cards.forEach(element => {
+        let elem = $("<img></img>");
+        switch(element) {
+            case "AS de Corazones": elem.prop("src",".//img/A_H.png");break;
+            case "As de Diamantes": elem.prop("src",".//img/A_D.png");break;
+            case "AS de Picas": elem.prop("src",".//img/A_S.png");break;
+            case "As de Tréboles": elem.prop("src",".//img/A_C.png");break;
+            case "2 de Corazones": elem.prop("src",".//img/2_H.png");break;
+            case "2 de Diamantes": elem.prop("src",".//img/2_D.png");break;
+            case "2 de Picas": elem.prop("src",".//img/2_S.png");break;
+            case "2 de Tréboles": elem.prop("src",".//img/2_C.png");break;
+            case "3 de Corazones": elem.prop("src",".//img/3_H.png");break;
+            case "3 de Diamantes": elem.prop("src",".//img/3_D.png");break;
+            case "3 de Picas": elem.prop("src",".//img/3_S.png");break;
+            case "3 de Tréboles": elem.prop("src",".//img/3_C.png");break;
+            case "4 de Corazones": elem.prop("src",".//img/4_H.png");break;
+            case "4 de Diamantes": elem.prop("src",".//img/4_D.png");break;
+            case "4 de Picas": elem.prop("src",".//img/4_S.png");break;
+            case "4 de Tréboles": elem.prop("src",".//img/4_C.png");break;
+            case "5 de Corazones": elem.prop("src",".//img/5_H.png");break;
+            case "5 de Diamantes": elem.prop("src",".//img/5_D.png");break;
+            case "5 de Picas": elem.prop("src",".//img/5_S.png");break;
+            case "5 de Tréboles": elem.prop("src",".//img/5_C.png");break;
+            case "6 de Corazones": elem.prop("src",".//img/6_H.png");break;
+            case "6 de Diamantes": elem.prop("src",".//img/6_D.png");break;
+            case "6 de Picas": elem.prop("src",".//img/6_S.png");break;
+            case "6 de Tréboles": elem.prop("src",".//img/6_C.png");break;
+            case "7 de Corazones": elem.prop("src",".//img/7_H.png");break;
+            case "7 de Diamantes":  elem.prop("src",".//img/7_D.png");break;
+            case "7 de Picas": elem.prop("src",".//img/7_S.png");break;
+            case "7 de Tréboles": elem.prop("src",".//img/7_C.png");break;
+            case "8 de Corazones": elem.prop("src",".//img/8_H.png");break;
+            case "8 de Diamantes": elem.prop("src",".//img/8_D.png");break;
+            case "8 de Picas": elem.prop("src",".//img/8_S.png");break;
+            case "8 de Tréboles": elem.prop("src",".//img/8_C.png");break;
+            case "9 de Corazones": elem.prop("src",".//img/9_H.png");break;
+            case "9 de Diamantes": elem.prop("src",".//img/9_D.png");break;
+            case "9 de Picas": elem.prop("src",".//img/9_S.png");break;
+            case "9 de Tréboles": elem.prop("src",".//img/9_C.png");break;
+            case "10 de Corazones": elem.prop("src",".//img/10_H.png");break;
+            case "10 de Diamantes": elem.prop("src",".//img/10_D.png");break;
+            case "10 de Picas": elem.prop("src",".//img/10_S.png");break;
+            case "10 de Tréboles": elem.prop("src",".//img/10_C.png");break;
+            case "J de Corazones": elem.prop("src",".//img/J_H.png");break;
+            case "J de Diamantes": elem.prop("src",".//img/J_D.png");break;
+            case "J de Picas": elem.prop("src",".//img/J_S.png");break;
+            case "J de Tréboles": elem.prop("src",".//img/J_C.png");break;
+            case "Q de Corazones": elem.prop("src",".//img/Q_H.png");break;
+            case "Q de Diamantes": elem.prop("src",".//img/Q_D.png");break;
+            case "Q de Picas": elem.prop("src",".//img/Q_S.png");break;
+            case "Q de Tréboles": elem.prop("src",".//img/Q_C.png");break;
+            case "K de Corazones": elem.prop("src",".//img/K_H.png");break;
+            case "K de Diamantes": elem.prop("src",".//img/K_D.png");break;
+            case "K de Picas": elem.prop("src",".//img/K_S.png");break;
+            case "K de Tréboles": elem.prop("src",".//img/K_C.png");break;
+        }
+        padre.append(elem);
+    });
+}

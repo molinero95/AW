@@ -12,5 +12,7 @@ COSAS POR HACER:
     - Boton logout
     - El id del usuario esta en el request, no hace falta devolverlo en la consulta que se hace en el login
 
-PREGUNTAS
-    - ¿podemos tener variables globales para guardar los ids, etc o mejor hacer consulta a la bd?
+POR HACER:
+    - En la tabla poner de otro color al jugador al que le toque jugar
+    - En index.js, cuando vayamos a crear un nodo para el DOM cuidado con let x = "<div>..."; utilizar
+let x = $("<div>...</div>); y añadir cosas a parte. Cambiar AddToNav

@@ -9,7 +9,6 @@ const mysql = require("mysql");//mysql
 const path = require("path");
 const bodyParser = require("body-parser");
 const expressValidator = require("express-validator");
-const deck = require("./cards");
 const game = require("./game");
 
 let privateKey = fs.readFileSync("./clave.pem");
@@ -95,8 +94,15 @@ app.get("/status/:id", passport.authenticate('basic', { session: false }), (requ
                     res.players.forEach(e => {
                         names.push(e.name);
                     });
-                    response.status(200);
-                    response.json({ names: names });
+                    daoG.getGameStatus(id, (err, res) => {
+                        if(err) {response.status(500); return;}
+                        else{
+                            if(res)
+                                response.json({ names: names, status: res})
+                            else
+                                response.json({ names: names });
+                        }
+                    })
                 }
                 else { response.status(404); response.json({}); }
             }
@@ -143,7 +149,7 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                         response.status(400);
                         response.json({ error: "ERROR: Usuario ya en partida" });
                     }
-                    else {
+                    else {  //Insertamos al jugador
                         daoG.joinGame(gameId, userId, (err, res) => {
                             if (err) { response.status(500); return; }
                             else {
@@ -152,9 +158,23 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                                         if (err) { res.status(500); return; }
                                         else {
                                             response.status(200);
-                                            console.log("Para iniciar el juego");
-                                            startGame(gameId);
-                                            response.json({ name: res });
+                                            let name = res;
+                                            if(players.length + 1 === 4){ //ultimo jugador
+                                                daoG.getGamePlayers(gameId, (err, players) => {
+                                                    if(err) { res.status(500); return; }
+                                                    else{
+                                                        console.log(players);
+                                                        let status = game.startGame(gameId, players);
+                                                        daoG.setGameStatus(gameId, status, (err, res) => {
+                                                            if(err) { res.status(500); return; }
+                                                            else response.json({ name: name});
+                                                        });
+                                                    }
+                                                })
+                                                
+                                            }
+                                            else
+                                                response.json({ name: name });
                                         }
                                     });
                                 }
@@ -219,49 +239,4 @@ server.listen(config.port, function (err) {
 
 
 
-function startGame(gameId) {
-    //Comenzar partida
-    let newGameDeck = new deck();
-    newGameDeck.shuffleDeck();
-    let gameDeck = newGameDeck.getDeck();
-    console.log(gameDeck);
-    let p1 = [], p2 = [], p3 = [], p4 = [];
-    for (let i = 0; i < 52; i++) {
-        if (i % 4 === 0)
-            p1.push(gameDeck.pop());
-        else if (i % 4 === 1)
-            p2.push(gameDeck.pop());
-        else if (i % 4 === 2)
-            p3.push(gameDeck.pop());
-        else
-            p4.push(gameDeck.pop());
-    }
-    console.log(p1);
-    console.log(p2);
-    console.log(p3);
-    console.log(p4);
-
-    /*
-    Status
-    Orden jugadores
-    Asignacion de cartas
-    Cartas sobre la mesa
-    Turno
-    Cartas ultimo jugador sobre la mesa
-    Separación por ;
-    */
-    let turno = Math.floor(Math.random() * 4); //numero [0,3] Turno del primer jugador sacados en orden de la BD
-    let status = "Mesa: []" + ";" + p1.toString() + "; " + p2.toString() + "; " + p3.toString() + "; " + p4.toString() + "; Turno: " + turno + "; ";
-    
-    //console.log(status);
-    /*
-    alterGameStatus(gameId, status, (err, res) => {
-        if (err) { response.status(500); return; }
-        else{
-            //mandar datos necesarios al útlimo usr en entrar
-        }
-    });
-    */
-   
-}
 

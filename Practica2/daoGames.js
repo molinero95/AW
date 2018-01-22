@@ -45,8 +45,21 @@ class DAO {
             connect.query("SELECT ESTADO FROM PARTIDAS WHERE ID = ?", [id], (err, res) => {
                 if (err) { callback(err); return; }
                 else {
-                    res.length > 0 ? callback(null, res[0].ESTADO) : callback(null, null);
+                    console.log(res.length);
+                    if(res.length > 0) callback(null, res[0].ESTADO);
+                    else callback(null, null);
                 }
+            });
+            connect.release();
+        });
+    }
+
+    setGameStatus(id, status, callback) {
+        this.pool.getConnection((err, connect) => {
+            if (err) { callback(err); return; }
+            connect.query("UPDATE PARTIDAS SET ESTADO = ? WHERE ID = ?", [status, id], (err, res) => {
+                if (err) { callback(err); return; }
+                else callback(null, true);
             });
             connect.release();
         });
