@@ -11,6 +11,9 @@ $(() => {
     $("#menuSup").on("click", "a#misPartidas", onMyGamesClick);
     $("#partida").on("click", "button#update", updateGameClick);
     $("#logoutBar").on("click", "button#logoutBtn", onLogoutButtonClick);
+    $("#gameButtons").on("click", "button#seleccionadas", onSelectedClick);
+    $("#gameButtons").on("click", "button#mentiroso", onLiarClick)
+
 });
 let cadenaBase64 = "";
 
@@ -188,6 +191,26 @@ function updateGameClick(event) {
         setGamePlayersDOM(data, null);
     });
 }
+//Al pulsar sobre el boton "jugar cartas seleccionadas"
+function onSelectedClick(event) {
+    //Coger cartas seleccionadas
+    let selected = []
+    $("#cartasUsr .selectedCard").each(function() {
+        selected.push(getCardByImg($(this).prop("attributes")[0])); //Cuidado aqui, mejor con URL entera
+    });
+    if(selected.length === 0)
+        alert("Debes seleccionar alguna carta");
+    else{
+        //petición aqui
+    }
+}
+
+//Al pulsar sobre "¡Mentiroso!"
+function onLiarClick(event) {
+    alert("Soy mentiroso y funciono bien");
+    //Coger cartas de la mesa
+    //Obtener el turno anterior si miente para ponerle todas las cartas
+}
 ////////// FIN CLICKS //////////
 
 
@@ -231,10 +254,19 @@ function playGame(id) {
             let cards = [split[1].split(","), split[2].split(","), split[3].split(","), split[4].split(",")];
             setGamePlayersDOM(players, cards, split[5]);
             let i = 6;
-            while (split[i] !== myName && i < 10)   //Buscamos el turno del player
+            while (split[i] !== myName && i < 10)   //Buscamos las cartas del jugador
                 i++;
             let myCards = split[i - 5].split(",");
             showMyCards(myCards);
+            //Comprobamos turno
+            if(split[5] === myName){ //turno del jugador
+                $("#seleccionadas").prop("disabled",false);
+                $("#mentiroso").prop("disabled", false);
+            }
+            else{   //Le toca a otro
+                $("#seleccionadas").prop("disabled",true);
+                $("#mentiroso").prop("disabled", true);
+            }
         }
     });
 }
@@ -468,4 +500,63 @@ function showMyCards(cards) {
         });
         padre.append(elem);
     });
+}
+
+function getCardByImg(img){
+    let card = "";
+    switch(img) {
+            case ".//img/A_H.png":  card="AS de Corazones"; break;
+            case ".//img/A_D.png":  card="As de Diamantes"; break;
+            case ".//img/A_S.png":  card="AS de Picas"; break;
+            case ".//img/A_C.png":  card="As de Tréboles"; break;
+            case ".//img/2_H.png":  card="2 de Corazones"; break;
+            case ".//img/2_D.png":  card="2 de Diamantes"; break;
+            case ".//img/2_S.png":  card="2 de Picas"; break;
+            case ".//img/2_C.png":  card="2 de Tréboles"; break;
+            case ".//img/3_H.png":  card="3 de Corazones"; break;
+            case ".//img/3_D.png":  card="3 de Diamantes"; break;
+            case ".//img/3_S.png":  card="3 de Picas"; break;
+            case ".//img/3_C.png":  card="3 de Tréboles"; break;
+            case ".//img/4_H.png":  card="4 de Corazones"; break;
+            case ".//img/4_D.png":  card="4 de Diamantes"; break;
+            case ".//img/4_S.png":  card="4 de Picas"; break;
+            case ".//img/4_C.png":  card="4 de Tréboles" ; break;
+            case ".//img/5_H.png":  card="5 de Corazones"; break;
+            case ".//img/5_D.png":  card="5 de Diamantes"; break;
+            case ".//img/5_S.png":  card="5 de Picas"; break;
+            case ".//img/5_C.png":  card="5 de Tréboles"; break;
+            case ".//img/6_H.png":  card="6 de Corazones"; break;
+            case ".//img/6_D.png":  card="6 de Diamantes"; break;
+            case ".//img/6_S.png":  card="6 de Picas"; break;
+            case ".//img/6_C.png":  card="6 de Tréboles"; break;
+            case ".//img/7_H.png":  card="7 de Corazones"; break;
+            case ".//img/7_D.png":  card="7 de Diamantes"; break;
+            case ".//img/7_S.png":  card="7 de Picas"; break;
+            case ".//img/7_C.png":  card="7 de Tréboles"; break;
+            case ".//img/8_H.png":  card="8 de Corazones"; break;
+            case ".//img/8_D.png":  card="8 de Diamantes"; break;
+            case ".//img/8_S.png":  card="8 de Picas"; break;
+            case ".//img/8_C.png":  card="8 de Tréboles"; break;
+            case ".//img/9_H.png":  card="9 de Corazones"; break;
+            case ".//img/9_D.png":  card="9 de Diamantes"; break;
+            case ".//img/9_S.png":  card="9 de Picas"; break;
+            case ".//img/9_C.png":  card="9 de Tréboles"; break;
+            case ".//img/10_H.png": card="10 de Corazones"; break;
+            case ".//img/10_D.png": card="10 de Diamantes"; break;
+            case ".//img/10_S.png": card="10 de Picas"; break;
+            case ".//img/10_C.png": card="10 de Tréboles"; break;
+            case ".//img/J_H.png":  card="J de Corazones"; break;
+            case ".//img/J_D.png":  card="J de Diamantes"; break;
+            case ".//img/J_S.png":  card="J de Picas"; break;
+            case ".//img/J_C.png":  card="J de Tréboles"; break;
+            case ".//img/Q_H.png":  card="Q de Corazones"; break;
+            case ".//img/Q_D.png":  card="Q de Diamantes"; break;
+            case ".//img/Q_S.png":  card="Q de Picas"; break;
+            case ".//img/Q_C.png":  card="Q de Tréboles"; break;
+            case ".//img/K_H.png":  card="K de Corazones"; break;
+            case ".//img/K_D.png":  card="K de Diamantes"; break;
+            case ".//img/K_S.png":  card="K de Picas"; break;
+            case ".//img/K_C.png":  card="K de Tréboles"; break;
+    }
+    return card;
 }
