@@ -200,8 +200,12 @@ function onSelectedClick(event) {
     });
     if(selected.length === 0)
         alert("Debes seleccionar alguna carta");
+    else if(selected.length > 3)
+        alert("Sólo puedes enviar 3 cartas como máximo");
     else{
+        //Si mesa vacia, mostrar selector de número
         //petición aqui
+        //Al soltar cartas (sea verdad o no), mostramos cartas en la mesa del número con palo aleatorio
     }
 }
 
@@ -246,7 +250,6 @@ function playGame(id) {
         else {  //Partida completa
             let myName = $("#name").text();
             showCards();
-            console.log(data);
             $("#cartasUsr").empty();
             let split = data.status.split(";");
             split[6] !== "NULL" ? showCardsTab() : hideCardsTab();

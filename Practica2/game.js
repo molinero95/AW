@@ -20,8 +20,8 @@ function startGame(gameId, players) {
     }
     
     /*
-    Status:
-    status[0] cartas en la mesa.
+    Status.split(";"):
+    status[0] cartas falsas en la mesa.
     status[1] cartas jugador 1
     status[2] cartas jugador 2
     status[3] cartas jugador 3
@@ -31,15 +31,14 @@ function startGame(gameId, players) {
     status[7] jugador 2
     status[8] jugador 3
     status[9] jugador 4
+    status[10] cartas autenticas en la mesa
 
     */
     let order = shufflePlayers(players.players);
-    console.log(order);
     let status = "NULL" + ";" + p1.toString() + ";" + p2.toString() + 
     ";" + p3.toString() + ";" + p4.toString() + ";" + order[0].name + ";" + order[0].name + ";" +
-    order[1].name + ";"+ order[2].name + ";" + order[3].name + ";"
+    order[1].name + ";"+ order[2].name + ";" + order[3].name + ";NULL";
     //El nombre de los jugadores lo guardaremos mas adelante
-    console.log(status);
     return status;
 }
 
