@@ -56,13 +56,13 @@ function hideGame() {
 function showImage() {
     $("#imagen").show();
 }
- //oculta las cartas de la mesa
-function hideCards(){
+//oculta las cartas de la mesa
+function hideCards() {
     $("#userCards").hide();
     $("#tableCards").hide();
 }
 
-function showCards(){
+function showCards() {
     $("#userCards").show();
     $("#tableCards").show();
 }
@@ -89,11 +89,11 @@ function hideImage() {
     $("#imagen").hide();
 }
 
-function showCardsTab(){
+function showCardsTab() {
     $("#cardsTab").show();
 }
 
-function hideCardsTab(){
+function hideCardsTab() {
     $("#cardsTab").hide();
 }
 
@@ -138,7 +138,7 @@ function onLoginButtonClick(event) {
                 $("#name").text(us);
             });
         }
-        else 
+        else
             alert("Usuario y/o contraseña no válido");
     });
 }
@@ -160,11 +160,11 @@ function onNewGameButtonClick(event) {
     let id = $("#userId").val();
     let name = $("#inputGameName").val();
     newGame(id, name, (data) => {
-        if(data) 
+        if (data)
             addToNav(name, data.id);
         else
             alert("No se pudo crear el juego...");
-    });   
+    });
 }
 
 //Al pulsar sobre "Unirse"
@@ -172,21 +172,21 @@ function onJoinGameButtonClick(event) {
     let id = $("#userId").val();
     let gameId = $("#inputGameId").val();
     joinGame(gameId, id, (data) => {
-        if(!data.error){
+        if (!data.error) {
             addToNav(data.name, gameId);
             alert("Partida: '" + data.name + "' agregada correctamente");
         }
         else
-            alert(data.error);     
+            alert(data.error);
     });
-    
+
 }
 //Al pulsar sobre "Actualizar partida"
 function updateGameClick(event) {
     let id = Number($("#menuSup > .active").attr("id"));
     getGameStatus(id, (data) => {
         setGamePlayersDOM(data, null);
-    }); 
+    });
 }
 ////////// FIN CLICKS //////////
 
@@ -207,44 +207,65 @@ function playGame(id) {
     setInactiveActualTab();
     showGameTabId(id);
     getGameStatus(id, (data) => {
-        setGamePlayersDOM(data, null);
-        if(data.names.length != 4){
+        if (!checkIfComplete(data)) {   //Partida no completa
+            let players = [];
+            let i = 0;
+            while(i < data.names.length){
+                players.push(data.names[i]);
+                i++;
+            }
+            for(i; i < 4; i++){
+                players.push("NULL");
+            }
             hideCards();
+            setGamePlayersDOM(players, null, null);
         }
-        else{
+        else {  //Partida completa
+            let myName = $("#name").text();
             showCards();
             console.log(data);
             $("#cartasUsr").empty();
             let split = data.status.split(";");
-            split[0] === "NULL"? showCardsTab(): hideCardsTab();
+            split[6] !== "NULL" ? showCardsTab() : hideCardsTab();
+            let players = [split[6], split[7], split[8], split[9]];
+            let cards = [split[1].split(","), split[2].split(","), split[3].split(","), split[4].split(",")];
+            setGamePlayersDOM(players, cards, split[5]);
             let i = 6;
-            while(split[i] !== $("#name").text() && i < 10)   //Buscamos el turno del player
+            while (split[i] !== myName && i < 10)   //Buscamos el turno del player
                 i++;
             let myCards = split[i - 5].split(",");
             showMyCards(myCards);
-            //  console.log(myCards);
-
         }
-    }); 
+    });
 }
 
 //Establece la tabla de jugadores, en caso de no estar completa incluye la cadena
 // "Esperando jugador" a la posicion de la tabla
-function setGamePlayersDOM(players, cards) {
-    let ultimo;
-    for (let i = 0; i < players.names.length; i++) {
-        let str = "#player" + String(i + 1);
-        $(str).text(players.names[i]);
-        ultimo = i;
-    }
-    ultimo++;
-    if (ultimo < 3) {
-        for (let i = ultimo; i < 4; i++) {
-            let str = "#player" + String(i + 1);
-            $(str).text("Esperando jugador...");
+function setGamePlayersDOM(players, cards, turn) {
+    $("td").removeClass("bg-success");
+    if(turn){   //turno definido, partida en curso
+        for (let i = 0; i < players.length; i++) {
+            let name = "#player" + String(i + 1);
+            let numCards = "#numCards" + String(i + 1);
+            $(name).text(players[i]);
+            $(numCards).text(cards[i].length);
+            if(players[i] === turn){
+                $(name).addClass("bg-success");
+                $(numCards).addClass("bg-success");
+            }
         }
     }
-    checkIfComplete(players);
+    else{   //turno no definido, partida no comenzada
+        for (let i = 0; i < 4; i++) {
+            let name = "#player" + String(i + 1);
+            let numCards = "#numCards" + String(i + 1);
+            $(numCards).text("...");
+            if(players[i] === "NULL")
+                $(name).text("Esperando a jugador...");
+            else
+                $(name).text(players[i]);
+        }
+    }
 }
 
 //Comprueba si la partida está completa y si no lo está muestra el mensaje de que no está completa
@@ -253,9 +274,6 @@ function checkIfComplete(players) {
     if (players.names.length !== 4) {
         $("#notComplete").show();
         return false;
-    }
-    else{ //
-
     }
     return true;
 }
@@ -322,7 +340,7 @@ function userGamesInfo(data, callback) {
 }
 
 //NewGame: crea una nueva partida, devuelve el id de la partida si sale bien
-function newGame(id, name, callback){
+function newGame(id, name, callback) {
     $.ajax({
         type: "POST",
         url: "/createGame",
@@ -340,7 +358,7 @@ function newGame(id, name, callback){
     });
 }
 
-function joinGame(gameId, id, callback){
+function joinGame(gameId, id, callback) {
     $.ajax({
         type: "POST",
         url: "/joinGame",
@@ -353,7 +371,7 @@ function joinGame(gameId, id, callback){
             callback(data);
         },
         error: function (data, textStatus, jqXHR) {
-            callback({error: data.responseJSON.error});
+            callback({ error: data.responseJSON.error });
         }
     });
 }
@@ -383,64 +401,71 @@ function getGameStatus(actualMatch, callback) {
 
 //UTILIDADES JUEGO
 
-function showMyCards(cards){
+function showMyCards(cards) {
     let padre = $("#cartasUsr");
     cards.forEach(element => {
         let elem = $("<img></img>");
-        switch(element) {
-            case "AS de Corazones": elem.prop("src",".//img/A_H.png");break;
-            case "As de Diamantes": elem.prop("src",".//img/A_D.png");break;
-            case "AS de Picas": elem.prop("src",".//img/A_S.png");break;
-            case "As de Tréboles": elem.prop("src",".//img/A_C.png");break;
-            case "2 de Corazones": elem.prop("src",".//img/2_H.png");break;
-            case "2 de Diamantes": elem.prop("src",".//img/2_D.png");break;
-            case "2 de Picas": elem.prop("src",".//img/2_S.png");break;
-            case "2 de Tréboles": elem.prop("src",".//img/2_C.png");break;
-            case "3 de Corazones": elem.prop("src",".//img/3_H.png");break;
-            case "3 de Diamantes": elem.prop("src",".//img/3_D.png");break;
-            case "3 de Picas": elem.prop("src",".//img/3_S.png");break;
-            case "3 de Tréboles": elem.prop("src",".//img/3_C.png");break;
-            case "4 de Corazones": elem.prop("src",".//img/4_H.png");break;
-            case "4 de Diamantes": elem.prop("src",".//img/4_D.png");break;
-            case "4 de Picas": elem.prop("src",".//img/4_S.png");break;
-            case "4 de Tréboles": elem.prop("src",".//img/4_C.png");break;
-            case "5 de Corazones": elem.prop("src",".//img/5_H.png");break;
-            case "5 de Diamantes": elem.prop("src",".//img/5_D.png");break;
-            case "5 de Picas": elem.prop("src",".//img/5_S.png");break;
-            case "5 de Tréboles": elem.prop("src",".//img/5_C.png");break;
-            case "6 de Corazones": elem.prop("src",".//img/6_H.png");break;
-            case "6 de Diamantes": elem.prop("src",".//img/6_D.png");break;
-            case "6 de Picas": elem.prop("src",".//img/6_S.png");break;
-            case "6 de Tréboles": elem.prop("src",".//img/6_C.png");break;
-            case "7 de Corazones": elem.prop("src",".//img/7_H.png");break;
-            case "7 de Diamantes":  elem.prop("src",".//img/7_D.png");break;
-            case "7 de Picas": elem.prop("src",".//img/7_S.png");break;
-            case "7 de Tréboles": elem.prop("src",".//img/7_C.png");break;
-            case "8 de Corazones": elem.prop("src",".//img/8_H.png");break;
-            case "8 de Diamantes": elem.prop("src",".//img/8_D.png");break;
-            case "8 de Picas": elem.prop("src",".//img/8_S.png");break;
-            case "8 de Tréboles": elem.prop("src",".//img/8_C.png");break;
-            case "9 de Corazones": elem.prop("src",".//img/9_H.png");break;
-            case "9 de Diamantes": elem.prop("src",".//img/9_D.png");break;
-            case "9 de Picas": elem.prop("src",".//img/9_S.png");break;
-            case "9 de Tréboles": elem.prop("src",".//img/9_C.png");break;
-            case "10 de Corazones": elem.prop("src",".//img/10_H.png");break;
-            case "10 de Diamantes": elem.prop("src",".//img/10_D.png");break;
-            case "10 de Picas": elem.prop("src",".//img/10_S.png");break;
-            case "10 de Tréboles": elem.prop("src",".//img/10_C.png");break;
-            case "J de Corazones": elem.prop("src",".//img/J_H.png");break;
-            case "J de Diamantes": elem.prop("src",".//img/J_D.png");break;
-            case "J de Picas": elem.prop("src",".//img/J_S.png");break;
-            case "J de Tréboles": elem.prop("src",".//img/J_C.png");break;
-            case "Q de Corazones": elem.prop("src",".//img/Q_H.png");break;
-            case "Q de Diamantes": elem.prop("src",".//img/Q_D.png");break;
-            case "Q de Picas": elem.prop("src",".//img/Q_S.png");break;
-            case "Q de Tréboles": elem.prop("src",".//img/Q_C.png");break;
-            case "K de Corazones": elem.prop("src",".//img/K_H.png");break;
-            case "K de Diamantes": elem.prop("src",".//img/K_D.png");break;
-            case "K de Picas": elem.prop("src",".//img/K_S.png");break;
-            case "K de Tréboles": elem.prop("src",".//img/K_C.png");break;
+        switch (element) {
+            case "AS de Corazones": elem.prop("src", ".//img/A_H.png"); break;
+            case "As de Diamantes": elem.prop("src", ".//img/A_D.png"); break;
+            case "AS de Picas": elem.prop("src", ".//img/A_S.png"); break;
+            case "As de Tréboles": elem.prop("src", ".//img/A_C.png"); break;
+            case "2 de Corazones": elem.prop("src", ".//img/2_H.png"); break;
+            case "2 de Diamantes": elem.prop("src", ".//img/2_D.png"); break;
+            case "2 de Picas": elem.prop("src", ".//img/2_S.png"); break;
+            case "2 de Tréboles": elem.prop("src", ".//img/2_C.png"); break;
+            case "3 de Corazones": elem.prop("src", ".//img/3_H.png"); break;
+            case "3 de Diamantes": elem.prop("src", ".//img/3_D.png"); break;
+            case "3 de Picas": elem.prop("src", ".//img/3_S.png"); break;
+            case "3 de Tréboles": elem.prop("src", ".//img/3_C.png"); break;
+            case "4 de Corazones": elem.prop("src", ".//img/4_H.png"); break;
+            case "4 de Diamantes": elem.prop("src", ".//img/4_D.png"); break;
+            case "4 de Picas": elem.prop("src", ".//img/4_S.png"); break;
+            case "4 de Tréboles": elem.prop("src", ".//img/4_C.png"); break;
+            case "5 de Corazones": elem.prop("src", ".//img/5_H.png"); break;
+            case "5 de Diamantes": elem.prop("src", ".//img/5_D.png"); break;
+            case "5 de Picas": elem.prop("src", ".//img/5_S.png"); break;
+            case "5 de Tréboles": elem.prop("src", ".//img/5_C.png"); break;
+            case "6 de Corazones": elem.prop("src", ".//img/6_H.png"); break;
+            case "6 de Diamantes": elem.prop("src", ".//img/6_D.png"); break;
+            case "6 de Picas": elem.prop("src", ".//img/6_S.png"); break;
+            case "6 de Tréboles": elem.prop("src", ".//img/6_C.png"); break;
+            case "7 de Corazones": elem.prop("src", ".//img/7_H.png"); break;
+            case "7 de Diamantes": elem.prop("src", ".//img/7_D.png"); break;
+            case "7 de Picas": elem.prop("src", ".//img/7_S.png"); break;
+            case "7 de Tréboles": elem.prop("src", ".//img/7_C.png"); break;
+            case "8 de Corazones": elem.prop("src", ".//img/8_H.png"); break;
+            case "8 de Diamantes": elem.prop("src", ".//img/8_D.png"); break;
+            case "8 de Picas": elem.prop("src", ".//img/8_S.png"); break;
+            case "8 de Tréboles": elem.prop("src", ".//img/8_C.png"); break;
+            case "9 de Corazones": elem.prop("src", ".//img/9_H.png"); break;
+            case "9 de Diamantes": elem.prop("src", ".//img/9_D.png"); break;
+            case "9 de Picas": elem.prop("src", ".//img/9_S.png"); break;
+            case "9 de Tréboles": elem.prop("src", ".//img/9_C.png"); break;
+            case "10 de Corazones": elem.prop("src", ".//img/10_H.png"); break;
+            case "10 de Diamantes": elem.prop("src", ".//img/10_D.png"); break;
+            case "10 de Picas": elem.prop("src", ".//img/10_S.png"); break;
+            case "10 de Tréboles": elem.prop("src", ".//img/10_C.png"); break;
+            case "J de Corazones": elem.prop("src", ".//img/J_H.png"); break;
+            case "J de Diamantes": elem.prop("src", ".//img/J_D.png"); break;
+            case "J de Picas": elem.prop("src", ".//img/J_S.png"); break;
+            case "J de Tréboles": elem.prop("src", ".//img/J_C.png"); break;
+            case "Q de Corazones": elem.prop("src", ".//img/Q_H.png"); break;
+            case "Q de Diamantes": elem.prop("src", ".//img/Q_D.png"); break;
+            case "Q de Picas": elem.prop("src", ".//img/Q_S.png"); break;
+            case "Q de Tréboles": elem.prop("src", ".//img/Q_C.png"); break;
+            case "K de Corazones": elem.prop("src", ".//img/K_H.png"); break;
+            case "K de Diamantes": elem.prop("src", ".//img/K_D.png"); break;
+            case "K de Picas": elem.prop("src", ".//img/K_S.png"); break;
+            case "K de Tréboles": elem.prop("src", ".//img/K_C.png"); break;
         }
+        elem.on("click", function(event) {
+            if($(this).hasClass("selectedCard")){
+                $(this).removeClass("selectedCard")
+            }
+            else
+                $(this).addClass("selectedCard")
+        });
         padre.append(elem);
     });
 }

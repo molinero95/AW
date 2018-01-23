@@ -163,7 +163,6 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                                                 daoG.getGamePlayers(gameId, (err, players) => {
                                                     if(err) { res.status(500); return; }
                                                     else{
-                                                        console.log(players);
                                                         let status = game.startGame(gameId, players);
                                                         daoG.setGameStatus(gameId, status, (err, res) => {
                                                             if(err) { res.status(500); return; }

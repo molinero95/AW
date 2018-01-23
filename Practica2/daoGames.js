@@ -45,7 +45,6 @@ class DAO {
             connect.query("SELECT ESTADO FROM PARTIDAS WHERE ID = ?", [id], (err, res) => {
                 if (err) { callback(err); return; }
                 else {
-                    console.log(res.length);
                     if(res.length > 0) callback(null, res[0].ESTADO);
                     else callback(null, null);
                 }
