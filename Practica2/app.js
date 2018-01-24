@@ -128,7 +128,6 @@ function playerStatus(player, status) {
         if (player === split[i])   //Si es el turno del jugador, mandamos sus cartas
             res.myCards = cards;
     }
-    console.log(res);
     return res;
 
 }
@@ -256,7 +255,6 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                     statusSplit[0] = "";
                 else
                     statusSplit[0] += ",";
-                    console.log(cards);
                 for (let i = 0; i < cards.length; i++) {
                     if (i === cards.length - 1){
                         statusSplit[0] += cards[i];
@@ -301,7 +299,6 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                         newStatus += statusSplit[i] + ";";
                 }
                 
-                console.log(newStatus);
                 daoG.updateGameStatus(request.body.id, newStatus, (err, res)=>{
                     if(err){
                         response.status(500); return
