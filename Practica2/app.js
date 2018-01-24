@@ -99,7 +99,7 @@ app.get("/status/:idGame/:player", passport.authenticate('basic', { session: fal
                         if (err) { response.status(500); return; }
                         else {
                             if (res) {    //Devolvemos la info relevante para el jugador
-                                let status = playerStatus(playerName, res);
+                                let status = game.playerStatus(playerName, res);
                                 response.json({ status: status })
                             }
                             else
@@ -113,24 +113,7 @@ app.get("/status/:idGame/:player", passport.authenticate('basic', { session: fal
     }
 });
 
-function playerStatus(player, status) {
-    let split = status.split(";");
-    let res = {
-        table: split[0],
-        turn: split[5],
-        numCards: [],  //Contendra las cartas del usuario y el numero de cartas del resto
-        names: [],
-    };
-    for (let i = 6; i < 10; i++) {
-        let cards = split[i - 5].split(",");
-        res.numCards.push(cards.length);
-        res.names.push(split[i]);
-        if (player === split[i])   //Si es el turno del jugador, mandamos sus cartas
-            res.myCards = cards;
-    }
-    return res;
 
-}
 
 app.post("/createGame", passport.authenticate('basic', { session: false }), (request, response) => {
     let name = request.body.gameName;
@@ -248,7 +231,7 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                 //colocar falsas y colocar verdaderas
                 //Colocamos verdaderas y falsas
                 if(statusSplit[10] === "NULL")
-                    statusSplit[10] = ";";
+                    statusSplit[10] = "";
                 else
                     statusSplit[10] += ",";
                 if(statusSplit[0] === "NULL")
@@ -257,16 +240,14 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                     statusSplit[0] += ",";
                 for (let i = 0; i < cards.length; i++) {
                     if (i === cards.length - 1){
-                        statusSplit[0] += cards[i];
-                        statusSplit[10] += game.getRandomCardByNumber(request.body.number);
+                        statusSplit[10] += cards[i];
+                        statusSplit[0] += game.getRandomCardByNumber(request.body.number);
                     }
                     else{
-                        statusSplit[0] += cards[i] + ",";
-                        statusSplit[10] += game.getRandomCardByNumber(request.body.number) + ",";
+                        statusSplit[10] += cards[i] + ",";
+                        statusSplit[0] += game.getRandomCardByNumber(request.body.number) + ",";
                     }
                 }
-                //console.log(statusSplit[0]);
-                //borramos cartas del usuario
                 let myCards = statusSplit[turn - 5].split(",");
                 let temp = "";
                 let quito = cards.pop();
@@ -298,13 +279,12 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                     else
                         newStatus += statusSplit[i] + ";";
                 }
-                
                 daoG.updateGameStatus(request.body.id, newStatus, (err, res)=>{
                     if(err){
-                        response.status(500); return
+                        response.status(500); return;
                     }
                     else{
-                        response.redirect("/status/"+ request.body.id +"/" +statusSplit[turn]);
+                        response.json({cardsInTable: statusSplit[0], turn: statusSplit[5]});
                     }
                 });
             }

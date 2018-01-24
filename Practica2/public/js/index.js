@@ -197,7 +197,7 @@ function onJoinGameButtonClick(event) {
 function updateGameClick(event) {
     let id = getGameId();
     getGameStatus(id, (data) => {
-        setGamePlayersDOM(data, null);
+        createGameTable(data, null, null);
     });
 }
 //Al pulsar sobre el boton "jugar cartas seleccionadas"
@@ -206,30 +206,37 @@ function onSelectedClick(event) {
     let selected = []
     $("#cartasUsr .selectedCard").each(function () {
         selected.push(getCardByImg($(this).prop("attributes")[0].nodeValue)); //Cuidado aqui, mejor con URL entera
+        $(this).remove();
     });
     if (selected.length === 0)
         alert("Debes seleccionar alguna carta");
     else if (selected.length > 3)
         alert("Sólo puedes enviar 3 cartas como máximo");
     else {
-        //Si la mesa está vacia y han seleccionado 0 cartas
-        if ($("#clearTable").css("display") !== "hidden" && $("#firstCardSelector .btn-primary").length === 0)  //Mal
+        //Si la mesa está vacia y han seleccionado 0 numeros (Primer jugador)
+        if ($("#clearTable").css("display") !== "none" && $("#firstCardSelector .btn-primary").length === 0)  //Mal
             alert("Tiene que seleccionar un número o figura");
-        //Si la mesa está vacia y han seleccionado mas de 1 cartas
-        else if ($("#clearTable").css("display") !== "hidden" && $("#firstCardSelector .btn-primary").length > 1)  //Mal
+        //Si la mesa está vacia y han seleccionado mas de 1 número (Primer jugador)
+        else if ($("#clearTable").css("display") !== "none" && $("#firstCardSelector .btn-primary").length > 1)  //Mal
             alert("Seleccione sólo un número ó figura");
-        //Si la mesa está vacia y han seleccionado una carta ó mesa no vacia
         else {
             let number;
-            if ($("#clearTable").css("display") !== "hidden")
+            if ($("#clearTable").css("display") !== "none") {
                 number = $("#firstCardSelector .btn-primary").text()
-            else {//TODO
-                //number = obtener de la última imagen por ejemplo
+                hideSelector();
+                hideClearTableMsg();
             }
-            playerMovesQuery(selected, number, (correct) => {
-                $("#mentiroso").prop("disabled", true);
-                $("#mentiroso").prop("disabled", true);
+            else//Obtenemos el numero si hay cartas sobre la mesa
+                number = getCardByImg($("#cardsTab img").first()[0].attributes.src.value).split(" ")[0];
+            playerMovesQuery(selected, number, (result) => {
+                updateGamePlayersTable(result.turn, selected.length);
+                showTableCards(result.cardsInTable.split(","));
             });
+            //Deshabilitamos botones, actualizamos tabla y ponemos cartas sobre la mesa
+            $("#mentiroso").prop("disabled", true);
+            $("#seleccionadas").prop("disabled", true);
+            
+
         }
 
         //petición aqui
@@ -281,15 +288,15 @@ function playGame(id) {
                 players.push("Esperando a jugador...");
             }
             hideCards();
-            setGamePlayersDOM(players, null, null);
+            createGameTable(players, null, null);
         }
         else {  //Partida completa
             showCards();
             $("#cartasUsr").empty();
             $("#cardsTab").empty();
-            setGamePlayersDOM(data.status.names, data.status.numCards, data.status.turn);
+            createGameTable(data.status.names, data.status.numCards, data.status.turn);
             showMyCards(data.status.myCards);
-            if (data.status.table !== "NULL"){
+            if (data.status.table !== "NULL") {
                 showTableCards(data.status.table.split(","));
                 hideClearTableMsg();
             }
@@ -310,35 +317,88 @@ function playGame(id) {
             }
             else {   //Le toca a otro
                 $("#seleccionadas").prop("disabled", true);
-                $("#mentiroso").prop("disabled", true);                    
+                $("#mentiroso").prop("disabled", true);
             }
         }
     });
 }
 
-//Establece la tabla de jugadores
-function setGamePlayersDOM(players, cards, turn) {
-    $("td").removeClass("bg-success");
-    if (turn) {   //turno definido, partida en curso
+
+/*
+Formato
+<tr>
+    <td>
+        <strong> Jugador </strong>
+    </td>
+    <td>
+        <strong>Nº Cartas </strong>
+    </td>
+</tr>
+<tr>
+    <td class="nombrePlayer name"></td>
+    <td class="nombrePlayer numCards"></td>
+</tr>
+*/
+//Establece la cabecera de la tabla
+function setTableHeader(){
+    let padre = $("#tabla");
+    let fila = $("<tr></tr>");
+    let col1 = $("<td></td>");
+    let strong1 = $("<strong></strong");
+    strong1.text("Jugador");
+    let col2 = $("<td></td>")
+    let strong2 = $("<strong></strong");
+    strong2.text("Nº Cartas");
+    col1.append(strong1);
+    fila.append(col1);
+    col2.append(strong2);
+    fila.append(col2);
+    padre.append(fila);
+}
+//Establece la tabla del juego
+function createGameTable(players, cards, turn) {
+    let superPadre = $("#tabla");
+    superPadre.empty();
+    setTableHeader();
+    if (turn) {
         for (let i = 0; i < players.length; i++) {
-            let name = "#player" + String(i + 1);
-            let numCards = "#numCards" + String(i + 1);
-            $(name).text(players[i]);
-            $(numCards).text(cards[i]);
+            let padre = $("<tr></tr>");
+            let name = $("<td></td>");
+            name.text(players[i]);
+            name.addClass(players[i]);
+            name.addClass("name");
+            let numCards = $("<td></td>");
+            numCards.text(cards[i]);
+            numCards.addClass(players[i]);
+            numCards.addClass("numCards");
+            padre.append(name);
+            padre.append(numCards);
+            superPadre.append(padre);
             if (players[i] === turn) {
                 $(name).addClass("bg-success");
                 $(numCards).addClass("bg-success");
             }
         }
     }
-    else {   //turno no definido, partida no comenzada
+    else {
         for (let i = 0; i < 4; i++) {
-            let name = "#player" + String(i + 1);
-            let numCards = "#numCards" + String(i + 1);
-            $(numCards).text("...");
-            $(name).text(players[i]);
+            let padre = $("<tr></tr>");
+            let name = $("<td></td>");
+            name.text(players[i]);
+            let numCards = $("<td></td>");
+            numCards.text("...");
+            padre.append(name);
+            padre.append(numCards);
+            superPadre.append(padre);
         }
     }
+}
+//Actualiza la tabla cambiando la fila verde y modificando los valores
+function updateGamePlayersTable(newTurn, difference) {
+    let text = Number($("." + getPlayerName() + ".numCards").text());
+    $("." + getPlayerName() + ".numCards").text(text - difference);
+    $("td").removeClass("bg-success");
+    $("."+newTurn).addClass("bg-success");
 }
 
 //Comprueba si la partida está completa y si no lo está muestra el mensaje de que no está completa
@@ -466,7 +526,8 @@ function getGameStatus(actualMatch, callback) {
         }
     });
 }
-//Cuando el primer jugador elige
+
+
 function playerMovesQuery(cards, number, callback) {
     $.ajax({
         type: "PUT",
@@ -474,14 +535,11 @@ function playerMovesQuery(cards, number, callback) {
         beforeSend: function (req) {
             req.setRequestHeader("Authorization", "Basic " + cadenaBase64);
         },
-        data: JSON.stringify({ cards: cards, number: number, player: getPlayerName(), id: getGameId() }),
+        data: JSON.stringify({ cards: cards, number: number, id: getGameId() }),
         contentType: "application/json",
         success: function (data, textStatus, jqXHR) {
-            callback(true);
+            callback(data);
         },
-        error: function (data, textStatus, jqXHR) {
-            callback(false);
-        }
     });
 }
 
@@ -510,17 +568,18 @@ function showMyCards(cards) {
     });
 }
 
-function showTableCards(tableCards){
+function showTableCards(tableCards) {
+    $("#cardsTab").empty();
     tableCards.forEach(card => {
         let elem = $("<img></img>");
         let src = getCardImgByName(card);
         elem.prop("src", src);
         $("#cardsTab").append(elem);
     })
-    
+
 }
 
-function getCardImgByName(name){
+function getCardImgByName(name) {
     let res = "";
     switch (name) {
         case "AS de Corazones": res = ".//img/A_H.png"; break;

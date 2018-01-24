@@ -83,9 +83,29 @@ function getRandomCardByNumber(number){
     return carta;
 }
 
+function playerStatus(player, status) {
+    let split = status.split(";");
+    let res = {
+        table: split[0],
+        turn: split[5],
+        numCards: [],  //Contendra las cartas del usuario y el numero de cartas del resto
+        names: [],
+    };
+    for (let i = 6; i < 10; i++) {
+        let cards = split[i - 5].split(",");
+        res.numCards.push(cards.length);
+        res.names.push(split[i]);
+        if (player === split[i])   //Si es el turno del jugador, mandamos sus cartas
+            res.myCards = cards;
+    }
+    return res;
+
+}
+
 module.exports = {
     startGame: startGame,
     getNextTurn: getNextTurn,
     getTurnIndex: getTurnIndex,
     getRandomCardByNumber: getRandomCardByNumber,
+    playerStatus: playerStatus,
 }
