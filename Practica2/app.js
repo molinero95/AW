@@ -79,14 +79,15 @@ app.post("/register", (request, response) => {
 });
 
 //Debe devolver los nombres de los jugadores
-app.get("/status/:id", passport.authenticate('basic', { session: false }), (request, response) => {
-    if (isNaN(request.params.id)) {
-        response.status(404);   //COMPROBAR
+app.get("/status/:idGame/:player", passport.authenticate('basic', { session: false }), (request, response) => {
+    if (isNaN(request.params.idGame)) {
+        response.status(404);
         response.json({});
     }
     else {
-        let id = Number(request.params.id); //Obtenemos el id
-        daoG.getGamePlayers(id, (err, res) => {
+        let idGame = Number(request.params.idGame); //Obtenemos el id del juego
+        let playerName = request.params.player; //Obtenemos el id del jugador
+        daoG.getGamePlayers(idGame, (err, res) => {
             if (err) { response.status(500); return; }
             else {//Aqui devolver tambien el status de la partida en el if: getGameStatus()
                 if (res) {
@@ -94,11 +95,13 @@ app.get("/status/:id", passport.authenticate('basic', { session: false }), (requ
                     res.players.forEach(e => {
                         names.push(e.name);
                     });
-                    daoG.getGameStatus(id, (err, res) => {
-                        if(err) {response.status(500); return;}
-                        else{
-                            if(res)
-                                response.json({ names: names, status: res})
+                    daoG.getGameStatus(idGame, (err, res) => {
+                        if (err) { response.status(500); return; }
+                        else {
+                            if (res) {    //Devolvemos la info relevante para el jugador
+                                let status = playerStatus(playerName, res);
+                                response.json({ status: status })
+                            }
                             else
                                 response.json({ names: names });
                         }
@@ -109,6 +112,26 @@ app.get("/status/:id", passport.authenticate('basic', { session: false }), (requ
         });
     }
 });
+
+function playerStatus(player, status) {
+    let split = status.split(";");
+    let res = {
+        table: split[0],
+        turn: split[5],
+        numCards: [],  //Contendra las cartas del usuario y el numero de cartas del resto
+        names: [],
+    };
+    for (let i = 6; i < 10; i++) {
+        let cards = split[i - 5].split(",");
+        res.numCards.push(cards.length);
+        res.names.push(split[i]);
+        if (player === split[i])   //Si es el turno del jugador, mandamos sus cartas
+            res.myCards = cards;
+    }
+    console.log(res);
+    return res;
+
+}
 
 app.post("/createGame", passport.authenticate('basic', { session: false }), (request, response) => {
     let name = request.body.gameName;
@@ -159,18 +182,18 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                                         else {
                                             response.status(200);
                                             let name = res;
-                                            if(players.length + 1 === 4){ //ultimo jugador
+                                            if (players.length + 1 === 4) { //ultimo jugador
                                                 daoG.getGamePlayers(gameId, (err, players) => {
-                                                    if(err) { res.status(500); return; }
-                                                    else{
+                                                    if (err) { res.status(500); return; }
+                                                    else {
                                                         let status = game.startGame(gameId, players);
-                                                        daoG.setGameStatus(gameId, status, (err, res) => {
-                                                            if(err) { res.status(500); return; }
-                                                            else response.json({ name: name});
+                                                        daoG.updateGameStatus(gameId, status, (err, res) => {
+                                                            if (err) { res.status(500); return; }
+                                                            else response.json({ name: name });
                                                         });
                                                     }
                                                 })
-                                                
+
                                             }
                                             else
                                                 response.json({ name: name });
@@ -214,7 +237,84 @@ app.get("/userGamesInfo", passport.authenticate('basic', { session: false }), (r
     });
 });
 
+//Realiza las acciones del juego
+app.put("/action", passport.authenticate('basic', { session: false }), (request, response) => {
+    daoG.getGameStatus(request.body.id, (err, status) => {  //Obtenemos el estado
+        if (err) { response.status(500); return }
+        else {
+            if (status) {
+                let cards = request.body.cards; //cartas buenas
+                let statusSplit = status.split(";");
+                let turn = game.getTurnIndex(statusSplit, statusSplit[5]);
+                //colocar falsas y colocar verdaderas
+                //Colocamos verdaderas y falsas
+                if(statusSplit[10] === "NULL")
+                    statusSplit[10] = ";";
+                else
+                    statusSplit[10] += ",";
+                if(statusSplit[0] === "NULL")
+                    statusSplit[0] = "";
+                else
+                    statusSplit[0] += ",";
+                    console.log(cards);
+                for (let i = 0; i < cards.length; i++) {
+                    if (i === cards.length - 1){
+                        statusSplit[0] += cards[i];
+                        statusSplit[10] += game.getRandomCardByNumber(request.body.number);
+                    }
+                    else{
+                        statusSplit[0] += cards[i] + ",";
+                        statusSplit[10] += game.getRandomCardByNumber(request.body.number) + ",";
+                    }
+                }
+                //console.log(statusSplit[0]);
+                //borramos cartas del usuario
+                let myCards = statusSplit[turn - 5].split(",");
+                let temp = "";
+                let quito = cards.pop();
+                let cuenta = 0;
+                let quitoCant = cards.length;
+                for(let i = myCards.length - 1; i >= 0; i--){
+                    if(quito && quito === myCards[i]){
+                        if(cards.length > 0)
+                            quito = cards.pop();
+                        else
+                            quito = null;
+                    }
+                    else{
+                        cuenta++;
+                        if(cuenta + quitoCant === myCards.length - 1)    //ultima
+                            temp += myCards[i];
+                        else
+                            temp += myCards[i] + ","
+                    }
+                }
+                statusSplit[turn - 5] = temp;
+                //Establecemos nuevo turno
+                statusSplit[5] = game.getNextTurn(statusSplit, statusSplit[5]);
+                let newStatus = "";
+                //Generamos el nuevo status
+                for(let i = 0; i < statusSplit.length; i++){
+                    if(i === 10)
+                        newStatus += statusSplit[i];
+                    else
+                        newStatus += statusSplit[i] + ";";
+                }
+                
+                console.log(newStatus);
+                daoG.updateGameStatus(request.body.id, newStatus, (err, res)=>{
+                    if(err){
+                        response.status(500); return
+                    }
+                    else{
+                        response.redirect("/status/"+ request.body.id +"/" +statusSplit[turn]);
+                    }
+                });
+            }
+        }
+    });
 
+});
 
 //IMAGENES
 app.get("/img/:nombre", (req, res) => {

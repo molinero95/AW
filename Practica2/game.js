@@ -54,27 +54,38 @@ function shufflePlayers(players){
     return order;
 }
 
-
-
-
-function playGame(status, playerName){
-    let split = status.split(";");
-    if(checkIfStarted(split)){  //Si ya estan establecidos los nombres de los jugadores...
-        if(getTurn() === playerName) { //puede mover
-
-        }
-        else{   //No puede mover
-
-        }
-    }
+function getTurnIndex(statusSplit, turn){
+    let i = 6;
+    while(i < 10 && statusSplit[i] !== turn)
+        i++;
+    return i;
 }
 
-function checkIfStarted(split){
-    if(split[6] === "NULL")
-        return false;
-    return true;
+function getNextTurn(statusSplit, turn){
+    let i = 6;
+    while(i < 10 && statusSplit[i] !== turn)
+        i++;
+    if(i === 9)
+        return statusSplit[6];
+    else
+        return statusSplit[i + 1];
+}
+
+function getRandomCardByNumber(number){
+    let carta = number;
+    let rand = Math.floor(Math.random() * 4);
+    switch(rand){
+        case 0: carta += " de Corazones"; break;
+        case 1: carta += " de Diamantes"; break;
+        case 2: carta += " de Picas"; break;
+        case 3: carta += " de Tréboles"; break;
+    }
+    return carta;
 }
 
 module.exports = {
-    startGame: startGame
+    startGame: startGame,
+    getNextTurn: getNextTurn,
+    getTurnIndex: getTurnIndex,
+    getRandomCardByNumber: getRandomCardByNumber,
 }

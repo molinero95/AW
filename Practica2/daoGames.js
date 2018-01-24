@@ -53,7 +53,7 @@ class DAO {
         });
     }
 
-    setGameStatus(id, status, callback) {
+    updateGameStatus(id, status, callback) {
         this.pool.getConnection((err, connect) => {
             if (err) { callback(err); return; }
             connect.query("UPDATE PARTIDAS SET ESTADO = ? WHERE ID = ?", [status, id], (err, res) => {
