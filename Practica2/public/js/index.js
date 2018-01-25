@@ -10,7 +10,7 @@ $(() => {
     $("#createGame").on("click", "button#newGame", onNewGameButtonClick);
     $("#joinGames").on("click", "button#joinGame", onJoinGameButtonClick);
     $("#menuSup").on("click", "a#misPartidas", onMyGamesClick);
-    $("#partida").on("click", "button#update", updateGameClick);
+    $("#updateButton").on("click", "button#botonActualizar", updateGameClick);
     $("#logoutBar").on("click", "button#logoutBtn", onLogoutButtonClick);
     $("#gameButtons").on("click", "button#seleccionadas", onSelectedClick);
     $("#gameButtons").on("click", "button#mentiroso", onLiarClick);
@@ -196,9 +196,8 @@ function onJoinGameButtonClick(event) {
 //TODO
 function updateGameClick(event) {
     let id = getGameId();
-    getGameStatus(id, (data) => {
-        createGameTable(data, null, null);
-    });
+    console.log(id);
+    playGame(id);
 }
 //Al pulsar sobre el boton "jugar cartas seleccionadas"
 function onSelectedClick(event) {
