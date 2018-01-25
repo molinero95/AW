@@ -115,8 +115,72 @@ function playerStatus(player, status) {
         if (player === split[i])   //Si es el turno del jugador, mandamos sus cartas
             res.myCards = cards;
     }
+    res.myCards = res.myCards.sort(compare);
     return res;
 
+}
+
+function compare(card1, card2){
+    let sp1 = card1.split(" ")[0];
+    let sp2 = card2.split(" ")[0];
+    if(sp1 === sp2)
+        return 0;
+    if(isNaN(sp1) && isNaN(sp2)){
+        if(sp1 === "AS") //sp2 > sp1
+            return -1;
+        else if(sp2 === "AS") //sp1 > sp2
+            return 1;
+        else if(sp1 === "K")  //sp1 > sp2
+            return 1;
+        else if(sp2 === "K")  //sp2 > sp1
+            return -1;
+        else if(sp1 > sp2)  //sp1 > sp2
+            return 1;
+        return -1;      //sp2 > sp1
+    }
+    else if(isNaN(sp1)){ //SP1 = AS, J, Q, K
+        if(sp1 === "AS")    //sp2 > sp1
+            return -1;
+        return 1;   //sp1 > sp2
+    }
+    else if(isNaN(sp2)){ //SP2 = AS, J, Q, K
+        if(sp2 === "AS")    //sp1 > sp2
+            return 1;
+        return -1;  //sp2 > sp1
+    }
+    else{//Ambos son numeros
+        sp1 = Number(sp1);
+        sp2 = Number(sp2);
+        if(sp1 > sp2)
+            return 1;
+        return -1;
+    }
+}
+
+
+function discard(cards){
+    let disc = false;
+    let before = "";
+    let count = 0;
+    let newCards = [];
+    for(let i = 0; i < cards.length; i++) {
+        newCards.push(cards[i]);
+        if(before === "")
+            before = cards[i];
+        if(cards[i].split(" ")[0] === before){
+            count++;
+            if(count === 4){
+                disc = true;
+                for(let k = 0; k < 4; k++)
+                    newCards.pop();
+            }
+        }
+        else{
+            before = cards[i].split(" ")[0];
+            count = 1;
+        }
+    }
+    return newCards;
 }
 
 module.exports = {
@@ -126,4 +190,6 @@ module.exports = {
     getTurnIndex: getTurnIndex,
     getRandomCardByNumber: getRandomCardByNumber,
     playerStatus: playerStatus,
+    discard: discard,
+    compare: compare
 }

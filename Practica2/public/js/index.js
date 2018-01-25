@@ -14,6 +14,7 @@ $(() => {
     $("#logoutBar").on("click", "button#logoutBtn", onLogoutButtonClick);
     $("#gameButtons").on("click", "button#seleccionadas", onSelectedClick);
     $("#gameButtons").on("click", "button#mentiroso", onLiarClick);
+    $("#gameButtons").on("click", "button#descartar", onDiscardClick);
     $("#firstCardSelector").on("click", "button.firstCardBtn", onFirstCardClick);
 });
 let cadenaBase64 = "";
@@ -249,9 +250,20 @@ function onLiarClick(event) {
         if(res.liar)
             alert("Has acertado!");
         else
-            alert("Vaya... Parece que has fallado");
+            alert("Vaya... Parece que has fallado, el jugador anterior no mentía");
         playGame(getGameId());
 
+    });
+}
+
+function onDiscardClick(event){
+    discardCards(res => {
+        console.log(res);
+        if(!res)
+            alert("No hay cartas para descartar");
+        else
+            alert("Descarte completado");
+        playGame(getGameId());
     });
 }
 
@@ -563,6 +575,21 @@ function checkIfLiar(callback) {
     });
 }
 
+function discardCards(callback){
+    $.ajax({
+        type: "PUT",
+        url: "/discard",
+        beforeSend: function (req) {
+            req.setRequestHeader("Authorization", "Basic " + cadenaBase64);
+        },
+        data: JSON.stringify({ id: getGameId(), player: getPlayerName() }),
+        contentType: "application/json",
+        success: function(data, textStatus, jqXHR){
+            callback(data.discard);
+        }
+    })
+}
+
 
 ////////// FIN AJAX //////////
 
@@ -577,6 +604,7 @@ function showMyCards(cards) {
         let elem = $("<img></img>");
         let img = getCardImgByName(element);
         elem.prop("src", img);
+        elem.addClass("card");
         elem.on("click", function (event) {
             if ($(this).hasClass("selectedCard")) {
                 $(this).removeClass("selectedCard")
@@ -603,7 +631,7 @@ function getCardImgByName(name) {
     let res = "";
     switch (name) {
         case "AS de Corazones": res = ".//img/A_H.png"; break;
-        case "As de Diamantes": res = ".//img/A_D.png"; break;
+        case "AS de Diamantes": res = ".//img/A_D.png"; break;
         case "AS de Picas": res = ".//img/A_S.png"; break;
         case "AS de Tréboles": res = ".//img/A_C.png"; break;
         case "2 de Corazones": res = ".//img/2_H.png"; break;
@@ -662,7 +690,7 @@ function getCardByImg(img) {
     let card = "";
     switch (img) {
         case ".//img/A_H.png": card = "AS de Corazones"; break;
-        case ".//img/A_D.png": card = "As de Diamantes"; break;
+        case ".//img/A_D.png": card = "AS de Diamantes"; break;
         case ".//img/A_S.png": card = "AS de Picas"; break;
         case ".//img/A_C.png": card = "AS de Tréboles"; break;
         case ".//img/2_H.png": card = "2 de Corazones"; break;

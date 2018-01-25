@@ -348,6 +348,45 @@ app.put("/isLiar", passport.authenticate('basic', { session: false }), (request,
     });
 });
 
+app.put("/discard", passport.authenticate('basic', { session: false }), (request, response) => {
+    let idGame = request.body.id;
+    let playerName = request.body.player;
+    daoG.getGameStatus(idGame, (err, status) => {
+        if(err){ response.status(500); return;}
+        if(status){
+            let split = status.split(";");
+            let index = game.getTurnIndex(split, playerName);
+            let cards = split[index - 5].split(",");
+            cards = cards.sort(game.compare);
+            let newCards = game.discard(cards);
+            console.log(newCards);
+            console.log("----");
+            split[index - 5] = "";
+            for(let i = 0; i < newCards.length; i++){
+                if(i !== newCards.length -1)
+                    split[index - 5] += newCards[i] + ",";
+                else
+                    split[index - 5] += newCards[i];
+            }
+            let discardDone = false;
+            cards.length === newCards.length ? discardDone = false : discardDone = true;
+            let newStatus = "";
+            for(let i = 0; i < split.length; i++){
+                if(i === 11)
+                    newStatus += split[i];
+                else
+                    newStatus += split[i] + ";";
+            }
+            console.log(newStatus);
+            daoG.updateGameStatus(idGame, newStatus, (err, resp) =>{
+                if(err){respose.status(500);return;}
+                else
+                    response.json({discard: discardDone});
+            });
+        }
+    });
+});
+
 //IMAGENES
 app.get("/img/:nombre", (req, res) => {
     let ruta = path.join(__dirname, "img", req.params.nombre);

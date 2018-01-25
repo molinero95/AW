@@ -1,6 +1,6 @@
 cards = [
     "AS de Corazones",
-    "As de Diamantes",
+    "AS de Diamantes",
     "AS de Picas",
     "AS de Tréboles",
     "2 de Corazones",
