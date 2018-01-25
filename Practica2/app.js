@@ -322,6 +322,7 @@ app.put("/isLiar", passport.authenticate('basic', { session: false }), (request,
                     turnoActual = game.getNextTurn(split, split[turnoRecibe]); //El turno pasa al siguiente, obtengo su indice
                     split[5] = split[turnoActual];
                 }
+                console.log(split[5]);
                 split[turnoRecibe - 5] += "," + split[10];
                 split[11] = "NULL";
                 split[0] = "NULL";
@@ -336,6 +337,9 @@ app.put("/isLiar", passport.authenticate('basic', { session: false }), (request,
                 daoG.updateGameStatus(request.body.id, newStatus, (err, res)=>{
                     if(err){
                         response.status(500); return;
+                    }
+                    else{
+                        response.json({liar: liar});
                     }
                 });
                 

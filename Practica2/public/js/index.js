@@ -244,8 +244,15 @@ function onSelectedClick(event) {
 //Al pulsar sobre "¡Mentiroso!"
 function onLiarClick(event) {
     alert("Soy mentiroso y funciono bien, pero todavía no estoy listo");
-    checkIfLiar;
-    playGame(getGameId());
+    checkIfLiar(res =>{
+        console.log(res);
+        if(res.liar)
+            alert("Has acertado!");
+        else
+            alert("Vaya... Parece que has fallado");
+        playGame(getGameId());
+
+    });
 }
 
 function onFirstCardClick(event) {
@@ -541,7 +548,7 @@ function playerMovesQuery(cards, number, callback) {
     });
 }
 
-function checkIfLiar() {
+function checkIfLiar(callback) {
     $.ajax({
         type: "PUT",
         url: "/isLiar",
@@ -550,6 +557,9 @@ function checkIfLiar() {
         },
         data: JSON.stringify({ id: getGameId() }),
         contentType: "application/json",
+        success: function (data, textStatus, jqXHR) {
+            callback(data);
+        },
     });
 }
 
