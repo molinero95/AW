@@ -245,7 +245,7 @@ function onSelectedClick(event) {
 
 //Al pulsar sobre "¡Mentiroso!"
 function onLiarClick(event) {
-    alert("Soy mentiroso y funciono bien");
+    alert("Soy mentiroso y funciono bien, pero todavía no estoy listo");
     //Coger cartas de la mesa
     //Obtener el turno anterior si miente para ponerle todas las cartas
 }
