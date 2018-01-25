@@ -238,14 +238,17 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                     statusSplit[0] = "";
                 else
                     statusSplit[0] += ",";
+                statusSplit[11] = "";
                 for (let i = 0; i < cards.length; i++) {
                     if (i === cards.length - 1){
-                        statusSplit[10] += cards[i];
-                        statusSplit[0] += game.getRandomCardByNumber(request.body.number);
+                        statusSplit[10] += cards[i];    //originales sobre mesa
+                        statusSplit[0] += game.getRandomCardByNumber(request.body.number); //falsas sobre mesa
+                        statusSplit[11] += cards[i];    //originales ultima jugada
                     }
                     else{
                         statusSplit[10] += cards[i] + ",";
                         statusSplit[0] += game.getRandomCardByNumber(request.body.number) + ",";
+                        statusSplit[11] += cards[i] + ",";
                     }
                 }
                 let myCards = statusSplit[turn - 5].split(",");
@@ -270,11 +273,12 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                 }
                 statusSplit[turn - 5] = temp;
                 //Establecemos nuevo turno
-                statusSplit[5] = game.getNextTurn(statusSplit, statusSplit[5]);
+                statusSplit[5] = statusSplit[game.getNextTurn(statusSplit, statusSplit[5])];
+                console.log(statusSplit);
                 let newStatus = "";
                 //Generamos el nuevo status
                 for(let i = 0; i < statusSplit.length; i++){
-                    if(i === 10)
+                    if(i === 11)
                         newStatus += statusSplit[i];
                     else
                         newStatus += statusSplit[i] + ";";
@@ -290,7 +294,54 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
             }
         }
     });
-
+});
+//Cuando se pulsa el boton mentiroso! se hace una petición a esta url
+//En la ultima posicion del status (11) están las cartas autenticas que ha lanzado el últumo jugador
+app.put("/isLiar", passport.authenticate('basic', { session: false }), (request, response) => {
+    let idGame = request.body.id;
+    daoG.getGameStatus(idGame, (err, status) => {
+        if(err){ response.status(500); return;}
+        else{
+            if(status){
+                let split = status.split(";");
+                let cartasAnterior = split[11].split(",");
+                let liar = false;
+                let number = split[0].split(" ")[0];
+                cartasAnterior.forEach(e => {
+                    if(!liar){
+                        if(e.split(" ")[0] !== number)
+                            liar = true;
+                    }
+                });
+                let turnoActual = split[5]; //nombre del jugador del turno act
+                let turnoRecibe; //El indice del jugador que recibira las cartas
+                if(liar) //miente, se las lleva el anterior, empieza el actual
+                    turnoRecibe = game.getLastTurn(split, turnoActual); //Indice del turno anterior
+                else{ //No mentia, se las lleva actual, empieza el siguiente
+                    turnoRecibe = game.getTurnIndex(split, turnoActual); //Indice del turno actual
+                    turnoActual = game.getNextTurn(split, split[turnoRecibe]); //El turno pasa al siguiente, obtengo su indice
+                    split[5] = split[turnoActual];
+                }
+                split[turnoRecibe - 5] += "," + split[10];
+                split[11] = "NULL";
+                split[0] = "NULL";
+                split[10] = "NULL";
+                let newStatus = "";
+                for(let i = 0; i < split.length; i++){
+                    if(i === 11)
+                        newStatus += split[i];
+                    else
+                        newStatus += split[i] + ";";
+                }
+                daoG.updateGameStatus(request.body.id, newStatus, (err, res)=>{
+                    if(err){
+                        response.status(500); return;
+                    }
+                });
+                
+            }
+        }
+    });
 });
 
 //IMAGENES

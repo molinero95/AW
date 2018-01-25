@@ -234,8 +234,6 @@ function onSelectedClick(event) {
             //Deshabilitamos botones, actualizamos tabla y ponemos cartas sobre la mesa
             $("#mentiroso").prop("disabled", true);
             $("#seleccionadas").prop("disabled", true);
-            
-
         }
 
         //petición aqui
@@ -246,8 +244,8 @@ function onSelectedClick(event) {
 //Al pulsar sobre "¡Mentiroso!"
 function onLiarClick(event) {
     alert("Soy mentiroso y funciono bien, pero todavía no estoy listo");
-    //Coger cartas de la mesa
-    //Obtener el turno anterior si miente para ponerle todas las cartas
+    checkIfLiar;
+    playGame(getGameId());
 }
 
 function onFirstCardClick(event) {
@@ -290,6 +288,7 @@ function playGame(id) {
             createGameTable(players, null, null);
         }
         else {  //Partida completa
+            console.log(data);
             showCards();
             $("#cartasUsr").empty();
             $("#cardsTab").empty();
@@ -542,6 +541,18 @@ function playerMovesQuery(cards, number, callback) {
     });
 }
 
+function checkIfLiar() {
+    $.ajax({
+        type: "PUT",
+        url: "/isLiar",
+        beforeSend: function (req) {
+            req.setRequestHeader("Authorization", "Basic " + cadenaBase64);
+        },
+        data: JSON.stringify({ id: getGameId() }),
+        contentType: "application/json",
+    });
+}
+
 
 ////////// FIN AJAX //////////
 
@@ -574,7 +585,7 @@ function showTableCards(tableCards) {
         let src = getCardImgByName(card);
         elem.prop("src", src);
         $("#cardsTab").append(elem);
-    })
+    });
 
 }
 
@@ -584,7 +595,7 @@ function getCardImgByName(name) {
         case "AS de Corazones": res = ".//img/A_H.png"; break;
         case "As de Diamantes": res = ".//img/A_D.png"; break;
         case "AS de Picas": res = ".//img/A_S.png"; break;
-        case "As de Tréboles": res = ".//img/A_C.png"; break;
+        case "AS de Tréboles": res = ".//img/A_C.png"; break;
         case "2 de Corazones": res = ".//img/2_H.png"; break;
         case "2 de Diamantes": res = ".//img/2_D.png"; break;
         case "2 de Picas": res = ".//img/2_S.png"; break;
@@ -643,7 +654,7 @@ function getCardByImg(img) {
         case ".//img/A_H.png": card = "AS de Corazones"; break;
         case ".//img/A_D.png": card = "As de Diamantes"; break;
         case ".//img/A_S.png": card = "AS de Picas"; break;
-        case ".//img/A_C.png": card = "As de Tréboles"; break;
+        case ".//img/A_C.png": card = "AS de Tréboles"; break;
         case ".//img/2_H.png": card = "2 de Corazones"; break;
         case ".//img/2_D.png": card = "2 de Diamantes"; break;
         case ".//img/2_S.png": card = "2 de Picas"; break;

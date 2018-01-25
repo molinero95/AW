@@ -2,7 +2,7 @@ cards = [
     "AS de Corazones",
     "As de Diamantes",
     "AS de Picas",
-    "As de Tréboles",
+    "AS de Tréboles",
     "2 de Corazones",
     "2 de Diamantes",
     "2 de Picas",
