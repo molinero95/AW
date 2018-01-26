@@ -257,7 +257,6 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                 statusSplit[turn - 5] = game.removeCardsSelected(myCards, cards);//Borra las cartas del usuario
                 //Establecemos nuevo turno
                 statusSplit[5] = statusSplit[game.getNextTurn(statusSplit, statusSplit[5])];
-                console.log(statusSplit);
                 let newStatus = "";
                 //Generamos el nuevo status
                 for(let i = 0; i < statusSplit.length; i++){

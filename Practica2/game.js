@@ -109,13 +109,22 @@ function playerStatus(player, status) {
         names: [],
     };
     for (let i = 6; i < 10; i++) {
-        let cards = split[i - 5].split(",");
-        res.numCards.push(cards.length);
-        res.names.push(split[i]);
-        if (player === split[i])   //Si es el turno del jugador, mandamos sus cartas
-            res.myCards = cards;
+        if(split[i - 5] === "NULL"){
+            res.numCards.push(0);   //Colocamos un 0
+            res.names.push(split[i]);
+            if(player === split[i])
+                res.myCards = "NULL";
+        }
+        else{
+            let cards = split[i - 5].split(",");
+            res.numCards.push(cards.length);
+            res.names.push(split[i]);
+            if (player === split[i])   //Si es el turno del jugador, mandamos sus cartas
+                res.myCards = cards;
+        }
     }
-    res.myCards = res.myCards.sort(compare);
+    if(res.myCards !== "NULL")  //Si el jugador se ha quedado sin cartas
+        res.myCards = res.myCards.sort(compare);
     return res;
 
 }
@@ -192,6 +201,9 @@ function removeCardsSelected(myCards, cardsToRemove) {
         else
             k++;
     }
+    if(newCards.length === 0)
+        newCards = "NULL";
+    console.log(newCards); 
     return newCards;
 }
 

@@ -230,12 +230,14 @@ function onSelectedClick(event) {
                 number = getCardByImg($("#cardsTab img").first()[0].attributes.src.value).split(" ")[0];
             
             playerMovesQuery(selected, number);
-            hideSelector(); 
-            hideClearTableMsg();
-            //Deshabilitamos botones, actualizamos tabla y ponemos cartas sobre la mesa
-            $("#mentiroso").prop("disabled", true);
-            $("#seleccionadas").prop("disabled", true);
-            playGame(getGameId()); //Volvemos a mostrar lo que hay que mostrar  
+            hideSelector(()=> {
+                hideClearTableMsg();
+                //Deshabilitamos botones, actualizamos tabla y ponemos cartas sobre la mesa
+                $("#mentiroso").prop("disabled", true);
+                $("#seleccionadas").prop("disabled", true);
+                playGame(getGameId()); //Volvemos a mostrar lo que hay que mostrar  
+            }); 
+            
         }
     }
 }
@@ -374,7 +376,7 @@ function createGameTable(players, cards, turn) {
     let superPadre = $("#tabla");
     superPadre.empty();
     setTableHeader();
-    if (turn) {
+    if (turn) { //Si hay partida empezada
         for (let i = 0; i < players.length; i++) {
             let padre = $("<tr></tr>");
             let name = $("<td></td>");
@@ -594,20 +596,28 @@ function discardCards(callback){
 
 function showMyCards(cards) {
     let padre = $("#cartasUsr");
-    cards.forEach(element => {
-        let elem = $("<img></img>");
-        let img = getCardImgByName(element);
-        elem.prop("src", img);
-        elem.addClass("card");
-        elem.on("click", function (event) {
-            if ($(this).hasClass("selectedCard")) {
-                $(this).removeClass("selectedCard")
-            }
-            else
-                $(this).addClass("selectedCard")
+    padre.empty();
+    if(cards === "NULL"){ //Jugador con 0 cartas
+        let parrafo = $("<p></p>");
+        parrafo.text("No tienes cartas, esperando al siguiente jugador.");
+        padre.append(parrafo);
+    }
+    else{
+        cards.forEach(element => {
+            let elem = $("<img></img>");
+            let img = getCardImgByName(element);
+            elem.prop("src", img);
+            elem.addClass("card");
+            elem.on("click", function (event) {
+                if ($(this).hasClass("selectedCard")) {
+                    $(this).removeClass("selectedCard")
+                }
+                else
+                    $(this).addClass("selectedCard")
+            });
+            padre.append(elem);
         });
-        padre.append(elem);
-    });
+    }
 }
 
 function showTableCards(tableCards) {
