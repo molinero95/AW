@@ -183,6 +183,18 @@ function discard(cards){
     return newCards;
 }
 
+function removeCardsSelected(myCards, cardsToRemove) {
+    let newCards = [];
+    let k = 0;
+    for(let i = 0; i < myCards.length; i++){
+        if(cardsToRemove[k] !== myCards[i])
+            newCards.push(myCards[i]);
+        else
+            k++;
+    }
+    return newCards;
+}
+
 module.exports = {
     startGame: startGame,
     getNextTurn: getNextTurn,
@@ -191,5 +203,6 @@ module.exports = {
     getRandomCardByNumber: getRandomCardByNumber,
     playerStatus: playerStatus,
     discard: discard,
-    compare: compare
+    compare: compare,
+    removeCardsSelected: removeCardsSelected,
 }

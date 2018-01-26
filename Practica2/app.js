@@ -233,14 +233,14 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                 if(statusSplit[10] === "NULL")
                     statusSplit[10] = "";
                 else
-                    statusSplit[10] += ",";
+                    statusSplit[10] += ","; //vamos a añadirle mas a las buenas
                 if(statusSplit[0] === "NULL")
                     statusSplit[0] = "";
                 else
-                    statusSplit[0] += ",";
+                    statusSplit[0] += ","; //vamos a añadirle mas a las falsas
                 statusSplit[11] = "";
                 for (let i = 0; i < cards.length; i++) {
-                    if (i === cards.length - 1){
+                    if (i === cards.length - 1){ //Ultima carta para añadir
                         statusSplit[10] += cards[i];    //originales sobre mesa
                         statusSplit[0] += game.getRandomCardByNumber(request.body.number); //falsas sobre mesa
                         statusSplit[11] += cards[i];    //originales ultima jugada
@@ -251,27 +251,9 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                         statusSplit[11] += cards[i] + ",";
                     }
                 }
+                //Eliminamos las cartas echadas del mazo del jugador
                 let myCards = statusSplit[turn - 5].split(",");
-                let temp = "";
-                let quito = cards.pop();
-                let cuenta = 0;
-                let quitoCant = cards.length;
-                for(let i = myCards.length - 1; i >= 0; i--){
-                    if(quito && quito === myCards[i]){
-                        if(cards.length > 0)
-                            quito = cards.pop();
-                        else
-                            quito = null;
-                    }
-                    else{
-                        cuenta++;
-                        if(cuenta + quitoCant === myCards.length - 1)    //ultima
-                            temp += myCards[i];
-                        else
-                            temp += myCards[i] + ","
-                    }
-                }
-                statusSplit[turn - 5] = temp;
+                statusSplit[turn - 5] = game.removeCardsSelected(myCards, cards);
                 //Establecemos nuevo turno
                 statusSplit[5] = statusSplit[game.getNextTurn(statusSplit, statusSplit[5])];
                 console.log(statusSplit);

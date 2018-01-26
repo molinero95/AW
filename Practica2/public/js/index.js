@@ -212,39 +212,39 @@ function onSelectedClick(event) {
         alert("Debes seleccionar alguna carta");
     else if (selected.length > 3)
         alert("Sólo puedes enviar 3 cartas como máximo");
-    else {
+    else { //Numero de cartas seleccionadas es correcto
         //Si la mesa está vacia y han seleccionado 0 numeros (Primer jugador)
         if ($("#clearTable").css("display") !== "none" && $("#firstCardSelector .btn-primary").length === 0)  //Mal
             alert("Tiene que seleccionar un número o figura");
         //Si la mesa está vacia y han seleccionado mas de 1 número (Primer jugador)
-        else if ($("#clearTable").css("display") !== "none" && $("#firstCardSelector .btn-primary").length > 1)  //Mal
+        else if ($("#clearTable").css("display") !== "none" && $("#firstCardSelector .btn-primary").length > 1) { //Mal
             alert("Seleccione sólo un número ó figura");
+            console.log($("#firstCardSelector .btn-primary").length);
+        }
         else {
             let number;
-            if ($("#clearTable").css("display") !== "none") {
-                number = $("#firstCardSelector .btn-primary").text()
-                hideSelector();
-                hideClearTableMsg();
-            }
+            //Si se muetra el error de "No hay cartas sobre la mesa"...
+            if ($("#clearTable").css("display") !== "none")  //Si no hay cartas sobre la mesa
+                number = $("#firstCardSelector .btn-primary").text() //obtenemos el numero seleccionado
             else//Obtenemos el numero si hay cartas sobre la mesa
                 number = getCardByImg($("#cardsTab img").first()[0].attributes.src.value).split(" ")[0];
+            
             playerMovesQuery(selected, number, (result) => {
                 updateGamePlayersTable(result.turn, selected.length);
                 showTableCards(result.cardsInTable.split(","));
-            });
-            //Deshabilitamos botones, actualizamos tabla y ponemos cartas sobre la mesa
-            $("#mentiroso").prop("disabled", true);
-            $("#seleccionadas").prop("disabled", true);
+                hideSelector(); 
+                hideClearTableMsg();
+                //Deshabilitamos botones, actualizamos tabla y ponemos cartas sobre la mesa
+                $("#mentiroso").prop("disabled", true);
+                $("#seleccionadas").prop("disabled", true);
+            });  
         }
-
-        //petición aqui
-        //Al soltar cartas (sea verdad o no), mostramos cartas en la mesa del número con palo aleatorio
     }
+    playGame(getGameId()); //Volvemos a mostrar lo que hay que mostrar
 }
 
 //Al pulsar sobre "¡Mentiroso!"
 function onLiarClick(event) {
-    alert("Soy mentiroso y funciono bien, pero todavía no estoy listo");
     checkIfLiar(res =>{
         console.log(res);
         if(res.liar)
