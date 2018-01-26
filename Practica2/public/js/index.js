@@ -229,18 +229,15 @@ function onSelectedClick(event) {
             else//Obtenemos el numero si hay cartas sobre la mesa
                 number = getCardByImg($("#cardsTab img").first()[0].attributes.src.value).split(" ")[0];
             
-            playerMovesQuery(selected, number, (result) => {
-                updateGamePlayersTable(result.turn, selected.length);
-                showTableCards(result.cardsInTable.split(","));
-                hideSelector(); 
-                hideClearTableMsg();
-                //Deshabilitamos botones, actualizamos tabla y ponemos cartas sobre la mesa
-                $("#mentiroso").prop("disabled", true);
-                $("#seleccionadas").prop("disabled", true);
-            });  
+            playerMovesQuery(selected, number);
+            hideSelector(); 
+            hideClearTableMsg();
+            //Deshabilitamos botones, actualizamos tabla y ponemos cartas sobre la mesa
+            $("#mentiroso").prop("disabled", true);
+            $("#seleccionadas").prop("disabled", true);
+            playGame(getGameId()); //Volvemos a mostrar lo que hay que mostrar  
         }
     }
-    playGame(getGameId()); //Volvemos a mostrar lo que hay que mostrar
 }
 
 //Al pulsar sobre "¡Mentiroso!"
@@ -545,7 +542,7 @@ function getGameStatus(actualMatch, callback) {
 }
 
 
-function playerMovesQuery(cards, number, callback) {
+function playerMovesQuery(cards, number) {
     $.ajax({
         type: "PUT",
         url: "/action",
@@ -554,9 +551,6 @@ function playerMovesQuery(cards, number, callback) {
         },
         data: JSON.stringify({ cards: cards, number: number, id: getGameId() }),
         contentType: "application/json",
-        success: function (data, textStatus, jqXHR) {
-            callback(data);
-        },
     });
 }
 

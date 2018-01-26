@@ -253,7 +253,8 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                 }
                 //Eliminamos las cartas echadas del mazo del jugador
                 let myCards = statusSplit[turn - 5].split(",");
-                statusSplit[turn - 5] = game.removeCardsSelected(myCards, cards);
+                myCards.sort(game.compare);
+                statusSplit[turn - 5] = game.removeCardsSelected(myCards, cards);//Borra las cartas del usuario
                 //Establecemos nuevo turno
                 statusSplit[5] = statusSplit[game.getNextTurn(statusSplit, statusSplit[5])];
                 console.log(statusSplit);
@@ -270,7 +271,7 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                         response.status(500); return;
                     }
                     else{
-                        response.json({cardsInTable: statusSplit[0], turn: statusSplit[5]});
+                        response.json({});
                     }
                 });
             }
@@ -304,7 +305,6 @@ app.put("/isLiar", passport.authenticate('basic', { session: false }), (request,
                     turnoActual = game.getNextTurn(split, split[turnoRecibe]); //El turno pasa al siguiente, obtengo su indice
                     split[5] = split[turnoActual];
                 }
-                console.log(split[5]);
                 split[turnoRecibe - 5] += "," + split[10];
                 split[11] = "NULL";
                 split[0] = "NULL";
@@ -341,8 +341,6 @@ app.put("/discard", passport.authenticate('basic', { session: false }), (request
             let cards = split[index - 5].split(",");
             cards = cards.sort(game.compare);
             let newCards = game.discard(cards);
-            console.log(newCards);
-            console.log("----");
             split[index - 5] = "";
             for(let i = 0; i < newCards.length; i++){
                 if(i !== newCards.length -1)
@@ -359,7 +357,6 @@ app.put("/discard", passport.authenticate('basic', { session: false }), (request
                 else
                     newStatus += split[i] + ";";
             }
-            console.log(newStatus);
             daoG.updateGameStatus(idGame, newStatus, (err, resp) =>{
                 if(err){respose.status(500);return;}
                 else
