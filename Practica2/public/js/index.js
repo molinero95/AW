@@ -210,16 +210,20 @@ function onSelectedClick(event) {
     });
     if (selected.length === 0)
         alert("Debes seleccionar alguna carta");
-    else if (selected.length > 3)
+    else if (selected.length > 3){
         alert("Sólo puedes enviar 3 cartas como máximo");
+        playGame(getGameId()); //Volvemos a mostrar lo que hay que mostrar  
+    }
     else { //Numero de cartas seleccionadas es correcto
         //Si la mesa está vacia y han seleccionado 0 numeros (Primer jugador)
-        if ($("#clearTable").css("display") !== "none" && $("#firstCardSelector .btn-primary").length === 0)  //Mal
+        if ($("#clearTable").css("display") !== "none" && $("#firstCardSelector .btn-primary").length === 0){  //Mal
             alert("Tiene que seleccionar un número o figura");
+            playGame(getGameId()); //Volvemos a mostrar lo que hay que mostrar  
+        }
         //Si la mesa está vacia y han seleccionado mas de 1 número (Primer jugador)
         else if ($("#clearTable").css("display") !== "none" && $("#firstCardSelector .btn-primary").length > 1) { //Mal
             alert("Seleccione sólo un número ó figura");
-            console.log($("#firstCardSelector .btn-primary").length);
+            playGame(getGameId()); //Volvemos a mostrar lo que hay que mostrar  
         }
         else {
             let number;
