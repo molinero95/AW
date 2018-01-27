@@ -210,13 +210,13 @@ function onSelectedClick(event) {
     });
     if (selected.length === 0)
         alert("Debes seleccionar alguna carta");
-    else if (selected.length > 3){
+    else if (selected.length > 3) {
         alert("Sólo puedes enviar 3 cartas como máximo");
         playGame(getGameId()); //Volvemos a mostrar lo que hay que mostrar  
     }
     else { //Numero de cartas seleccionadas es correcto
         //Si la mesa está vacia y han seleccionado 0 numeros (Primer jugador)
-        if ($("#clearTable").css("display") !== "none" && $("#firstCardSelector .btn-primary").length === 0){  //Mal
+        if ($("#clearTable").css("display") !== "none" && $("#firstCardSelector .btn-primary").length === 0) {  //Mal
             alert("Tiene que seleccionar un número o figura");
             playGame(getGameId()); //Volvemos a mostrar lo que hay que mostrar  
         }
@@ -232,25 +232,26 @@ function onSelectedClick(event) {
                 number = $("#firstCardSelector .btn-primary").text() //obtenemos el numero seleccionado
             else//Obtenemos el numero si hay cartas sobre la mesa
                 number = getCardByImg($("#cardsTab img").first()[0].attributes.src.value).split(" ")[0];
-            
-            playerMovesQuery(selected, number);
-            hideSelector(()=> {
+
+            playerMovesQuery(selected, number, () => {
+                hideSelector();
                 hideClearTableMsg();
                 //Deshabilitamos botones, actualizamos tabla y ponemos cartas sobre la mesa
                 $("#mentiroso").prop("disabled", true);
                 $("#seleccionadas").prop("disabled", true);
                 playGame(getGameId()); //Volvemos a mostrar lo que hay que mostrar  
-            }); 
-            
+            });
+
+
         }
     }
 }
 
 //Al pulsar sobre "¡Mentiroso!"
 function onLiarClick(event) {
-    checkIfLiar(res =>{
+    checkIfLiar(res => {
         console.log(res);
-        if(res.liar)
+        if (res.liar)
             alert("Has acertado!");
         else
             alert("Vaya... Parece que has fallado, el jugador anterior no mentía");
@@ -259,10 +260,10 @@ function onLiarClick(event) {
     });
 }
 
-function onDiscardClick(event){
+function onDiscardClick(event) {
     discardCards(res => {
         console.log(res);
-        if(!res)
+        if (!res)
             alert("No hay cartas para descartar");
         else
             alert("Descarte completado");
@@ -310,30 +311,25 @@ function playGame(id) {
             createGameTable(players, null, null);
         }
         else {  //Partida completa
-            console.log(data);
             showCards();
+            hideSelector();
             $("#cartasUsr").empty();
             $("#cardsTab").empty();
             createGameTable(data.status.names, data.status.numCards, data.status.turn);
             showMyCards(data.status.myCards);
-            if (data.status.table !== "NULL") {
+            showClearTableMsg();    //Mostramos el mensaje de no hay cartas sobre la mesa
+            if (data.status.table !== "NULL") { //Hay cartas sobre la mesa
                 showTableCards(data.status.table.split(","));
-                hideClearTableMsg();
+                hideClearTableMsg();    //quitamos el mensaje
             }
-            else
-                showClearTableMsg();
             if (data.status.turn === getPlayerName()) { //turno del jugador
-                $("#seleccionadas").prop("disabled", false);
+                $("#seleccionadas").prop("disabled", false);    //activamos el boton de seleccionar
                 if (data.status.table === "NULL") {  //No hay cartas sobre la mesa, mostrar selector de numer o figura
-                    showClearTableMsg();
                     showSelector();
                     $("#mentiroso").prop("disabled", true);
                 }
-                else {    //Hay cartas sobre la mesa
-                    $("#mentiroso").prop("disabled", false);
-                    hideSelector();
-                    hideClearTableMsg();
-                }
+                else     //Hay cartas sobre la mesa
+                    $("#mentiroso").prop("disabled", false);    //activamos el boton de mentiroso
             }
             else {   //Le toca a otro
                 $("#seleccionadas").prop("disabled", true);
@@ -360,7 +356,7 @@ Formato
 </tr>
 */
 //Establece la cabecera de la tabla
-function setTableHeader(){
+function setTableHeader() {
     let padre = $("#tabla");
     let fila = $("<tr></tr>");
     let col1 = $("<td></td>");
@@ -418,7 +414,7 @@ function updateGamePlayersTable(newTurn, difference) {
     let text = Number($("." + getPlayerName() + ".numCards").text());
     $("." + getPlayerName() + ".numCards").text(text - difference);
     $("td").removeClass("bg-success");
-    $("."+newTurn).addClass("bg-success");
+    $("." + newTurn).addClass("bg-success");
 }
 
 //Comprueba si la partida está completa y si no lo está muestra el mensaje de que no está completa
@@ -548,7 +544,7 @@ function getGameStatus(actualMatch, callback) {
 }
 
 
-function playerMovesQuery(cards, number) {
+function playerMovesQuery(cards, number, callback) {
     $.ajax({
         type: "PUT",
         url: "/action",
@@ -557,6 +553,9 @@ function playerMovesQuery(cards, number) {
         },
         data: JSON.stringify({ cards: cards, number: number, id: getGameId() }),
         contentType: "application/json",
+        success: function(){
+            callback();
+        }
     });
 }
 
@@ -575,7 +574,7 @@ function checkIfLiar(callback) {
     });
 }
 
-function discardCards(callback){
+function discardCards(callback) {
     $.ajax({
         type: "PUT",
         url: "/discard",
@@ -584,7 +583,7 @@ function discardCards(callback){
         },
         data: JSON.stringify({ id: getGameId(), player: getPlayerName() }),
         contentType: "application/json",
-        success: function(data, textStatus, jqXHR){
+        success: function (data, textStatus, jqXHR) {
             callback(data.discard);
         }
     })
@@ -601,12 +600,12 @@ function discardCards(callback){
 function showMyCards(cards) {
     let padre = $("#cartasUsr");
     padre.empty();
-    if(cards === "NULL"){ //Jugador con 0 cartas
+    if (cards === "NULL") { //Jugador con 0 cartas
         let parrafo = $("<p></p>");
         parrafo.text("No tienes cartas, esperando al siguiente jugador.");
         padre.append(parrafo);
     }
-    else{
+    else {
         cards.forEach(element => {
             let elem = $("<img></img>");
             let img = getCardImgByName(element);
