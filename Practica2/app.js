@@ -1,3 +1,4 @@
+
 "use strict";
 const express = require("express");
 const https = require("https");
@@ -78,7 +79,8 @@ app.post("/register", (request, response) => {
     }
 });
 
-//Debe devolver los nombres de los jugadores
+//Devuelve el estado para el jugador concreto si la partida esta completa
+//En caso de que la partida no esté completa devuelve sólamente el nombre de los jugadores
 app.get("/status/:idGame/:player", passport.authenticate('basic', { session: false }), (request, response) => {
     if (isNaN(request.params.idGame)) {
         response.status(404);
@@ -98,11 +100,27 @@ app.get("/status/:idGame/:player", passport.authenticate('basic', { session: fal
                     daoG.getGameStatus(idGame, (err, res) => {
                         if (err) { response.status(500); return; }
                         else {
+                            //Si la partida ha comenzado, hay status
                             if (res) {    //Devolvemos la info relevante para el jugador
-                                let status = game.playerStatus(playerName, res);
+                                res = JSON.parse(res);
+                                let player = -1;
+                                for(let i = 0; i < res.names.length; i++){
+                                    if(playerName === res.names[i])
+                                        player = i; //Obtenemos el numero del jugador
+                                }
+                                let status = {
+                                    names: res.names,
+                                    myCards: res.cards[player],
+                                    numCards: res.numCards,
+                                    table: res.falseOnTable,
+                                    turn: res.turn,
+                                    end: res.end,
+                                }
+                                console.log(status);
+                                //let status = game.playerStatus(playerName, res);
                                 response.json({ status: status })
                             }
-                            else
+                            else    //Si la partida no ha comenzado, devolvemos sólo los nombres
                                 response.json({ names: names });
                         }
                     })
@@ -112,7 +130,6 @@ app.get("/status/:idGame/:player", passport.authenticate('basic', { session: fal
         });
     }
 });
-
 
 
 app.post("/createGame", passport.authenticate('basic', { session: false }), (request, response) => {
@@ -195,7 +212,7 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
     });
 });
 
-
+//Obtenemos el id y los nombres de las partidas para el jugador
 app.get("/userGamesInfo", passport.authenticate('basic', { session: false }), (request, response) => {
     let id = request.user;
     daoG.getUserGames(id, (err, res) => {
@@ -225,47 +242,22 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
         if (err) { response.status(500); return }
         else {
             if (status) {
-                let cards = request.body.cards; //cartas buenas
-                let statusSplit = status.split(";");
-                let turn = game.getTurnIndex(statusSplit, statusSplit[5]);
-                //colocar falsas y colocar verdaderas
-                //Colocamos verdaderas y falsas
-                if(statusSplit[10] === "NULL")
-                    statusSplit[10] = "";
-                else
-                    statusSplit[10] += ","; //vamos a añadirle mas a las buenas
-                if(statusSplit[0] === "NULL")
-                    statusSplit[0] = "";
-                else
-                    statusSplit[0] += ","; //vamos a añadirle mas a las falsas
-                statusSplit[11] = "";
-                for (let i = 0; i < cards.length; i++) {
-                    if (i === cards.length - 1){ //Ultima carta para añadir
-                        statusSplit[10] += cards[i];    //originales sobre mesa
-                        statusSplit[0] += game.getRandomCardByNumber(request.body.number); //falsas sobre mesa
-                        statusSplit[11] += cards[i];    //originales ultima jugada
-                    }
-                    else{
-                        statusSplit[10] += cards[i] + ",";
-                        statusSplit[0] += game.getRandomCardByNumber(request.body.number) + ",";
-                        statusSplit[11] += cards[i] + ",";
-                    }
-                }
+                let cards = request.body.cards; //cartas buenas del jugador
+                status = JSON.parse(status);
+                status.lastCards = [];
+                cards.forEach(card => {
+                    status.trueOnTable.push(card);
+                    status.lastCards.push(card);
+                    status.falseOnTable.push(game.getRandomCardByNumber(request.body.number));
+                });
+                let playerIndex = game.getPlayerIndex(status.turn, status);
                 //Eliminamos las cartas echadas del mazo del jugador
-                let myCards = statusSplit[turn - 5].split(",");
-                myCards.sort(game.compare);
-                statusSplit[turn - 5] = game.removeCardsSelected(myCards, cards);//Borra las cartas del usuario
+                status.cards[playerIndex] = game.removeCardsSelected(status.cards[playerIndex], cards);//Borra las cartas del usuario
+                status.numCards[playerIndex] -= cards.length;
                 //Establecemos nuevo turno
-                statusSplit[5] = statusSplit[game.getNextTurn(statusSplit, statusSplit[5])];
-                let newStatus = "";
-                //Generamos el nuevo status
-                for(let i = 0; i < statusSplit.length; i++){
-                    if(i === 11)
-                        newStatus += statusSplit[i];
-                    else
-                        newStatus += statusSplit[i] + ";";
-                }
-                daoG.updateGameStatus(request.body.id, newStatus, (err, res)=>{
+                status.turn = status.names[game.getNextTurn(playerIndex)];
+                console.log(status);
+                daoG.updateGameStatus(request.body.id, JSON.stringify(status), (err, res)=>{
                     if(err){
                         response.status(500); return;
                     }
@@ -278,50 +270,37 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
     });
 });
 //Cuando se pulsa el boton mentiroso! se hace una petición a esta url
-//En la ultima posicion del status (11) están las cartas autenticas que ha lanzado el últumo jugador
 app.put("/isLiar", passport.authenticate('basic', { session: false }), (request, response) => {
     let idGame = request.body.id;
     daoG.getGameStatus(idGame, (err, status) => {
         if(err){ response.status(500); return;}
         else{
             if(status){
-                let split = status.split(";");
-                let cartasAnterior = split[11].split(",");
-                let liar = false;
-                let number = split[0].split(" ")[0];
-                cartasAnterior.forEach(e => {
-                    if(!liar){
-                        if(e.split(" ")[0] !== number)
-                            liar = true;
-                    }
-                });
-                let turnoActual = split[5]; //nombre del jugador del turno act
-                let turnoRecibe; //El indice del jugador que recibira las cartas
-                if(liar) //miente, se las lleva el anterior, empieza el actual
-                    turnoRecibe = game.getLastTurn(split, turnoActual); //Indice del turno anterior
-                else{ //No mentia, se las lleva actual, empieza el siguiente
-                    turnoRecibe = game.getTurnIndex(split, turnoActual); //Indice del turno actual
-                    turnoActual = game.getNextTurn(split, split[turnoRecibe]); //El turno pasa al siguiente, obtengo su indice
-                    split[5] = split[turnoActual];
+                status = JSON.parse(status);
+                //console.log(status);
+                let playerIndex = game.getPlayerIndex(status.turn, status);
+                let number = status.falseOnTable[0].split(" ")[0];  //Obtenemos el numero que se está jugando
+                let liar = game.checkIfLiar(status.lastCards, number);
+
+                if(liar){ //El anterior miente, se las lleva el anterior, empieza que ha pulsado "mentiroso"
+                    status.cards[game.getLastTurn(playerIndex)] = game.addCards(status.trueOnTable, status.cards[game.getLastTurn(playerIndex)]);
+                    status.numCards[game.getLastTurn(playerIndex)] += status.trueOnTable.length;
                 }
-                split[turnoRecibe - 5] += "," + split[10];
-                split[11] = "NULL";
-                split[0] = "NULL";
-                split[10] = "NULL";
-                let newStatus = "";
-                for(let i = 0; i < split.length; i++){
-                    if(i === 11)
-                        newStatus += split[i];
-                    else
-                        newStatus += split[i] + ";";
+                else{ //No mentia, se las lleva actual, empieza el siguiente al que ha pulsado
+                    status.cards[playerIndex] = game.addCards(status.trueOnTable, status.cards[playerIndex]);
+                    status.turn = game.getNextTurn(playerIndex);
+                    status.numCards[playerIndex] += status.trueOnTable.length;
                 }
-                daoG.updateGameStatus(request.body.id, newStatus, (err, res)=>{
+                //Actualizamos tablero
+                status.trueOnTable = [];
+                status.lastCards = [];
+                status.falseOnTable = [];
+                daoG.updateGameStatus(idGame, JSON.stringify(status), (err, res)=>{
                     if(err){
                         response.status(500); return;
                     }
-                    else{
+                    else
                         response.json({liar: liar});
-                    }
                 });
                 
             }
@@ -335,28 +314,15 @@ app.put("/discard", passport.authenticate('basic', { session: false }), (request
     daoG.getGameStatus(idGame, (err, status) => {
         if(err){ response.status(500); return;}
         if(status){
-            let split = status.split(";");
-            let index = game.getTurnIndex(split, playerName);
-            let cards = split[index - 5].split(",");
-            cards = cards.sort(game.compare);
-            let newCards = game.discard(cards);
-            split[index - 5] = "";
-            for(let i = 0; i < newCards.length; i++){
-                if(i !== newCards.length -1)
-                    split[index - 5] += newCards[i] + ",";
-                else
-                    split[index - 5] += newCards[i];
-            }
+            status = JSON.parse(status);
+            let playerIndex = game.getPlayerIndex(playerName, status);
+            let newCards = game.discard(status.cards[playerIndex]);
+                        
             let discardDone = false;
-            cards.length === newCards.length ? discardDone = false : discardDone = true;
-            let newStatus = "";
-            for(let i = 0; i < split.length; i++){
-                if(i === 11)
-                    newStatus += split[i];
-                else
-                    newStatus += split[i] + ";";
-            }
-            daoG.updateGameStatus(idGame, newStatus, (err, resp) =>{
+            status.cards[playerIndex].length === newCards.length ? discardDone = false : discardDone = true;
+            status.cards[playerIndex] = newCards;
+            status.numCards[playerIndex] = newCards.length;
+            daoG.updateGameStatus(idGame, JSON.stringify(status), (err, resp) =>{
                 if(err){respose.status(500);return;}
                 else
                     response.json({discard: discardDone});

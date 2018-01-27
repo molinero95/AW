@@ -1,9 +1,9 @@
+
 const deck = require("./cards");
 
 
-//Comienza el juego! repartimos las cartas
+//Comienza el juego! repartimos las cartas y establecemos el estado
 function startGame(gameId, players) {
-    //Comenzar partida
     let newGameDeck = new deck();
     newGameDeck.shuffleDeck();
     let gameDeck = newGameDeck.getDeck();
@@ -18,28 +18,31 @@ function startGame(gameId, players) {
         else
             p4.push(gameDeck.pop());
     }
-    /*
-    Status.split(";"):
-    status[0] cartas falsas en la mesa.
-    status[1] cartas jugador 1
-    status[2] cartas jugador 2
-    status[3] cartas jugador 3
-    status[4] cartas jugador 4
-    status[5] turno actual
-    status[6] jugador 1
-    status[7] jugador 2
-    status[8] jugador 3
-    status[9] jugador 4
-    status[10] cartas autenticas en la mesa
-    status[11] ultimas cartas autenticas tiradas
-    */
     let order = shufflePlayers(players.players);
-    let status = "NULL" + ";" + p1.toString() + ";" + p2.toString() + 
-    ";" + p3.toString() + ";" + p4.toString() + ";" + order[0].name + ";" + order[0].name + ";" +
-    order[1].name + ";"+ order[2].name + ";" + order[3].name + ";NULL;NULL";
-    //El nombre de los jugadores lo guardaremos mas adelante
-    return status;
+    let status = {
+        cards : [p1.sort(compare), p2.sort(compare), p3.sort(compare), p4.sort(compare)],
+        names : [order[0].name, order[1].name, order[2].name, order[3].name],
+        numCards : [p1.length, p2.length, p3.length, p4.length],
+        trueOnTable : [],
+        falseOnTable : [],
+        lastCards : [],
+        turn : order[0].name,
+        end : {
+            isEnded : false,
+            winner : null,
+        }
+    }
+    return JSON.stringify(status);
 }
+
+//Obtiene la posicion del jugador en el array para obtener sus cartas y su número de cartas
+function getPlayerIndex(player, status){
+    let index = 0;
+    while(index < status.names.length && player !== status.names[index])
+        index++;
+    return index;
+}
+
 
 //Orden aleatorio de los jugadores
 function shufflePlayers(players){
@@ -54,37 +57,6 @@ function shufflePlayers(players){
     return order;
 }
 
-//Obtiene el indice del jugador al que corresponde el turno para poder obtener sus cartas
-function getTurnIndex(statusSplit, turn){
-    let i = 6;
-    while(i < 10 && statusSplit[i] !== turn)
-        i++;
-    return i;
-}
-
-//Obtiene el índice del jugador anterior al turno actual
-function getLastTurn(statusSplit, turn) {
-    let i = 6;
-    let anterior = 0;
-    while(i < 10 && statusSplit[i] !== turn){
-        i++;
-    }
-    anterior = i - 1;
-    if(anterior === 5)
-        anterior = 9;
-    return anterior;
-}
-
-//Obtiene el indice del siguiente turno al actual.
-function getNextTurn(statusSplit, turn){
-    let i = 6;
-    while(i < 10 && statusSplit[i] !== turn)
-        i++;
-    if(i === 9)
-        return 6;
-    else
-        return i + 1;
-}
 
 //Obtiene una carta aleatoria para mostrar en la mesa con el mismo numero al que se está jugando
 function getRandomCardByNumber(number){
@@ -99,34 +71,50 @@ function getRandomCardByNumber(number){
     return carta;
 }
 
-//Obtiene el estado de la partida necesario para el jugador
-function playerStatus(player, status) {
-    let split = status.split(";");
-    let res = {
-        table: split[0],    //Las supuestas cartas sobre la mesa
-        turn: split[5],
-        numCards: [],  //Contendra las cartas del usuario y el numero de cartas del resto
-        names: [],
-    };
-    for (let i = 6; i < 10; i++) {
-        if(split[i - 5] === "NULL"){
-            res.numCards.push(0);   //Colocamos un 0
-            res.names.push(split[i]);
-            if(player === split[i])
-                res.myCards = "NULL";
-        }
-        else{
-            let cards = split[i - 5].split(",");
-            res.numCards.push(cards.length);
-            res.names.push(split[i]);
-            if (player === split[i])   //Si es el turno del jugador, mandamos sus cartas
-                res.myCards = cards;
-        }
-    }
-    if(res.myCards !== "NULL")  //Si el jugador se ha quedado sin cartas
-        res.myCards = res.myCards.sort(compare);
-    return res;
 
+//Borra las cartas del mazo del jugador
+function removeCardsSelected(myCards, cardsToRemove) {
+    let newCards = [];
+    let k = 0;
+    for(let i = 0; i < myCards.length; i++){
+        if(cardsToRemove[k] !== myCards[i])
+            newCards.push(myCards[i]);
+        else
+            k++;
+    }
+    return newCards;
+}
+
+function addCards(cards, array){
+    cards.forEach(c => {
+        array.push(c);
+    });
+    array.sort(compare);
+    return array;
+}
+
+//Obtiene el siguiente turno
+function getNextTurn(index){
+    if(index === 3)
+        return 0;
+    return index + 1;
+}
+//Obtiene el turno del jugador anterior
+function getLastTurn(index){
+    if(index === 0)
+        return 3;
+    return index - 1;
+}
+
+function checkIfLiar(lastCards, number){
+    let liar = false;
+    let index = 0;
+    while(!liar && index < lastCards.length){
+        if(lastCards[index].split(" ")[0] !== number)
+            liar = true;
+        index++;
+    }
+    return liar;
 }
 
 function compare(card1, card2){
@@ -192,29 +180,15 @@ function discard(cards){
     return newCards;
 }
 
-function removeCardsSelected(myCards, cardsToRemove) {
-    let newCards = [];
-    let k = 0;
-    for(let i = 0; i < myCards.length; i++){
-        if(cardsToRemove[k] !== myCards[i])
-            newCards.push(myCards[i]);
-        else
-            k++;
-    }
-    if(newCards.length === 0)
-        newCards = "NULL";
-    console.log(newCards); 
-    return newCards;
-}
-
 module.exports = {
     startGame: startGame,
-    getNextTurn: getNextTurn,
-    getLastTurn: getLastTurn,
-    getTurnIndex: getTurnIndex,
     getRandomCardByNumber: getRandomCardByNumber,
-    playerStatus: playerStatus,
     discard: discard,
     compare: compare,
     removeCardsSelected: removeCardsSelected,
+    getPlayerIndex: getPlayerIndex,
+    getNextTurn: getNextTurn,
+    getLastTurn: getLastTurn,
+    checkIfLiar: checkIfLiar,
+    addCards: addCards,
 }

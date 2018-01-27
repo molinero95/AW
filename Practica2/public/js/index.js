@@ -194,12 +194,12 @@ function onJoinGameButtonClick(event) {
 
 }
 //Al pulsar sobre "Actualizar partida"
-//TODO
 function updateGameClick(event) {
     let id = getGameId();
     console.log(id);
     playGame(id);
 }
+
 //Al pulsar sobre el boton "jugar cartas seleccionadas"
 function onSelectedClick(event) {
     //Coger cartas seleccionadas
@@ -297,6 +297,7 @@ function playGame(id) {
     setInactiveActualTab();
     showGameTabId(id);
     getGameStatus(id, (data) => {
+        console.log(data);
         if (!checkIfComplete(data)) {   //Partida no completa
             let players = [];
             let i = 0;
@@ -318,13 +319,13 @@ function playGame(id) {
             createGameTable(data.status.names, data.status.numCards, data.status.turn);
             showMyCards(data.status.myCards);
             showClearTableMsg();    //Mostramos el mensaje de no hay cartas sobre la mesa
-            if (data.status.table !== "NULL") { //Hay cartas sobre la mesa
-                showTableCards(data.status.table.split(","));
+            if (data.status.table.length > 0) { //Hay cartas sobre la mesa
+                showTableCards(data.status.table);
                 hideClearTableMsg();    //quitamos el mensaje
             }
             if (data.status.turn === getPlayerName()) { //turno del jugador
                 $("#seleccionadas").prop("disabled", false);    //activamos el boton de seleccionar
-                if (data.status.table === "NULL") {  //No hay cartas sobre la mesa, mostrar selector de numer o figura
+                if (data.status.table.length === 0) {  //No hay cartas sobre la mesa, mostrar selector de numer o figura
                     showSelector();
                     $("#mentiroso").prop("disabled", true);
                 }
@@ -377,6 +378,7 @@ function createGameTable(players, cards, turn) {
     superPadre.empty();
     setTableHeader();
     if (turn) { //Si hay partida empezada
+        console.log(players);
         for (let i = 0; i < players.length; i++) {
             let padre = $("<tr></tr>");
             let name = $("<td></td>");
@@ -396,7 +398,7 @@ function createGameTable(players, cards, turn) {
             }
         }
     }
-    else {
+    else { //Partida no completa, llega players como un array
         for (let i = 0; i < 4; i++) {
             let padre = $("<tr></tr>");
             let name = $("<td></td>");
@@ -418,9 +420,9 @@ function updateGamePlayersTable(newTurn, difference) {
 }
 
 //Comprueba si la partida está completa y si no lo está muestra el mensaje de que no está completa
-function checkIfComplete(players) {
+function checkIfComplete(data) {
     $("#notComplete").hide();
-    if (players.names) {
+    if (data.names) {    //si estuviera completa el tipo seria data.status.names
         $("#notComplete").show();
         return false;
     }
@@ -553,7 +555,7 @@ function playerMovesQuery(cards, number, callback) {
         },
         data: JSON.stringify({ cards: cards, number: number, id: getGameId() }),
         contentType: "application/json",
-        success: function(){
+        success: function () {
             callback();
         }
     });
@@ -600,7 +602,7 @@ function discardCards(callback) {
 function showMyCards(cards) {
     let padre = $("#cartasUsr");
     padre.empty();
-    if (cards === "NULL") { //Jugador con 0 cartas
+    if (cards.length === 0) { //Jugador con 0 cartas
         let parrafo = $("<p></p>");
         parrafo.text("No tienes cartas, esperando al siguiente jugador.");
         padre.append(parrafo);

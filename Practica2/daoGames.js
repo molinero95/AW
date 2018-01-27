@@ -79,18 +79,6 @@ class DAO {
         });
     }
 
-    alterGameStatus(gameId, status, callback) {
-        this.pool.getConnection((err, connect) => {
-            if (err) { callback(err); return; }
-            connect.query("UPDATE PARTIDAS SET ESTADO = ? WHERE ID = ?", [status, gameId], (err, res) => {
-                if (err) { callback(err); return; }
-                else
-                    callback(null, true);
-            });
-            connect.release();
-        });
-    }
-
 
     insertGame(name, userId, callback) {
         this.pool.getConnection((err, connect) => { //Transacción
