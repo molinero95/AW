@@ -256,6 +256,11 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                 status.numCards[playerIndex] -= cards.length;
                 //Establecemos nuevo turno
                 status.turn = status.names[game.getNextTurn(playerIndex)];
+                let lastPlayer = game.getLastTurn(playerIndex);
+                if(status.numCards[lastPlayer] === 0){  //En este caso, el jugador anterior gana la partida
+                    status.end.isEnded = true;
+                    status.end.winner = status.names[lastPlayer];
+                }
                 console.log(status);
                 daoG.updateGameStatus(request.body.id, JSON.stringify(status), (err, res)=>{
                     if(err){
@@ -290,11 +295,17 @@ app.put("/isLiar", passport.authenticate('basic', { session: false }), (request,
                     status.cards[playerIndex] = game.addCards(status.trueOnTable, status.cards[playerIndex]);
                     status.turn = game.getNextTurn(playerIndex);
                     status.numCards[playerIndex] += status.trueOnTable.length;
+                    let lastPlayer = game.getLastTurn(playerIndex);
+                    if(status.numCards[lastPlayer] === 0){  //Gana el jugador anterior
+                        status.end.isEnded = true;
+                        status.end.winner = status.names[lastPlayer];
+                    }
                 }
                 //Actualizamos tablero
                 status.trueOnTable = [];
                 status.lastCards = [];
                 status.falseOnTable = [];
+
                 daoG.updateGameStatus(idGame, JSON.stringify(status), (err, res)=>{
                     if(err){
                         response.status(500); return;

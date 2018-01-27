@@ -312,29 +312,34 @@ function playGame(id) {
             createGameTable(players, null, null);
         }
         else {  //Partida completa
-            showCards();
-            hideSelector();
-            $("#cartasUsr").empty();
-            $("#cardsTab").empty();
-            createGameTable(data.status.names, data.status.numCards, data.status.turn);
-            showMyCards(data.status.myCards);
-            showClearTableMsg();    //Mostramos el mensaje de no hay cartas sobre la mesa
-            if (data.status.table.length > 0) { //Hay cartas sobre la mesa
-                showTableCards(data.status.table);
-                hideClearTableMsg();    //quitamos el mensaje
+            if (data.status.end.isEnded) {//partida terminada
+                alert("La partida ha terminado, el ganador es: " + data.status.end.winner + "!");
             }
-            if (data.status.turn === getPlayerName()) { //turno del jugador
-                $("#seleccionadas").prop("disabled", false);    //activamos el boton de seleccionar
-                if (data.status.table.length === 0) {  //No hay cartas sobre la mesa, mostrar selector de numer o figura
-                    showSelector();
+            else {
+                showCards();
+                hideSelector();
+                $("#cartasUsr").empty();
+                $("#cardsTab").empty();
+                createGameTable(data.status.names, data.status.numCards, data.status.turn);
+                showMyCards(data.status.myCards);
+                showClearTableMsg();    //Mostramos el mensaje de no hay cartas sobre la mesa
+                if (data.status.table.length > 0) { //Hay cartas sobre la mesa
+                    showTableCards(data.status.table);
+                    hideClearTableMsg();    //quitamos el mensaje
+                }
+                if (data.status.turn === getPlayerName()) { //turno del jugador
+                    $("#seleccionadas").prop("disabled", false);    //activamos el boton de seleccionar
+                    if (data.status.table.length === 0) {  //No hay cartas sobre la mesa, mostrar selector de numer o figura
+                        showSelector();
+                        $("#mentiroso").prop("disabled", true);
+                    }
+                    else     //Hay cartas sobre la mesa
+                        $("#mentiroso").prop("disabled", false);    //activamos el boton de mentiroso
+                }
+                else {   //Le toca a otro
+                    $("#seleccionadas").prop("disabled", true);
                     $("#mentiroso").prop("disabled", true);
                 }
-                else     //Hay cartas sobre la mesa
-                    $("#mentiroso").prop("disabled", false);    //activamos el boton de mentiroso
-            }
-            else {   //Le toca a otro
-                $("#seleccionadas").prop("disabled", true);
-                $("#mentiroso").prop("disabled", true);
             }
         }
     });
