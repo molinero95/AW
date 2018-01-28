@@ -350,6 +350,7 @@ function playGame(id) {
             }
         }
         if(data.event !== undefined){
+            $("#historial").empty();
             $("#historial").append("<span>"+data.event+"</span>");
         }
         
