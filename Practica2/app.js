@@ -207,7 +207,7 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                                                 let event = userName + " se ha unido a la partida";
                                                 daoG.insertEvent(gameId, event, (err, res) => {
                                                     if (err) { res.status(500); return; }
-                                                    else response.json({name: name, event: event});
+                                                    else response.json({ name: name, event: event });
                                                 });
                                             }
 
@@ -254,7 +254,8 @@ app.get("/userGamesInfo", passport.authenticate('basic', { session: false }), (r
 
 //Realiza las acciones del juego
 app.put("/action", passport.authenticate('basic', { session: false }), (request, response) => {
-    daoG.getGameStatus(request.body.id, (err, status) => {  //Obtenemos el estado
+    let gameId = request.body.id;
+    daoG.getGameStatus(gameId, (err, status) => {  //Obtenemos el estado
         if (err) { response.status(500); return }
         else {
             if (status) {
@@ -267,6 +268,19 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                     status.falseOnTable.push(game.getRandomCardByNumber(request.body.number));
                 });
                 let playerIndex = game.getPlayerIndex(status.turn, status);
+                let name = status.names[playerIndex];
+                let numCartas = status.lastCards.length;
+                let event = "";
+                if (numCartas === 1) {
+                    event = name + " ha tirado una carta";
+                }
+                else if (numCartas === 2) {
+                    event = name + " ha tirado dos cartas";
+                }
+                else {
+                    event = name + " ha tirado tres cartas";
+                }
+
                 //Eliminamos las cartas echadas del mazo del jugador
                 status.cards[playerIndex] = game.removeCardsSelected(status.cards[playerIndex], cards);//Borra las cartas del usuario
                 status.numCards[playerIndex] -= cards.length;
@@ -276,6 +290,8 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                 if (status.numCards[lastPlayer] === 0) {  //En este caso, el jugador anterior gana la partida
                     status.end.isEnded = true;
                     status.end.winner = status.names[lastPlayer];
+                    event = status.end.winner + " ha ganado la partida";
+
                 }
                 console.log(status);
                 daoG.updateGameStatus(request.body.id, JSON.stringify(status), (err, res) => {
@@ -283,7 +299,11 @@ app.put("/action", passport.authenticate('basic', { session: false }), (request,
                         response.status(500); return;
                     }
                     else {
-                        response.json({});
+                        daoG.insertEvent(gameId, event, (err, res) => {
+                            if (err) { res.status(500); return; }
+                            else response.json({});
+                        });
+
                     }
                 });
             }
@@ -298,23 +318,29 @@ app.put("/isLiar", passport.authenticate('basic', { session: false }), (request,
         else {
             if (status) {
                 status = JSON.parse(status);
-                //console.log(status);
+                let event = "";
                 let playerIndex = game.getPlayerIndex(status.turn, status);
                 let number = status.falseOnTable[0].split(" ")[0];  //Obtenemos el numero que se está jugando
                 let liar = game.checkIfLiar(status.lastCards, number);
 
                 if (liar) { //El anterior miente, se las lleva el anterior, empieza que ha pulsado "mentiroso"
-                    status.cards[game.getLastTurn(playerIndex)] = game.addCards(status.trueOnTable, status.cards[game.getLastTurn(playerIndex)]);
-                    status.numCards[game.getLastTurn(playerIndex)] += status.trueOnTable.length;
+                    let lastPlayer = game.getLastTurn(playerIndex);
+                    status.cards[lastPlayer] = game.addCards(status.trueOnTable, status.cards[lastPlayer]);
+                    status.numCards[lastPlayer] += status.trueOnTable.length;
+                    let name = status.names[lastPlayer];
+                    event = name + " ha mentido";
                 }
                 else { //No mentia, se las lleva actual, empieza el siguiente al que ha pulsado
                     status.cards[playerIndex] = game.addCards(status.trueOnTable, status.cards[playerIndex]);
                     status.turn = game.getNextTurn(playerIndex);
                     status.numCards[playerIndex] += status.trueOnTable.length;
                     let lastPlayer = game.getLastTurn(playerIndex);
+                    let name = status.names[status.turn];
+                    event = name + " se ha equivocado";
                     if (status.numCards[lastPlayer] === 0) {  //Gana el jugador anterior
                         status.end.isEnded = true;
                         status.end.winner = status.names[lastPlayer];
+                        event = status.names[status.end.winner] + " ha ganado la partida";
                     }
                 }
                 //Actualizamos tablero
@@ -326,8 +352,13 @@ app.put("/isLiar", passport.authenticate('basic', { session: false }), (request,
                     if (err) {
                         response.status(500); return;
                     }
-                    else
-                        response.json({ liar: liar });
+                    else {
+                        daoG.insertEvent(idGame, event, (err, res) => {
+                            if (err) { res.status(500); return; }
+                            else response.json({ liar: liar });
+                        });
+                    }
+
                 });
 
             }
