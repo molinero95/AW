@@ -116,9 +116,15 @@ app.get("/status/:idGame/:player", passport.authenticate('basic', { session: fal
                                     turn: res.turn,
                                     end: res.end,
                                 }
+                                daoG.getLastEvent(idGame,(err,res)=>{
+                                    if(err){response.status(500);return;}
+                                    else{
+                                        response.json({status: status, event:res});
+                                    }
+                                });
                                 console.log(status);
                                 //let status = game.playerStatus(playerName, res);
-                                response.json({ status: status })
+                               
                             }
                             else    //Si la partida no ha comenzado, devolvemos sólo los nombres
                                 response.json({ names: names });

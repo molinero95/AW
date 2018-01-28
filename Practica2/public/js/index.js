@@ -301,7 +301,7 @@ function playGame(id) {
     setInactiveActualTab();
     showGameTabId(id);
     getGameStatus(id, (data) => {
-        console.log(data);
+        console.log("datos en play game:"+data);
         if (!checkIfComplete(data)) {   //Partida no completa
             let players = [];
             let i = 0;
@@ -349,6 +349,10 @@ function playGame(id) {
                 }
             }
         }
+        if(data.event !== undefined){
+            $("#historial").append("<span>"+data.event+"</span>");
+        }
+        
     });
 }
 

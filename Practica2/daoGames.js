@@ -161,6 +161,24 @@ class DAO {
         });
     }
 
+    getLastEvent(gameId,callback){
+        this.pool.getConnection((err, connect) => {
+            if (err) { callback(err); return; }
+            else {
+                connect.query("SELECT evento FROM historial WHERE idPartida = ? order by hora desc limit 1",[gameId],(err, res) => {
+                    if (err) { 
+                        callback(err); 
+                        return; 
+                    }
+                    else{
+                        callback(null, res[0].evento);
+                    }
+                });
+            }
+            connect.release();
+        });
+    }
+
 
     close() {
         this.pool.end();
