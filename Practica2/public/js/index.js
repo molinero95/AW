@@ -533,6 +533,7 @@ function joinGame(gameId, id, callback) {
         data: JSON.stringify({ gameId: gameId, userId: id, name: name}),
         success: function (data, textStatus, jqXHR) {
             callback(data);
+            
         },
         error: function (data, textStatus, jqXHR) {
             callback({ error: data.responseJSON.error });
