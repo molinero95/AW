@@ -85,6 +85,7 @@ function removeCardsSelected(myCards, cardsToRemove) {
     return newCards;
 }
 
+//Añade las cartas a un mazo
 function addCards(cards, array){
     cards.forEach(c => {
         array.push(c);
@@ -106,6 +107,7 @@ function getLastTurn(index){
     return index - 1;
 }
 
+//Comprobamos si el jugador miente o no
 function checkIfLiar(lastCards, number){
     let liar = false;
     let index = 0;
@@ -117,6 +119,7 @@ function checkIfLiar(lastCards, number){
     return liar;
 }
 
+//Funcion de comparación para el sort de cartas
 function compare(card1, card2){
     let sp1 = card1.split(" ")[0];
     let sp2 = card2.split(" ")[0];
@@ -154,7 +157,7 @@ function compare(card1, card2){
     }
 }
 
-
+//Quita del mazo las cartas que se pueden descartar
 function discard(cards){
     let disc = false;
     let before = "";
@@ -184,14 +187,10 @@ function discard(cards){
 function getDiscardedNumbers(newCards, cards){
     let j = 0;
     let disc = [];
-    console.log(newCards);
-    console.log(cards);
     for(let i = 0; i < cards.length; i++){
-        console.log("PAR: " + cards[i] + " " + newCards[j]);
         if(newCards[j] === cards[i])
             j++;
         else{
-            console.log("ENTRO");
             if(disc.length === 0 || disc[disc.length - 1] !== cards[i].split(" ")[0])
                 disc.push(cards[i].split(" ")[0]);
         }
