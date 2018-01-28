@@ -183,15 +183,19 @@ function onNewGameButtonClick(event) {
 function onJoinGameButtonClick(event) {
     let id = $("#userId").val();
     let gameId = $("#inputGameId").val();
-    joinGame(gameId, id, (data) => {
-        if (!data.error) {
-            addToNav(data.name, gameId);
-            alert("Partida: '" + data.name + "' agregada correctamente");
-        }
-        else
-            alert(data.error);
-    });
-
+    if (isNaN(gameId)) {
+        alert("El id tiene que ser un número");
+    }
+    else {
+        joinGame(gameId, id, (data) => {
+            if (!data.error) {
+                addToNav(data.name, gameId);
+                alert("Partida: '" + data.name + "' agregada correctamente");
+            }
+            else
+                alert(data.error);
+        });
+    }
 }
 //Al pulsar sobre "Actualizar partida"
 function updateGameClick(event) {
@@ -314,6 +318,9 @@ function playGame(id) {
         else {  //Partida completa
             if (data.status.end.isEnded) {//partida terminada
                 alert("La partida ha terminado, el ganador es: " + data.status.end.winner + "!");
+                $("#seleccionadas").prop("disabled", true);
+                $("#mentiroso").prop("disabled", true);
+                $("#descartar").prop("disabled", true);
             }
             else {
                 showCards();
@@ -515,6 +522,7 @@ function newGame(id, name, callback) {
 }
 
 function joinGame(gameId, id, callback) {
+    let name = getPlayerName();
     $.ajax({
         type: "POST",
         url: "/joinGame",
@@ -522,7 +530,7 @@ function joinGame(gameId, id, callback) {
             req.setRequestHeader("Authorization", "Basic " + cadenaBase64);
         },
         contentType: "application/json",
-        data: JSON.stringify({ gameId: gameId, userId: id }),
+        data: JSON.stringify({ gameId: gameId, userId: id, name: name}),
         success: function (data, textStatus, jqXHR) {
             callback(data);
         },

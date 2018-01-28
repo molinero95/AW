@@ -152,6 +152,8 @@ app.post("/createGame", passport.authenticate('basic', { session: false }), (req
 app.post("/joinGame", passport.authenticate('basic', { session: false }), (request, response) => {
     let gameId = request.body.gameId;
     let userId = request.user;
+    let userName = request.body.name;
+    console.log(userName);
     daoG.getGamePlayers(gameId, (err, res) => {
         if (err) { res.status(500); return; }
         else {
@@ -188,7 +190,14 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                                                         let status = game.startGame(gameId, players);
                                                         daoG.updateGameStatus(gameId, status, (err, res) => {
                                                             if (err) { res.status(500); return; }
-                                                            else response.json({ name: name });
+                                                            else{
+                                                                let event = userName+" se ha unido a la partida";
+                                                                daoG.insertEvent(gameId, event, (err, res) => {
+                                                                    if (err) { res.status(500); return; }
+                                                                    else response.json({});
+                                                                });
+                                                                response.json({ name: name });
+                                                            }
                                                         });
                                                     }
                                                 })
@@ -200,6 +209,7 @@ app.post("/joinGame", passport.authenticate('basic', { session: false }), (reque
                                     });
                                 }
                             }
+                            
                         });
                     }
                 }

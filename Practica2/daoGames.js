@@ -143,6 +143,25 @@ class DAO {
         });
     }
 
+    insertEvent(gameId, event, callback) {
+        this.pool.getConnection((err, connect) => {
+            if (err) { callback(err); return; }
+            else {
+                connect.query("INSERT INTO historial(idPartida, evento) VALUES (?,?)", [gameId, event], (err, res) => {
+                    if (err) { 
+                        callback(err); 
+                        return; 
+                    }
+                    else{
+                        callback(null, true);
+                    }
+                });
+            }
+            connect.release();
+        });
+    }
+
+
     close() {
         this.pool.end();
     }
