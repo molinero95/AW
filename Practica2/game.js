@@ -180,6 +180,25 @@ function discard(cards){
     return newCards;
 }
 
+//Obtenemos los números descartados por el jugador
+function getDiscardedNumbers(newCards, cards){
+    let j = 0;
+    let disc = [];
+    console.log(newCards);
+    console.log(cards);
+    for(let i = 0; i < cards.length; i++){
+        console.log("PAR: " + cards[i] + " " + newCards[j]);
+        if(newCards[j] === cards[i])
+            j++;
+        else{
+            console.log("ENTRO");
+            if(disc.length === 0 || disc[disc.length - 1] !== cards[i].split(" ")[0])
+                disc.push(cards[i].split(" ")[0]);
+        }
+    }
+    return disc;
+}
+
 module.exports = {
     startGame: startGame,
     getRandomCardByNumber: getRandomCardByNumber,
@@ -191,4 +210,5 @@ module.exports = {
     getLastTurn: getLastTurn,
     checkIfLiar: checkIfLiar,
     addCards: addCards,
+    getDiscardedNumbers: getDiscardedNumbers,
 }
